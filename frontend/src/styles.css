@@ -1,0 +1,40 @@
+:root { font-family: system-ui, sans-serif; color: #203b37; background: #faf6ec; line-height: 1.55; }
+* { box-sizing: border-box; }
+body { margin: 0; }
+a { color: inherit; }
+a:focus-visible, button:focus-visible { outline: 3px solid #a74830; outline-offset: 4px; }
+header { border-bottom: 1px solid #dfd8ca; }
+.shell { width: min(1120px, calc(100% - 36px)); margin-inline: auto; }
+.nav { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding-block: 16px; }
+.brand { font-family: Georgia, serif; font-size: 2rem; font-weight: 700; text-decoration: none; }
+.brand span { color: #a74830; }
+nav { display: flex; gap: clamp(12px, 4vw, 30px); }
+nav a { text-decoration: none; }
+nav a.active { text-decoration: underline; text-underline-offset: 5px; }
+main { padding-block: clamp(32px, 6vw, 76px); min-height: 70vh; }
+h1, h2 { font-family: Georgia, serif; line-height: 1.15; margin: 0 0 14px; }
+h1 { font-size: clamp(2.15rem, 6vw, 4.2rem); }
+h2 { font-size: 1.5rem; }
+p { margin: 0 0 14px; }
+.eyebrow { font-size: .78rem; font-weight: 750; letter-spacing: .12em; color: #884329; text-transform: uppercase; }
+.hero, .detail { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: clamp(22px, 5vw, 60px); }
+.hero-copy > p:not(.eyebrow) { max-width: 40ch; font-size: 1.1rem; }
+.button { display: inline-block; padding: 11px 18px; border: 0; border-radius: 8px; background: #193f43; color: white; text-decoration: none; font: inherit; cursor: pointer; }
+img, .image-placeholder { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 14px; }
+.image-placeholder { display: grid; place-items: center; background: #eee5d6; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); gap: 20px; padding: 0; list-style: none; }
+.card { border: 1px solid #dfd8ca; border-radius: 15px; background: #fffcf6; overflow: hidden; }
+.card a { display: block; height: 100%; text-decoration: none; }
+.card a:focus-visible { outline-offset: -4px; }
+.card a:hover h2 { text-decoration: underline; }
+.card img { border-radius: 0; }
+.card-copy { padding: 18px; }
+.card-copy p:last-child { margin: 0; }
+.back { display: inline-block; margin-bottom: 24px; }
+.workshop { font-weight: 700; }
+.notice { padding: 18px; background: #f0e6d5; border-radius: 10px; }
+footer { border-top: 1px solid #dfd8ca; padding-block: 22px; font-size: .9rem; }
+@media (max-width: 660px) {
+  .hero, .detail { grid-template-columns: 1fr; }
+  .detail > div { grid-row: 1; }
+}
