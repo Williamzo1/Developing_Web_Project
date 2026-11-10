@@ -10,6 +10,7 @@ Dùng **đúng một tên** cho mỗi khái niệm trong mã, API, cơ sở dữ
 | Khách | guest (không có tài khoản) | Người xem nội dung công khai, gồm cả khách du lịch quét QR. |
 | Ban quản lý | `ADMIN` (vai trò) | Hội làng nghề/chủ tịch xã; quản trị nền tảng. |
 | Phân loại | `category` | Nhóm sản phẩm (cốc, bình, đĩa…). |
+| Tag (nhãn) | `tag` | Nhãn gắn cho sản phẩm và yêu cầu mua sỉ; mỗi thứ có nhiều tag. Dùng để khớp yêu cầu mở với hộ phù hợp. Khác phân loại: một sản phẩm chỉ thuộc một phân loại. |
 | Sản phẩm (loại sản phẩm) | `product` | Một **loại** sản phẩm của một xưởng, mang nội dung trưng bày và quy trình sản xuất dùng chung. Không phải từng món hàng. |
 | Công đoạn | `process_step` | Một bước trong quy trình sản xuất của sản phẩm (nhào đất, vuốt, nung…): tên, mô tả, ảnh. |
 | Lô hàng | `batch` | Một đợt hàng cụ thể của một sản phẩm: số lượng, giá tham khảo, thời gian, trạng thái hiển thị. Đơn vị gắn QR. |

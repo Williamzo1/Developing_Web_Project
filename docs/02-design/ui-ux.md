@@ -39,7 +39,7 @@ Ba khu vực có bố cục riêng: **công khai** (header + footer giàu hình 
 ## 3. Màn hình trọng điểm
 
 1. **Landing page lô** — mở từ điện thoại sau khi quét QR, thiết kế mobile-first: ảnh lô → tên, hộ sản xuất (kèm huy hiệu xác minh) → dòng thời gian mốc sản xuất của lô (ngày + ảnh) → quy trình của sản phẩm → câu chuyện hộ → nút xem xưởng trên bản đồ / gửi yêu cầu báo giá.
-2. **Bản đồ** — bản đồ chiếm phần lớn màn hình; ghim hai kiểu (đang mở / đóng); popup có ảnh, tên, giờ mở cửa, liên kết hồ sơ; bộ lọc "Đang mở cửa".
+2. **Bản đồ** — bản đồ chiếm phần lớn màn hình; ghim hai kiểu (đang mở / đóng — ý nghĩa chờ Q-29); popup có ảnh, tên, giờ mở cửa, liên kết hồ sơ; bộ lọc "Đang mở cửa".
 3. **Danh mục sản phẩm** — lưới ảnh, bộ lọc hộ + phân loại, tìm kiếm, phân trang; chỉ tải thumbnail.
 4. **So sánh báo giá (Buyer)** — bảng/thẻ các báo giá: hộ, giá, thời gian; nút chấp nhận có hộp xác nhận; thanh tiến trình 6 trạng thái.
 5. **Trình sửa quy trình và mốc sản xuất (Artisan)** — thêm/xóa/sắp xếp công đoạn, kéo thả nhiều ảnh, xem trước.
@@ -52,7 +52,7 @@ Ba khu vực có bố cục riêng: **công khai** (header + footer giàu hình 
 - Responsive: thử ở 390, 768, 1280 px. Vùng bấm tối thiểu 44 px trên di động.
 - Trợ năng cơ bản: HTML ngữ nghĩa, điều hướng được bằng bàn phím, tương phản đủ, `lang="vi"`.
 - Mọi chữ hiển thị bằng tiếng Việt; dùng đúng thuật ngữ ở `01-requirements/glossary.md`.
-- Định dạng: tiền `1.250.000 ₫`, ngày `dd/MM/yyyy`.
+- Định dạng: tiền `1.250.000 ₫`, ngày `dd/MM/yyyy`. Giá bị hộ ẩn hiển thị "Liên hệ báo giá".
 
 ## 5. Việc còn thiếu
 

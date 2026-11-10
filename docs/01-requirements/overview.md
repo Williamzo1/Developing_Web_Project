@@ -12,7 +12,7 @@ Nền tảng web **triển lãm số** cho một làng nghề truyền thống v
 
 Làng nghề nhóm chọn: **gốm Bát Tràng** (đã dùng trong mã và dữ liệu mẫu).
 
-Bối cảnh: bài tập lớn INT3306 Fall 2026, nhóm 3 người, chấm bằng **demo trực tiếp** tại buổi vấn đáp (không cần slide/doc). Hệ quả: mọi thứ phải demo được ổn định; luồng demo quan trọng hơn độ phủ tính năng.
+Bối cảnh: bài tập lớn INT3306 Fall 2026, nhóm 3 người, chấm bằng **demo trực tiếp** tại buổi vấn đáp (không cần slide/doc). Hệ quả: mọi thứ phải demo được ổn định; luồng demo quan trọng hơn độ phủ tính năng. Nhóm đã chốt: web **phải chạy trên Internet** và phải có dữ liệu như người dùng thật (nhóm tự tạo tài khoản các vai trò và thao tác qua giao diện).
 
 ## 2. Nguyên tắc thiết kế
 
@@ -49,15 +49,15 @@ Danh sách đầy đủ: [functional-requirements.md](functional-requirements.md
 
 ## 5. Chỗ đặc tả lệch với đề gốc
 
-Đặc tả (sau khi hỏi giảng viên) thu hẹp đề gốc ở vài điểm. Vì buổi vấn đáp vẫn có thể đối chiếu với **mục 4 – Yêu cầu kỹ thuật của đề gốc**, nhóm chọn cách dung hòa dưới đây. Các dòng "Đề xuất" cần nhóm/giảng viên xác nhận.
+Đặc tả (sau khi hỏi giảng viên) thu hẹp đề gốc ở vài điểm. Vì buổi vấn đáp vẫn có thể đối chiếu với **mục 4 – Yêu cầu kỹ thuật của đề gốc**, nhóm chọn cách dung hòa dưới đây. "Nhóm chốt" là quyết định của nhóm ngày 2026-11-10, chưa phải xác nhận của giảng viên.
 
 | Mã | Đề gốc | Đặc tả | Cách xử lý | Trạng thái |
 |---|---|---|---|---|
 | C-01 | BQL phân bổ đơn hàng lớn cho nhiều hộ | Admin không phân lô, không điều phối | Theo đặc tả. Không làm chức năng phân bổ. | Đã chốt |
-| C-02 | Mỗi **lô** có mảng mốc thời gian + ảnh chứng minh | Quy trình dùng chung theo **loại sản phẩm**, không lặp lại cho từng lô | Làm cả hai tầng: quy trình dùng chung ở sản phẩm (bắt buộc) + mốc thời gian riêng của lô (ngày + ảnh, tùy chọn, ánh xạ vào công đoạn). Landing page lô ghép hai tầng. | Đề xuất (Q-10) |
-| C-03 | State machine 6 trạng thái đến `Delivered`, có khóa bản ghi | Không quản lý bắt buộc sản xuất/giao hàng; "chấp nhận báo giá, nếu có" | Giữ đủ 6 trạng thái để đáp ứng 4.2, nhưng `In Production`/`Delivered` chỉ là mốc thông tin do hộ tự cập nhật, không kèm quản lý hợp đồng/thanh toán. Khóa bản ghi ở bước chấp nhận báo giá. | Đề xuất (Q-04, Q-11) |
-| C-04 | QR mỗi lô → landing page kể toàn bộ câu chuyện | QR đến landing page lô "hoặc trang truy xuất phù hợp" | QR → landing page lô; trang này nhúng quy trình của loại sản phẩm. | Đề xuất (Q-06) |
-| C-05 | Bản đồ cho biết xưởng nào **đang mở cửa** | Giờ mở cửa "có thể hiển thị nếu hộ cung cấp" | Hộ khai giờ mở cửa + cờ nhận khách tham quan; ghim thể hiện trạng thái mở/đóng. | Đề xuất |
+| C-02 | Mỗi **lô** có mảng mốc thời gian + ảnh chứng minh | Quy trình dùng chung theo **loại sản phẩm**, không lặp lại cho từng lô | Làm cả hai tầng: quy trình dùng chung ở sản phẩm (bắt buộc) + mốc thời gian riêng của lô (ngày + ảnh, tùy chọn, ánh xạ vào công đoạn). Landing page lô ghép hai tầng. | Nhóm chốt (Q-10) |
+| C-03 | State machine 6 trạng thái đến `Delivered`, có khóa bản ghi | Không quản lý bắt buộc sản xuất/giao hàng; "chấp nhận báo giá, nếu có" | Giữ đủ 6 trạng thái để đáp ứng 4.2, nhưng `In Production`/`Delivered` chỉ là mốc thông tin do hộ tự cập nhật, không kèm quản lý hợp đồng/thanh toán. Khóa bản ghi ở bước chấp nhận báo giá. | Nhóm chốt (Q-04, Q-11) |
+| C-04 | QR mỗi lô → landing page kể toàn bộ câu chuyện | QR đến landing page lô "hoặc trang truy xuất phù hợp" | QR → trang lô (quy trình + mốc thời gian + ảnh); hộ gửi QR cho khách. Lô riêng tư: QR mã hóa liên kết riêng. | Nhóm chốt (Q-06) |
+| C-05 | Bản đồ cho biết xưởng nào **đang mở cửa** | Giờ mở cửa "có thể hiển thị nếu hộ cung cấp" | Hộ khai giờ mở cửa + cờ nhận khách tham quan; ghim thể hiện trạng thái mở/đóng. | Chờ làm rõ Q-29 |
 | C-06 | Admin kiểm duyệt **và cấp** tài khoản hộ | Admin xác minh hộ | Tương thích. Giữ luồng hiện có: Admin cấp tài khoản → duyệt → hộ đăng nhập được. | Đã chốt |
 
 ## 6. Tiêu chí nghiệm thu (tự kiểm)

@@ -16,5 +16,6 @@
 | NFR-DATA-01 | Toàn vẹn khi truy cập đồng thời ở luồng báo giá: không thể có hai báo giá cùng được chấp nhận cho một yêu cầu. | Test gửi song song. |
 | NFR-DATA-02 | Mọi thay đổi schema qua Flyway migration; không sửa migration đã merge. | Review. |
 | NFR-OPS-01 | Chạy được toàn bộ hệ thống bằng một lệnh Docker Compose kèm dữ liệu mẫu đủ để demo. | Chạy trên máy sạch. |
-| NFR-OPS-02 | Dữ liệu demo (seed) đủ phong phú: nhiều hộ, sản phẩm có ảnh thật, lô có QR, yêu cầu ở nhiều trạng thái. | Chạy kịch bản `04-plan/demo-script.md`. |
-| NFR-OPS-03 | Triển khai lên Internet. | Giả định Q-09: không bắt buộc; ưu tiên chạy ổn định trên máy demo. QR cần URL gốc cấu hình được để điện thoại quét được trong mạng LAN. |
+| NFR-OPS-02 | Seed tối thiểu để môi trường phát triển chạy được (tài khoản mẫu, phân loại, tag, vài hộ/sản phẩm); dữ liệu phong phú cho demo nhập qua giao diện (NFR-OPS-04). | Chạy kịch bản `04-plan/demo-script.md`. |
+| NFR-OPS-03 | **Bắt buộc** triển khai trên Internet (Q-09 đã chốt), có HTTPS. QR dùng URL gốc cấu hình được (`APP_BASE_URL`) trỏ về tên miền thật. | Truy cập từ điện thoại ngoài mạng nhóm; quét QR in sẵn. Nơi đặt máy chủ: Q-23. |
+| NFR-OPS-04 | Bản triển khai có dữ liệu như người dùng thật: nhóm tự tạo tài khoản Admin/Buyer/hộ và thao tác qua giao diện (đăng bài, tạo lô, gửi yêu cầu, chào giá). Sao lưu DB và thư mục ảnh định kỳ. | Có bản sao lưu khôi phục được. |

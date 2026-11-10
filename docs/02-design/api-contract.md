@@ -10,6 +10,7 @@
 - Tài nguyên công khai định danh bằng `slug` (lô dùng `publicCode`); thao tác quản lý dùng `id`.
 - Danh sách có phân trang: tham số `page` (từ 0), `size` (mặc định 20, tối đa 100) → `{ "items": [...], "page": 0, "size": 20, "total": 137 }`. *(Đề xuất; `GET /api/products` hiện trả mảng thuần.)*
 - Thời gian ISO-8601 có múi giờ; ngày `YYYY-MM-DD`; tiền là số nguyên VND.
+- Giá bị hộ ẩn (`priceVisible = false`) thì response công khai trả `price: null` — không gửi giá về client rồi ẩn bằng giao diện.
 - Ảnh trong response là đối tượng `{ "id", "thumbUrl", "mediumUrl", "largeUrl", "width", "height" }`. *(Đề xuất; hiện `ProductResponse` chỉ có `imageUrl`.)*
 
 ### Lỗi
@@ -51,15 +52,15 @@ Collection Postman: `postman/`. Kiểm thử HTTP: `backend/tests/phase02.py`.
 
 | Phương thức | Đường dẫn | FR |
 |---|---|---|
-| POST | `/api/register` (đăng ký Buyer) | FR-AUTH-04 |
+| POST | `/api/register` (đăng ký Buyer: username, mật khẩu, tên hiển thị, email, SĐT) · các endpoint xác thực email/SĐT — chờ Q-39 | FR-AUTH-04 |
 | GET | `/api/home` (nội dung nổi bật) | FR-HOME-02 |
-| GET | `/api/categories` | FR-PROD-03 |
+| GET | `/api/categories` · `/api/tags` | FR-PROD-03, FR-PROD-06 |
 | GET | `/api/workshops?q=&page=` · `/api/workshops/{slug}` | FR-WS-01, 06, 07 |
 | GET | `/api/workshops/map` (chỉ trường cần cho ghim: slug, tên, tọa độ, giờ mở cửa, `openNow`, ảnh thumb) | FR-MAP-01..03 |
-| GET | `/api/products?workshop=&category=&q=&sort=&page=` · `/api/products/{slug}` (kèm công đoạn và lô công khai) | FR-PROD-03..05 |
+| GET | `/api/products?workshop=&category=&tag=&q=&sort=&page=` · `/api/products/{slug}` (kèm công đoạn và lô công khai) | FR-PROD-03..05 |
 | GET | `/api/batches?product=&workshop=&kind=&page=` | FR-BATCH-07 |
-| GET | `/api/batches/{publicCode}` (landing page; lô riêng tư cần `?token=`; sai → 404) | FR-BATCH-02, 05, 06 |
-| GET | `/api/batches/{publicCode}/qr.png` | FR-BATCH-04 |
+| GET | `/api/batches/{publicCode}` (landing page: thông tin lô + mốc thời gian + quy trình + ảnh; lô riêng tư cần `?token=`; sai → 404) | FR-BATCH-02, 03, 05, 06 |
+| GET | `/api/batches/{publicCode}/qr.png` (lô công khai) — với lô riêng tư, QR chứa liên kết riêng nên chỉ chủ lô lấy được qua `/api/artisan/batches/{id}/qr.png` | FR-BATCH-04 |
 | GET | `/api/news?kind=&page=` · `/api/news/{slug}` | FR-NEWS-02 |
 | POST | `/api/reports` | FR-ADMIN-04 |
 
@@ -87,7 +88,7 @@ Mọi thao tác ngầm định trên xưởng của người đăng nhập; khô
 | Phương thức | Đường dẫn | FR |
 |---|---|---|
 | GET, POST | `/quote-requests` · GET, PUT, DELETE `/quote-requests/{id}` (sửa/xóa chỉ khi `DRAFT`) | FR-QUOTE-01 |
-| POST | `/quote-requests/{id}/send` (`{ mode, workshopIds? }`) | FR-QUOTE-02 |
+| POST | `/quote-requests/{id}/send` (`{ mode, workshopId? }` — chỉ định một hộ hoặc mở) | FR-QUOTE-02 |
 | POST | `/quote-requests/{id}/cancel` | FR-QUOTE-08 |
 | GET | `/quote-requests/{id}/quotes` | FR-QUOTE-05 |
 | POST | `/quote-requests/{id}/quotes/{quoteId}/accept` (`{ quoteUpdatedAt }`) | FR-QUOTE-06 |
@@ -99,6 +100,8 @@ Mọi thao tác ngầm định trên xưởng của người đăng nhập; khô
 | POST | `/workshops/{id}/suspend` | FR-ADMIN-01 |
 | GET, POST | `/news` · PUT, DELETE `/news/{id}` | FR-NEWS-01 |
 | GET | `/stats` | FR-ADMIN-02 |
+| POST | `/products/{id}/hide` · `/batches/{id}/hide` (hậu kiểm) | FR-ADMIN-05 |
+| GET, POST, PUT, DELETE | `/tags[/{id}]` | FR-ADMIN-06 |
 | PUT | `/featured` | FR-ADMIN-03 |
 | GET | `/reports` · POST `/reports/{id}/resolve` | FR-ADMIN-04 |
 

@@ -1,6 +1,6 @@
 # Máy trạng thái yêu cầu báo giá
 
-> Trạng thái tài liệu: **Đề xuất** — phụ thuộc Q-04, Q-11, Q-15. Đáp ứng đề gốc §4.2 (6 trạng thái + khóa bản ghi) trong giới hạn của đặc tả (không quản lý hợp đồng/thanh toán/giao hàng).
+> Trạng thái tài liệu: **Nhóm đã chốt** các điểm nghiệp vụ ngày 2026-11-10 (Q-03, Q-04, Q-11, Q-14, Q-15, Q-31); chi tiết cài đặt (khóa, mã lỗi) là đề xuất kỹ thuật. Còn chờ: cách tổ chức tag (Q-38) — chỉ ảnh hưởng câu truy vấn "hộ phù hợp". Đáp ứng đề gốc §4.2 (6 trạng thái + khóa bản ghi) trong giới hạn của đặc tả (không quản lý hợp đồng/thanh toán/giao hàng).
 
 ## 1. Trạng thái của yêu cầu (`quote_requests.status`)
 
@@ -36,8 +36,8 @@ Mọi chuyển trạng thái không có trong bảng đều bị từ chối v�
 
 | Từ | Sang | Ai | Điều kiện | Tác dụng phụ |
 |---|---|---|---|---|
-| `DRAFT` | `SENT` | Buyer chủ yêu cầu | Đủ trường bắt buộc; nếu `TARGETED` thì có ≥ 1 hộ đã duyệt | Ghi sự kiện. |
-| `SENT`/`BIDDING` | `BIDDING` | Hộ đủ điều kiện (gửi báo giá) | Hộ được chỉ định, hoặc yêu cầu mở và hộ có sản phẩm cùng phân loại (Q-03); chưa quá `bidding_deadline` (Q-15); hộ chưa có báo giá còn hiệu lực | Tạo `quotes` `SUBMITTED`. |
+| `DRAFT` | `SENT` | Buyer chủ yêu cầu | Đủ trường bắt buộc; nếu `TARGETED` thì chỉ định đúng một hộ đã duyệt; nếu `OPEN` thì có ≥ 1 tag | Ghi sự kiện. |
+| `SENT`/`BIDDING` | `BIDDING` | Hộ đủ điều kiện (gửi báo giá) | Hộ được chỉ định, hoặc yêu cầu mở và hộ có sản phẩm trùng ít nhất một tag với yêu cầu (Q-03); chưa quá `bidding_deadline` nếu có (Q-15); hộ chưa có báo giá còn hiệu lực | Tạo `quotes` `SUBMITTED`. |
 | `BIDDING` | `BIDDING`/`SENT` | Hộ chủ báo giá (sửa/rút) | Yêu cầu chưa `ACCEPTED` | Rút → `WITHDRAWN`; hết báo giá còn hiệu lực thì yêu cầu về `SENT`. |
 | `BIDDING` | `ACCEPTED` | Buyer chủ yêu cầu | Báo giá thuộc yêu cầu và đang `SUBMITTED` | Báo giá đó → `ACCEPTED`; các báo giá `SUBMITTED` khác → `NOT_SELECTED`; đặt `accepted_quote_id`. |
 | `SENT`/`BIDDING` | `CANCELLED` | Buyer chủ yêu cầu | — | Các báo giá `SUBMITTED` → `NOT_SELECTED`. |
@@ -68,7 +68,7 @@ Nguyên tắc cài đặt:
 ## 4. Quyền xem
 
 - Buyer: chỉ yêu cầu của mình, cùng mọi báo giá của chúng.
-- Hộ: yêu cầu chỉ định mình, yêu cầu mở phù hợp đang `SENT`/`BIDDING`, và các yêu cầu mình đã báo giá (kèm kết quả của riêng mình). Không thấy báo giá của hộ khác; ở yêu cầu đã `ACCEPTED` mà mình không được chọn, chỉ thấy báo giá của mình ở `NOT_SELECTED`.
+- Hộ: yêu cầu chỉ định mình, yêu cầu mở trùng tag đang `SENT`/`BIDDING`, và các yêu cầu mình đã báo giá (kèm kết quả của riêng mình). Không thấy báo giá của hộ khác; ở yêu cầu đã `ACCEPTED` mà mình không được chọn, chỉ thấy báo giá của mình ở `NOT_SELECTED`.
 - Thông tin liên hệ: hộ thấy liên hệ Buyer khi đủ điều kiện tham gia; Buyer thấy liên hệ hộ trên từng báo giá.
 - Admin: chỉ số liệu tổng hợp.
 

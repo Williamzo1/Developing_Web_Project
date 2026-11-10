@@ -1,13 +1,13 @@
 # Vai trò và phân quyền
 
-> Trạng thái: khung vai trò **Đã chốt**; các ô có dấu `*` phụ thuộc câu hỏi mở (ghi mã Q).
+> Trạng thái: **Đã chốt** theo kết quả họp nhóm 2026-11-10; các ô có dấu `*` còn phụ thuộc câu hỏi mở.
 
 ## Vai trò
 
 | Vai trò | Cách có tài khoản | Ghi chú |
 |---|---|---|
-| Khách (guest) | Không cần | Xem toàn bộ nội dung công khai, quét QR. *(giả định Q-01)* |
-| `BUYER` | Tự đăng ký *(giả định Q-12)* | Tạo yêu cầu mua sỉ, xem báo giá gửi cho mình. |
+| Khách (guest) | Không cần | Xem toàn bộ nội dung công khai, quét QR. Không gửi yêu cầu/báo giá. |
+| `BUYER` | Tự đăng ký, xác thực email + SĐT (cách xác thực: Q-39) | Tạo yêu cầu mua sỉ, xem báo giá gửi cho mình. |
 | `ARTISAN` | Admin cấp, phải được duyệt mới đăng nhập được (đã có trong mã) | Gắn đúng 1 xưởng. Chỉ thao tác trên dữ liệu của xưởng mình. |
 | `ADMIN` | Tạo sẵn bằng seed | Quản trị nền tảng; không tham gia giao dịch. |
 
@@ -19,17 +19,17 @@ Ký hiệu: ✔ được phép · ✖ không · "của mình" = chỉ bản ghi 
 |---|---|---|---|---|
 | Xem trang chủ, hồ sơ hộ, sản phẩm, quy trình, bản đồ, tin tức | ✔ | ✔ | ✔ | ✔ |
 | Xem lô **công khai** / landing page qua QR | ✔ | ✔ | ✔ | ✔ |
-| Xem lô **riêng tư** | qua liên kết riêng* (Q-02) | qua liên kết riêng* | của mình | ✔ (mục đích kiểm duyệt) |
+| Xem lô **riêng tư** | qua liên kết riêng do hộ gửi | qua liên kết riêng do hộ gửi | của mình | ✔ (mục đích kiểm duyệt) |
 | Sửa hồ sơ xưởng | ✖ | ✖ | của mình | ✖ (chỉ duyệt/ẩn) |
-| Tạo/sửa/ẩn sản phẩm, công đoạn | ✖ | ✖ | của mình | ẩn khi vi phạm |
+| Tạo/sửa/ẩn sản phẩm, công đoạn | ✖ | ✖ | của mình (hiển thị ngay, không duyệt trước) | ẩn khi vi phạm (hậu kiểm) |
 | Tạo/sửa lô, mốc sản xuất, đổi công khai/riêng tư | ✖ | ✖ | của mình | ẩn khi vi phạm |
 | Upload ảnh | ✖ | ✖* | ✔ | ✔ |
 | Tạo/sửa/gửi/hủy yêu cầu mua sỉ | ✖ | của mình | ✖ | ✖ |
-| Xem yêu cầu mua sỉ | ✖ | của mình | yêu cầu chỉ định mình + yêu cầu mở phù hợp* (Q-03) | chỉ số liệu tổng hợp* |
+| Xem yêu cầu mua sỉ | ✖ | của mình | yêu cầu chỉ định mình + yêu cầu mở trùng tag (Q-38) | chỉ số liệu tổng hợp* |
 | Gửi/sửa/rút báo giá | ✖ | ✖ | của mình | ✖ |
 | Xem báo giá | ✖ | các báo giá gửi cho yêu cầu của mình | **chỉ** báo giá của mình | ✖* |
-| Chấp nhận báo giá | ✖ | yêu cầu của mình* (Q-04) | ✖ | ✖ |
-| Cập nhật `In Production`/`Delivered` | ✖ | ✖ | hộ có báo giá được chấp nhận* (Q-11) | ✖ |
+| Chấp nhận báo giá | ✖ | yêu cầu của mình | ✖ | ✖ |
+| Cập nhật `In Production`/`Delivered` | ✖ | ✖ | hộ có báo giá được chấp nhận | ✖ |
 | Cấp tài khoản hộ, duyệt/xác minh hộ | ✖ | ✖ | ✖ | ✔ |
 | Đăng/sửa/ẩn tin tức, sự kiện | ✖ | ✖ | ✖ | ✔ |
 | Chọn nội dung nổi bật | ✖ | ✖ | ✖ | ✔ |

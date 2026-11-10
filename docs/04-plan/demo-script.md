@@ -6,8 +6,8 @@ Bài được chấm bằng demo trực tiếp, không slide. Kịch bản đi t
 
 ## Chuẩn bị
 
-- Hệ thống chạy bằng Docker Compose với dữ liệu seed: ≥ 5 hộ có tọa độ (có hộ mở, hộ đóng), vài chục đến vài trăm sản phẩm có ảnh thật, ≥ 2 lô có mốc sản xuất, tin tức mẫu, một yêu cầu đang nhận báo giá với ≥ 2 báo giá.
-- Điện thoại cùng mạng với máy demo; `APP_BASE_URL` trỏ đúng địa chỉ để quét QR được. In sẵn một mã QR.
+- Hệ thống chạy **trên Internet** (bắt buộc — Q-09), có bản Docker Compose trên laptop làm dự phòng. Dữ liệu do nhóm tự nhập qua giao diện bằng các tài khoản Admin/Buyer/hộ để trông như có người dùng thật: ≥ 5 hộ có tọa độ (có hộ mở, hộ đóng), vài chục đến vài trăm sản phẩm có ảnh thật, ≥ 2 lô có mốc sản xuất, tin tức mẫu, một yêu cầu đang nhận báo giá với ≥ 2 báo giá.
+- `APP_BASE_URL` trỏ tên miền thật; in sẵn một mã QR và thử quét bằng mạng di động. Sao lưu DB + ảnh trước ngày thi.
 - Mở sẵn 3 trình duyệt/hồ sơ: Buyer, Artisan, Admin.
 
 ## Luồng
@@ -22,8 +22,8 @@ Bài được chấm bằng demo trực tiếp, không slide. Kịch bản đi t
 | 6 | Artisan | Tạo lô, thêm mốc sản xuất có ngày + ảnh; hệ thống sinh QR | §4.1 |
 | 7 | Khách (điện thoại) | Quét QR → landing page kể lại quá trình làm ra lô | §4.1 |
 | 8 | Artisan | Chuyển lô sang riêng tư → khách không còn thấy; mở bằng liên kết riêng thì thấy | Đặc tả §5 |
-| 9 | Buyer | Tạo yêu cầu "5.000 cốc in logo trong 1 tháng" → lưu nháp → gửi (mở) | §4.2 Draft → Sent |
-| 10 | 2 Artisan | Mỗi hộ thấy yêu cầu, gửi báo giá; hộ này không thấy báo giá hộ kia | §4.2 Bidding, đặc tả §5 |
+| 9 | Buyer | Đăng ký tài khoản (xác thực email/SĐT) → tạo yêu cầu "5.000 cốc in logo trong 1 tháng" gắn tag → lưu nháp → gửi (mở) | §4.2 Draft → Sent |
+| 10 | 2 Artisan | Mỗi hộ có sản phẩm trùng tag thấy yêu cầu (hộ không trùng tag thì không thấy), gửi báo giá; hộ này không thấy báo giá hộ kia | §4.2 Bidding, đặc tả §5 |
 | 11 | Buyer | So sánh báo giá → chấp nhận một báo giá. Thử chấp nhận báo giá khác ở tab thứ hai → bị từ chối | §4.2 Accepted + **khóa bản ghi** |
 | 12 | Artisan được chọn | Cập nhật Đang sản xuất → Đã giao; Buyer thấy tiến trình | §4.2 In Production → Delivered |
 | 13 | Admin | Đăng tin "lịch cúp điện"; xem thống kê; chọn lô nổi bật lên trang chủ | §3 Admin |
