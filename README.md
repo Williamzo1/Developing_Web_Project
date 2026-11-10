@@ -1,5 +1,7 @@
 # vCraft Phase 02 MVC
 
+> **Tài liệu dự án** (yêu cầu, thiết kế, quy ước, hiện trạng, lộ trình): xem [docs/README.md](docs/README.md). Hướng dẫn cho AI agent: [AGENTS.md](AGENTS.md).
+
 Bài tập lớn INT3306, chủ đề gốm Bát Tràng. Bản này tiếp nối vCraft Phase 02, tổ chức lại backend Spring MVC theo lớp. Chức năng gồm danh mục công khai, đăng nhập và đăng xuất, Admin cấp và duyệt tài khoản hộ, Artisan sửa tên xưởng của mình. Giao diện React hiện phục vụ trang chủ, danh mục và chi tiết. Chức năng tài khoản và quản trị được thử bằng Postman.
 
 ## 1. Cấu trúc thư mục
