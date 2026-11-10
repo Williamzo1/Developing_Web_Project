@@ -46,13 +46,13 @@
 | Q-13 | Lưu ảnh ở đâu | C | 🔴 | Đĩa cục bộ qua volume, sau interface | Mở |
 | Q-16 | Giữ token DB hay đổi JWT | C | 🔴 | Giữ token DB | Mở |
 | Q-17 | Cấu trúc gói backend | C | 🔴 | Giữ theo lớp | Mở |
-| Q-19 | Lấy dữ liệu ở frontend | C | 🔴 | Hook tự viết + client chung | Mở |
+| Q-19 | Lấy dữ liệu ở frontend | C | 🔴 | Hook tự viết + client chung | Đã chốt |
 | Q-20 | Sinh QR ở backend hay frontend | C | 🟡 | Backend trả PNG | Mở |
 | Q-21 | Resize ảnh: thư viện, kích thước, giới hạn | C | 🟡 | Thumbnailator, 3 cỡ, JPEG | Mở |
 | Q-22 | Công cụ kiểm thử | C | 🟡 | Python cho HTTP + JUnit cho logic | Mở |
 | Q-23 | Phương án demo/triển khai | C | 🔴 | Triển khai Internet là bắt buộc (Q-09); chọn nơi đặt máy chủ | Mở |
 | Q-39 | Xác thực email và SĐT bằng cách nào | C | 🔴 | Email bằng mã OTP; SĐT chỉ kiểm định dạng | Mở |
-| Q-18 | CSS thuần hay thư viện UI | D | 🔴 | CSS thuần + CSS Modules | Mở |
+| Q-18 | CSS thuần hay thư viện UI | D | 🔴 | CSS thuần + CSS Modules | Đã chốt |
 | Q-24 | Nguồn ảnh và dữ liệu demo | D | 🟡 | Ảnh giấy phép tự do, ghi nguồn | Mở |
 | Q-36 | Ngôn ngữ giao diện | D | 🟢 | Chỉ tiếng Việt | Mở |
 | Q-25 | Chia việc theo tính năng | E | 🔴 | Ba luồng A/B/C | Mở |
@@ -261,7 +261,7 @@ Nhóm không tự chốt được các câu này, nhưng nên thống nhất **p
 
 - **Phương án:** (a) Mở rộng hook tự viết hiện có (`useCatalog`) thành `useApi`/`useMutation` + một client fetch chung; phiên đăng nhập bằng Context. (b) Thêm TanStack Query. (c) Redux/Zustand.
 - **Gợi ý:** (a). Ít thứ phải học và phải giải thích khi vấn đáp. Chọn (b) nếu trong nhóm đã có người quen — nó giảm nhiều mã lặp cho tải lại sau khi sửa. (c) không cần.
-- **Nhóm chốt:** _chưa_
+- **Nhóm chốt:** **(a)** — hook tự viết (`useApi`/`useMutation`) + một client fetch dùng chung; phiên đăng nhập bằng React Context; không thêm TanStack Query, Redux, Zustand. (2026-11-10, nhóm — theo gợi ý; xem ADR-0003)
 
 ### Q-20 🟡 Sinh mã QR ở backend hay frontend?
 
@@ -298,7 +298,7 @@ Nhóm không tự chốt được các câu này, nhưng nên thống nhất **p
 - **Phương án:** (a) CSS thuần + biến CSS + CSS Modules (Vite hỗ trợ sẵn). (b) Tailwind CSS. (c) Bộ component có sẵn (MUI, Ant Design…).
 - **Gợi ý:** (a) cho khu công khai — giao diện là tiêu chí chấm và cần bản sắc riêng; bộ component có sẵn dễ ra giao diện "trang quản trị" na ná nhau. Nếu người làm frontend quen Tailwind thì (b) cũng ổn. Khu quản trị có thể dùng style đơn giản dùng chung.
 - **Phải chốt trước khi chia việc**, vì đổi giữa chừng là viết lại toàn bộ style.
-- **Nhóm chốt:** _chưa_
+- **Nhóm chốt:** **(a)** — CSS thuần + biến CSS + CSS Modules; không dùng Tailwind hay bộ component có sẵn. (2026-11-10, nhóm — theo gợi ý; xem ADR-0003)
 
 ### Q-24 🟡 Ảnh và dữ liệu demo lấy từ đâu, ai chuẩn bị?
 

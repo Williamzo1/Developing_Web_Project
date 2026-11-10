@@ -55,7 +55,7 @@ Xác thực hiện có: đăng nhập trả token ngẫu nhiên; DB chỉ lưu m
 - Toàn bộ nằm trong `frontend/src/main.jsx` (~140 dòng) và `styles.css`: hook `useCatalog` (fetch + abort + thử lại), các trang `Home`, `Catalog`, `Detail`, route `/`, `/san-pham`, `/san-pham/:id`.
 - Chưa có: đăng nhập, lưu phiên, route guard, form, `@vitejs/plugin-react`.
 
-## 5. Frontend — định hướng (đề xuất)
+## 5. Frontend — định hướng (Q-18, Q-19 đã chốt — ADR-0003; cấu trúc thư mục là đề xuất)
 
 ```text
 frontend/src/
@@ -67,7 +67,8 @@ frontend/src/
 └── styles/             biến CSS (design tokens) và style chung
 ```
 
-- Trạng thái: React Context cho phiên đăng nhập; dữ liệu server lấy bằng hook fetch. Chỉ thêm thư viện quản lý state khi thật sự cần và cả nhóm đồng ý.
+- **Dữ liệu server (đã chốt):** một client fetch dùng chung trong `api/` (gắn token, chuyển lỗi `{code, message}` thành exception) + hai hook tự viết: `useApi` để đọc (tải/lỗi/thử lại/hủy khi rời trang, phát triển từ `useCatalog` hiện có) và `useMutation` để ghi (trạng thái đang gửi, lỗi, gọi lại `reload` của dữ liệu liên quan sau khi thành công). Phiên đăng nhập giữ trong React Context. Không dùng TanStack Query, Redux, Zustand.
+- **Style (đã chốt):** CSS thuần. Biến CSS (design tokens) khai báo trong `:root`; style riêng của component viết bằng CSS Modules (`Ten.module.css`, Vite hỗ trợ sẵn); style nền và tiện ích dùng chung đặt trong `styles/`. Không dùng Tailwind hay bộ component có sẵn.
 - Bản đồ: Leaflet + OpenStreetMap (không cần khóa API).
 - Tuyến đường tiếng Việt không dấu, xem `ui-ux.md`.
 - Thêm thư viện mới (UI kit, form, state…) là quyết định của nhóm → ghi ADR trước khi cài.

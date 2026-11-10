@@ -58,4 +58,4 @@ Ba khu vực có bố cục riêng: **công khai** (header + footer giàu hình 
 
 - [ ] Wireframe cho 5 màn hình trọng điểm.
 - [ ] Chốt bảng màu, kiểu chữ, bộ ảnh thật (tự chụp hoặc có giấy phép sử dụng — ghi nguồn).
-- [ ] Quyết định có dùng thư viện UI/CSS hay tiếp tục CSS thuần (ghi ADR).
+- [x] Style: CSS thuần + biến CSS + CSS Modules, không dùng thư viện UI (Q-18 đã chốt, ADR-0003).

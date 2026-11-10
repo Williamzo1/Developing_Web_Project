@@ -18,7 +18,7 @@ Sau khi có nền, chia việc **theo tính năng** (mỗi người làm trọn 
 
 - [ ] Nhóm đọc và duyệt `01-requirements/`, đặc biệt bảng lệch đề gốc/đặc tả trong `overview.md`.
 - [x] Họp nhóm lần 1 (2026-11-10): đã chốt 18 câu nghiệp vụ (nhóm A và phần lớn nhóm B).
-- [ ] Họp nhóm lần 2: làm rõ Q-29; chốt các câu 🔴 còn mở — Q-38 (tag), Q-39 (xác thực email/SĐT), Q-13 (lưu ảnh), Q-23 (nơi đặt máy chủ), Q-18 (CSS), Q-19 (lấy dữ liệu frontend), Q-16, Q-17, Q-25, Q-26.
+- [ ] Họp nhóm lần 2: làm rõ Q-29; chốt các câu 🔴 còn mở — Q-38 (tag), Q-39 (xác thực email/SĐT), Q-13 (lưu ảnh), Q-23 (nơi đặt máy chủ), Q-16, Q-17, Q-25, Q-26. (Q-18, Q-19 đã chốt.)
 - [ ] Gửi giảng viên các điểm nhóm làm khác/diễn giải đề gốc §4.1–4.2 (bản nháp tin nhắn có sẵn trong `open-questions.md`).
 - [ ] Duyệt `conventions.md`, `git-workflow.md` (Q-27, Q-28).
 - [ ] Wireframe 5 màn hình trọng điểm (`02-design/ui-ux.md`).
@@ -38,12 +38,13 @@ Dựa trên các câu đã chốt. "Sẵn sàng" = không còn câu hỏi mở n
 | 5 | Hồ sơ hộ phía backend: giới thiệu, lịch sử, địa chỉ, liên hệ, Gmail + Facebook, tọa độ; danh sách hộ; endpoint ghim bản đồ (tọa độ + tóm tắt) | FR-WS-01, 02, 04, 06, 07, FR-MAP-01, 02 | Chưa gồm giờ mở cửa/trạng thái (Q-29). |
 | 6 | Tin tức và thống kê phía backend | FR-NEWS-01..03, FR-ADMIN-01, 02 | |
 | 7 | Sinh mã QR cho lô | FR-BATCH-04 | Q-20 chưa chốt nhưng mức ảnh hưởng nhỏ; làm ở backend theo gợi ý, đổi sau không tốn công. |
+| 8 | **Nền frontend** (Q-18, Q-19 đã chốt): tách `main.jsx` theo cấu trúc thư mục, client API, `useApi`/`useMutation`, AuthContext, route guard theo vai trò, bố cục 3 khu vực, design tokens, trang đăng nhập | FR-AUTH-01, 02 | Làm trước khi ba người cùng viết giao diện. |
+| 9 | Giao diện cho các phần backend đã sẵn sàng ở trên (danh mục, chi tiết sản phẩm, hồ sơ hộ, trang lô, bản đồ ghim + popup, báo giá, tin tức, quản trị) | theo từng module | Sau việc 8. Chỗ cần ảnh tạm dùng ảnh tĩnh cho đến khi có MEDIA. Nên có wireframe các màn hình trọng điểm trước. |
 
 ### Làm được một phần — vướng một câu hỏi
 
 | Việc | Vướng | Phần làm được trước |
 |---|---|---|
-| Toàn bộ giao diện (frontend) | Q-18 (CSS), Q-19 (lấy dữ liệu) | Nên chốt hai câu này **trước tiên** — chúng chặn một nửa khối lượng công việc. Có thể dựng trước: cấu trúc thư mục, router, route guard theo vai trò, trang đăng nhập. |
 | Khớp yêu cầu mở theo tag; tag trên sản phẩm | Q-38 | Bảng `tags` và các bảng nối gần như chắc chắn cần; chờ chốt danh sách cố định hay tự do. |
 | Đăng ký Buyer | Q-39 | Form + API đăng ký lưu email/SĐT; bước xác thực để sau. |
 | Trạng thái "đang mở" trên bản đồ | Q-29 | Ghim + popup làm trước. |

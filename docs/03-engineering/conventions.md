@@ -28,7 +28,8 @@ Tên khái niệm lấy từ [glossary.md](../01-requirements/glossary.md): `wor
 ## Frontend (React 19, Vite)
 
 - Component hàm + hooks. Một component một file, tên `PascalCase.jsx`; hook `useXxx.js`.
-- Gọi API qua **một** client dùng chung (gắn token, đọc `{code, message}`), không `fetch` rải rác trong component.
+- Gọi API qua **một** client dùng chung (gắn token, đọc `{code, message}`), không `fetch` rải rác trong component. Đọc dữ liệu bằng `useApi`, ghi bằng `useMutation`; không thêm thư viện quản lý dữ liệu/state (ADR-0003).
+- Style của component viết trong file CSS Modules cùng tên (`ProductCard.jsx` + `ProductCard.module.css`); không dùng style inline trừ giá trị tính động.
 - Không viết cứng màu, cỡ chữ, khoảng cách: dùng biến CSS trong `:root`.
 - Mỗi màn hình gọi API có đủ trạng thái tải / rỗng / lỗi.
 - Route cần đăng nhập bọc trong guard theo vai trò; ẩn nút không có nghĩa là đã phân quyền — backend luôn kiểm lại.

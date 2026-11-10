@@ -35,3 +35,4 @@ ADR đã chốt thì không sửa nội dung; muốn đổi thì viết ADR mớ
 |---|---|---|
 | [0001](0001-thu-tu-uu-tien-nguon-yeu-cau.md) | Thứ tự ưu tiên giữa các nguồn yêu cầu | Đã chốt |
 | [0002](0002-stack-va-xac-thuc.md) | Stack công nghệ và cơ chế xác thực | Stack: Đã chốt · Xác thực: Đề xuất |
+| [0003](0003-frontend-style-va-du-lieu.md) | Frontend: CSS thuần + CSS Modules, hook tự viết để lấy dữ liệu | Đã chốt |
