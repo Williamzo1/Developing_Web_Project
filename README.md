@@ -20,29 +20,7 @@ Không chạy SQL tạo bảng bằng tay. Spring Boot chạy Flyway V1–V3, sa
 
 ### Bước 2 — Backend trong IntelliJ
 
-1. Open `backend/pom.xml` dưới dạng Maven project và Reload Maven.
-2. Đặt Project SDK, Module SDK, Maven Runner JRE và Run Configuration JRE đều là **JDK 17**.
-3. Mở `VCraftApplication`. Trong Run → Edit Configurations, đặt **Working directory** là đường dẫn thư mục `backend`.
-4. Điền Environment variables (đổi mật khẩu theo máy bạn):
-
-```text
-SPRING_PROFILES_ACTIVE=local;VCRAFT_DB_URL=jdbc:postgresql://localhost:5432/vcraft_local;VCRAFT_DB_USER=postgres;VCRAFT_DB_PASSWORD=YOUR_LOCAL_PASSWORD
-```
-
-5. Run; đợi log Started và seed chạy xong. Kiểm tra `http://localhost:8080/api/health/db` trả `200 {"status":"UP"}`.
-
-**Nếu muốn điền trong file properties:** copy `backend/application-local-private.properties.example` thành `backend/application-local-private.properties`, sửa `VCRAFT_DB_PASSWORD` cùng URL/user nếu cần. File private đã nằm trong `.gitignore`. Vẫn phải bật profile local và đặt Working directory là backend. Không gửi/commit file private. Không sửa mật khẩu trong file properties chung.
-
-**Chạy bằng PowerShell thay cho IntelliJ** (đang ở `backend/`):
-
-```powershell
-$env:JAVA_HOME = "C:\Program Files\Java\jdk-17"
-$env:Path = "$env:JAVA_HOME\bin;$env:Path"
-$env:SPRING_PROFILES_ACTIVE = "local"
-$env:VCRAFT_DB_PASSWORD = "YOUR_LOCAL_PASSWORD"
-.\mvnw.cmd spring-boot:run
-```
-
+Thay đổi mật khẩu và user nếu cần thiết ở application-local-private.properties
 Nếu wrapper báo `'powershell' is not recognized`, kiểm tra PATH Windows có `C:\Windows\System32\WindowsPowerShell\v1.0\`; hoặc chạy Maven goal `spring-boot:run` trong cửa sổ Maven của IntelliJ. Không đổi Spring Boot chỉ để sửa lỗi PATH.
 
 ### Bước 3 — React ở terminal thứ hai
