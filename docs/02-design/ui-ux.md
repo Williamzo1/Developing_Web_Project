@@ -76,31 +76,32 @@ Nhận xét chung:
 - Trang nào mạnh cũng mở đầu bằng **một ảnh lớn về con người hoặc bàn tay làm nghề**, không phải lưới sản phẩm.
 - Không trang nào có trang truy xuất theo lô hay bản đồ xưởng — đây là chỗ vCraft khác biệt, nên đầu tư thiết kế vào trang lô và bản đồ.
 
-### 5.2. Kiểu chữ đã chọn
+### 5.2. Kiểu chữ đang dùng — hai bộ để so sánh
 
-| Vai trò | Font | Biến CSS | Dùng cho |
-|---|---|---|---|
-| Tiêu đề | **Alegreya** (400–800, có nghiêng) | `--font-display` | Tên thương hiệu, `h1`–`h2`, tên hộ, tên sản phẩm, trích dẫn lời nghệ nhân (nghiêng) |
-| Nội dung và giao diện | **Be Vietnam Pro** (400, 500, 600, 700) | `--font-body` | Đoạn văn, điều hướng, nút, form, bảng, toàn bộ khu quản lý |
+> Trạng thái: **nhóm chọn tạm ngày 2026-11-14** sau khi bỏ phiếu trên trang chọn font. Hai bộ chỉ khác nhau ở font tiêu đề lớn. Nhóm sẽ chốt một bộ (hoặc đổi) sau khi xem trên giao diện thật.
 
-Lý do:
+| Vai trò | Bộ 1 (mặc định) | Bộ 2 | Biến CSS | Dùng cho |
+|---|---|---|---|---|
+| Tên thương hiệu và tiêu đề lớn | **Playwrite Việt Nam** | **Charmonman** | `--font-hero` | Chữ "vCraft" trên thanh đầu trang, `h1` ở đầu trang chủ, tiêu đề gắn class `title-hero` |
+| Tiêu đề mục và tên sản phẩm | Alegreya | Alegreya | `--font-display` | `h1` các trang khác, `h2`, tên hộ, tên sản phẩm, tên lô |
+| Lời trích của nghệ nhân | Alegreya nghiêng | Alegreya nghiêng | `--font-quote` | `blockquote`, class `quote` |
+| Nội dung, nút bấm, biểu mẫu | Noto Serif | Noto Serif | `--font-body` | Đoạn văn, điều hướng, nút, form, bảng, khu quản lý |
 
-- **Alegreya** là serif có nét bút rõ: nét đậm nhạt thay đổi như đường bút lông vẽ men lam trên gốm Bát Tràng. Nó gợi thủ công bằng chính hình chữ, không cần đến font viết tay. Chữ hơi hẹp nên tiêu đề tiếng Việt dài vẫn gọn; dải độ đậm rộng đủ cho mọi cấp tiêu đề.
-- **Be Vietnam Pro** được thiết kế riêng cho tiếng Việt: dấu thanh và dấu mũ chồng nhau (ế, ỗ, ữ) được đặt đúng vị trí, không bị dính vào dòng trên ở cỡ nhỏ. Đây là điểm yếu của nhiều font Latin thông dụng.
-- Hai font khác nhau rõ rệt (serif nét bút / sans hình học) nên phân cấp tiêu đề – nội dung nhìn là thấy, và không trùng với cặp Noto mà các trang khảo sát đang dùng.
-- Cả hai đều miễn phí (giấy phép OFL) và đã kiểm tra có bộ ký tự `vietnamese` trên Google Fonts.
+Cách xem từng bộ trên giao diện thật: thêm `?font=playwrite` hoặc `?font=charmonman` vào URL bất kỳ trang nào; lựa chọn được nhớ cho các trang sau. Cơ chế này là tạm thời (đoạn script trong `frontend/index.html` và khối `[data-font]` trong `styles.css`), xóa khi đã chốt.
 
-Quy tắc dùng:
+Ghi chú khi dùng:
 
-- Chiều cao dòng tiêu đề **1.2** (`--leading-display`), không thấp hơn: tiếng Việt có dấu chồng, 1.1–1.15 sẽ làm dấu dòng dưới chạm chữ dòng trên. Nội dung 1.6.
-- **Không in hoa toàn bộ** tiêu đề hay nhãn tiếng Việt (dấu trên chữ hoa rất khó đọc). Nhấn mạnh bằng độ đậm hoặc cỡ chữ.
-- Không thêm font thứ ba, không dùng font viết tay.
-- Số liệu trong bảng (giá, số lượng) dùng Be Vietnam Pro với `font-variant-numeric: tabular-nums`.
-- Font đang tải từ Google Fonts qua `<link>` trong `frontend/index.html`. Trước khi triển khai chính thức nên cân nhắc tự lưu file font trong dự án để trang không phụ thuộc dịch vụ ngoài.
+- **Playwrite Việt Nam** dựng theo mẫu chữ viết tay dạy ở tiểu học Việt Nam; nét khuyết dài nên được thu cỡ (`--hero-scale: .72`) và giãn dòng (`--hero-leading: 1.6`). **Charmonman** là nét bút lông bay bướm, dùng độ đậm 700 để đủ rõ.
+- Font hero chỉ dành cho vài chỗ chữ lớn. Không dùng cho `h2`, thẻ sản phẩm, nút hay form: chữ viết tay ở cỡ nhỏ rất khó đọc.
+- Chiều cao dòng tiêu đề Alegreya **1.2** (`--leading-display`), không thấp hơn, vì dấu tiếng Việt chồng nhau. Nội dung 1.65.
+- **Không in hoa toàn bộ** chữ tiếng Việt, nhất là với font hero.
+- Noto Serif làm font nội dung cho cả nút và form. Cần kiểm tra lại khi có bảng dữ liệu và khu quản lý: nếu thấy nặng nề thì cân nhắc một font không chân cho riêng khu quản lý. Số liệu trong bảng dùng `font-variant-numeric: tabular-nums`.
+- Font tải từ Google Fonts qua `<link>` trong `frontend/index.html`. Trước khi triển khai chính thức nên cân nhắc tự lưu file font trong dự án.
+- Trang so sánh tĩnh các font đã xét: [font-specimen.html](font-specimen.html).
 
 ## 6. Việc còn thiếu
 
 - [ ] Wireframe cho 5 màn hình trọng điểm.
-- [x] Kiểu chữ: Alegreya + Be Vietnam Pro (mục 5.2).
+- [ ] Kiểu chữ: chốt một trong hai bộ ở mục 5.2 sau khi xem trên giao diện thật, rồi gỡ cơ chế chuyển tạm thời.
 - [ ] Chốt bảng màu và bộ ảnh thật (tự chụp hoặc có giấy phép sử dụng — ghi nguồn). Ảnh nên có ít nhất một ảnh bàn tay nghệ nhân làm nghề cho đầu trang chủ.
 - [x] Style: CSS thuần + biến CSS + CSS Modules, không dùng thư viện UI (Q-18 đã chốt, ADR-0003).

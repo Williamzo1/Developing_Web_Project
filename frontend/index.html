@@ -6,7 +6,20 @@
   <meta name="theme-color" content="#193f43" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400..800;1,400..800&family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400..800;1,400..800&family=Charmonman:wght@400;700&family=Noto+Serif:ital,wght@0,400..700;1,400..700&family=Playwrite+VN:wght@100..400&display=swap" />
+  <script>
+    // TẠM THỜI — để nhóm so sánh hai bộ font trên giao diện thật (docs/02-design/ui-ux.md mục 5.2).
+    // Thêm ?font=playwrite hoặc ?font=charmonman vào URL; lựa chọn được nhớ cho các trang sau.
+    // Khi đã chốt một bộ: xóa đoạn script này và khối [data-font] trong styles.css.
+    (function () {
+      try {
+        var asked = new URLSearchParams(location.search).get('font');
+        if (asked) localStorage.setItem('vcraft-font', asked);
+        var font = asked || localStorage.getItem('vcraft-font');
+        if (font) document.documentElement.dataset.font = font;
+      } catch (e) {}
+    })();
+  </script>
   <title>vCraft · Gốm làng nghề</title>
 </head>
 <body>
