@@ -60,7 +60,8 @@ Dựa trên các câu đã chốt. "Sẵn sàng" = không còn câu hỏi mở n
 
 ### M1 — Nền tảng dùng chung (chặn mọi việc khác; làm trước khi chia song song)
 
-- [ ] Frontend: tách cấu trúc thư mục, client API, AuthContext, route guard, bố cục 3 khu vực, design tokens, đăng nhập/đăng ký (FR-AUTH-01, 02, 04).
+- [x] Frontend: client API, AuthContext, route guard, bố cục theo vai trò, biến CSS, giao diện đăng nhập/đăng xuất (FR-AUTH-01, 02).
+- [ ] Đăng ký và xác thực Buyer (FR-AUTH-04, chờ Q-39).
 - [x] Backend: validation, chuẩn hóa lỗi, khung phân trang, `/api/buyer/**` trong `SecurityConfig`, dọn `application.properties` — bản M1 backend ngày 2026-11-12; xem `../03-engineering/m1-backend.md`. MEDIA, nền frontend và deploy chưa hoàn thành.
 - [ ] **MEDIA**: upload nhiều ảnh + resize + phục vụ ảnh (FR-MEDIA-01..03) — làm sớm vì mọi module nội dung đều cần.
 - [ ] Seed tối thiểu (tài khoản mẫu, phân loại, tag, vài hộ/sản phẩm).

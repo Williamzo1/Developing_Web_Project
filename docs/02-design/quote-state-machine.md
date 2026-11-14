@@ -2,6 +2,8 @@
 
 > Trạng thái tài liệu: **Nhóm đã chốt** các điểm nghiệp vụ ngày 2026-11-10 (Q-03, Q-04, Q-11, Q-14, Q-15, Q-31); chi tiết cài đặt (khóa, mã lỗi) là đề xuất kỹ thuật. Còn chờ: cách tổ chức tag (Q-38) — chỉ ảnh hưởng câu truy vấn "hộ phù hợp". Đáp ứng đề gốc §4.2 (6 trạng thái + khóa bản ghi) trong giới hạn của đặc tả (không quản lý hợp đồng/thanh toán/giao hàng).
 
+> Hiện trạng 2026-11-14: luồng chỉ định một xưởng đã có API và giao diện. Service khóa dòng yêu cầu qua JDBC; sửa nháp kiểm tra `version` do client gửi dưới cùng khóa. Luồng mở và rút báo giá còn chờ Q-38 và phần chưa chốt của Q-31. Kiểm thử đồng thời hiện gửi hai lượt chấp nhận cùng một báo giá ở luồng chỉ định.
+
 ## 1. Trạng thái của yêu cầu (`quote_requests.status`)
 
 | Mã | Tên trong đề gốc | Trên giao diện | Nghĩa |

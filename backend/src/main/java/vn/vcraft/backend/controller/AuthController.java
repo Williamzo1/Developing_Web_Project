@@ -6,6 +6,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import vn.vcraft.backend.dto.LoginRequest;
 import vn.vcraft.backend.dto.LoginResponse;
+import vn.vcraft.backend.dto.PasswordChange;
 import vn.vcraft.backend.model.Actor;
 import vn.vcraft.backend.service.AuthService;
 
@@ -32,5 +33,11 @@ class AuthController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void logout(@RequestHeader("Authorization") String authorization) {
         auth.logout(authorization);
+    }
+
+    @PutMapping("/password")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    void changePassword(@AuthenticationPrincipal Actor actor, @Valid @RequestBody PasswordChange input) {
+        auth.changePassword(actor, input);
     }
 }

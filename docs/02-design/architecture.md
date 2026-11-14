@@ -52,8 +52,10 @@ Xác thực hiện có: đăng nhập trả token ngẫu nhiên; DB chỉ lưu m
 
 ## 4. Frontend — hiện trạng
 
-- Toàn bộ nằm trong `frontend/src/main.jsx` (~140 dòng) và `styles.css`: hook `useCatalog` (fetch + abort + thử lại), các trang `Home`, `Catalog`, `Detail`, route `/`, `/san-pham`, `/san-pham/:id`.
-- Chưa có: đăng nhập, lưu phiên, route guard, form, `@vitejs/plugin-react`.
+- `main.jsx` khai báo router và bố cục công khai. Các khu vực theo vai trò dùng `RequireRole` và bố cục có menu riêng.
+- `api/client.js` gọi API chung, `api/hooks.js` quản lý đọc/ghi, và `auth/AuthContext.jsx` khôi phục phiên qua `/api/me`. Token lưu trong `sessionStorage` theo tab.
+- Màn hình nghiệp vụ có component riêng. CSS Modules và biến trong `styles.css` dùng chung cho biểu mẫu và bố cục.
+- Bản đồ tương tác sử dụng OpenStreetMap, xem [ADR-0005](../decisions/0005-ban-do-nen-openstreetmap.md).
 
 ## 5. Frontend — định hướng (Q-18, Q-19 đã chốt — ADR-0003; cấu trúc thư mục là đề xuất)
 

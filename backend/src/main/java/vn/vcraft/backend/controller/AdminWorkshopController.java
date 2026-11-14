@@ -32,4 +32,9 @@ class AdminWorkshopController {
     WorkshopResponse approve(@PathVariable long id) {
         return workshops.approve(id);
     }
+
+    @PostMapping("/{id}/suspend")
+    WorkshopResponse suspend(@PathVariable long id) {
+        return workshops.suspend(id);
+    }
 }

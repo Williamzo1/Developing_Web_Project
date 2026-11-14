@@ -10,8 +10,11 @@ public class Category {
     @Id
     private Long id;
     private String name;
+    private String slug;
 
     protected Category() {}
+
+    public String slug() { return slug; }
 
     public String name() {
         return name;

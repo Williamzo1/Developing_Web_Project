@@ -7,7 +7,7 @@
 - **Gợi ý cũng là giả định làm việc**: cho đến khi nhóm chốt, mã và tài liệu thiết kế tạm đi theo gợi ý để không bị chặn. Gợi ý không phải quyết định.
 - Khi chốt một câu: điền dòng **Nhóm chốt** (phương án, ngày, ai chốt), đổi trạng thái trong bảng mục lục thành `Đã chốt`, rồi sửa các chỗ ghi "Giả định Q-xx" trong `functional-requirements.md` và tài liệu thiết kế liên quan trong cùng một lần thay đổi. Quyết định lớn thì thêm ADR.
 - Câu đã chốt giữ lại để tra cứu, không xóa, không đánh số lại.
-- AI gặp điểm mơ hồ mới: thêm câu hỏi (mã kế tiếp, hiện là **Q-40**) kèm gợi ý, rồi báo người dùng.
+- AI gặp điểm mơ hồ mới: thêm câu hỏi (mã kế tiếp, hiện là **Q-42**) kèm gợi ý, rồi báo người dùng.
 - Nhãn mức ảnh hưởng: 🔴 chặn schema/kiến trúc — chốt trước khi code · 🟡 ảnh hưởng một module · 🟢 chốt lúc nào cũng được.
 
 ## Đề xuất thứ tự bàn
@@ -41,6 +41,8 @@
 | Q-33 | Hộ tự đăng ký hay Admin cấp | B | 🟡 | Admin cấp | Đã chốt |
 | Q-34 | Ai quản lý phân loại | B | 🟢 | Seed cố định | Mở |
 | Q-35 | Cắt gì khi thiếu thời gian | B | 🟡 | Danh sách cắt theo thứ tự | Mở |
+| Q-41 | Khi nào một yêu cầu báo giá được tính là mới | B | 🟢 | Tính là mới đến lúc xưởng mở chi tiết lần đầu | Mở |
+| Q-40 | Báo cáo vi phạm áp dụng cho đối tượng nào, ai được báo cáo | B | 🟡 | Tài khoản đã đăng nhập báo cáo sản phẩm, lô công khai và tin; Admin hậu kiểm | Mở |
 | Q-37 | Có chức năng bình luận không | B | 🟡 | Không làm | Mở |
 | Q-38 | Tổ chức tag sản phẩm thế nào | B | 🔴 | Danh sách tag do Admin quản lý, nhiều tag mỗi sản phẩm | Mở |
 | Q-13 | Lưu ảnh ở đâu | C | 🔴 | Đĩa cục bộ qua volume, sau interface | Mở |
@@ -340,3 +342,17 @@ Nhóm không tự chốt được các câu này, nhưng nên thống nhất **p
 
 - **Gợi ý:** Cả nhóm dùng chung `AGENTS.md` và `docs/` làm ngữ cảnh. Mỗi phiên AI làm một FR hoặc một nhóm FR cùng module, trên nhánh riêng. Người giao việc đọc toàn bộ diff trước khi mở PR và phải giải thích được mã đó khi vấn đáp. AI không tự commit/push. Tài liệu lệch mã thì sửa ngay trong PR đó.
 - **Nhóm chốt:** _chưa_
+
+
+### Q-40 🟡 Phạm vi báo cáo vi phạm
+
+- **Bối cảnh:** FR-ADMIN-04 cho phép báo cáo nội dung vi phạm. Ma trận quyền đánh dấu quyền của khách bằng dấu sao, và thiết kế chưa liệt kê các loại tài nguyên nhận báo cáo.
+- **Gợi ý để nhóm bàn:** Tài khoản đăng nhập báo cáo sản phẩm, lô công khai và tin tức. Admin xem nội dung được báo cáo và chọn đóng báo cáo hoặc ẩn nội dung.
+- **Nhóm chốt:** _chưa._
+
+
+### Q-41 🟢 Khi nào một yêu cầu báo giá được tính là mới?
+
+- **Bối cảnh:** FR-QUOTE-10 yêu cầu hiện số yêu cầu mới. Q-08 đã chốt kênh hiển thị trên trang quản lý.
+- **Gợi ý để nhóm bàn:** Tính là mới đến khi xưởng mở chi tiết lần đầu. Cần quyết định liệu yêu cầu đã hủy và các yêu cầu mở mới khớp tag có tham gia bộ đếm hay không.
+- **Nhóm chốt:** _chưa._

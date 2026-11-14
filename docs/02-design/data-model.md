@@ -2,9 +2,9 @@
 
 > Cập nhật 2026-11-10 theo kết quả họp nhóm (Q-03, Q-06, Q-07, Q-10, Q-12, Q-14, Q-15, Q-30). Phần còn chờ: giờ mở cửa/nhận đơn (Q-29), cách tổ chức tag (Q-38), cơ chế xác thực (Q-39), bộ ảnh (Q-13, Q-21).
 >
-> **Nguồn sự thật của schema là các file Flyway** trong `backend/src/main/resources/db/migration/`. Tài liệu này mô tả ý đồ. Mục 1 là hiện trạng (V1–V3). Mục 2 là **đề xuất**, chưa có migration; khi viết migration cho một bảng, cập nhật lại mục tương ứng và chuyển nó lên "hiện trạng".
+> **Nguồn sự thật của schema là các file Flyway** trong `backend/src/main/resources/db/migration/`. Tài liệu này mô tả ý đồ. Mục 1 là hiện trạng (V1–V9). Mục 2 là **đề xuất**, chưa có migration; khi viết migration cho một bảng, cập nhật lại mục tương ứng và chuyển nó lên "hiện trạng".
 
-## 1. Hiện trạng (Flyway V1–V3)
+## 1. Hiện trạng (Flyway V1–V9)
 
 | Bảng | Cột | Ghi chú |
 |---|---|---|
@@ -13,6 +13,15 @@
 | `products` | `id`, `workshop_id` → workshops, `category_id` → categories, `slug` (unique), `name`, `description`, `image_path` | Loại sản phẩm. |
 | `accounts` | `id`, `username` (unique, `^[a-z0-9-]{3,60}$`), `password_hash`, `role` (`BUYER`/`ARTISAN`/`ADMIN`), `workshop_id` (unique) | Ràng buộc: `role = 'ARTISAN'` ⇔ có `workshop_id`. |
 | `account_sessions` | `token_hash` (PK), `account_id` → accounts (cascade), `expires_at` | Phiên đăng nhập. |
+
+| Migration | Bổ sung |
+|---|---|
+| V4 | Hồ sơ xưởng có giới thiệu, lịch sử, địa chỉ, điện thoại, Gmail, Facebook và cặp tọa độ. |
+| V5 | Giá tham khảo, công khai giá, hai cờ ẩn (hộ và Admin), chỉ mục hộ/phân loại và bảng `process_steps`. |
+| V6 | `quote_requests`, `quotes`, `quote_request_events` cho yêu cầu chỉ định. Nháp có phiên bản, khóa dòng cha khi ghi, unique báo giá theo hộ, unique một báo giá được chọn. |
+| V7 | `batches`, `batch_milestones`; xưởng sở hữu suy ra từ sản phẩm. UUID dùng cho URL, mã chia sẻ lưu dưới dạng băm. |
+| V8 | `news_posts` có sự kiện, cờ ẩn, thời gian đăng/cập nhật. |
+| V9 | `featured_content` lưu một lựa chọn tùy chọn cho mỗi nhóm xưởng, sản phẩm và lô. |
 
 ## 2. Đề xuất mở rộng
 
@@ -76,6 +85,6 @@ erDiagram
 - Tên bảng/cột: `snake_case`, tiếng Anh, bảng ở số nhiều.
 - Khóa chính `BIGINT GENERATED ... AS IDENTITY`. Thời gian `TIMESTAMPTZ`; ngày thuần `DATE`. Tiền `NUMERIC(15,2)` (VND).
 - Enum lưu dạng `VARCHAR` + `CHECK`, giá trị viết HOA, khớp enum Java.
-- Mỗi thay đổi là **một file migration mới** `V<n>__mo_ta_ngan.sql`; không sửa file đã merge vào nhánh chính. Số `n` kế tiếp hiện tại: **V4**. Hai người cùng thêm migration thì người merge sau đổi số.
+- Mỗi thay đổi là **một file migration mới** `V<n>__mo_ta_ngan.sql`; không sửa file đã merge vào nhánh chính. Số `n` kế tiếp hiện tại: **V10**. Hai người cùng thêm migration thì người merge sau đổi số.
 - Dữ liệu mẫu đặt ở `db/seed/`, phải idempotent (`ON CONFLICT ... DO NOTHING`), không đặt trong migration.
 - Entity JPA phải khớp schema vì `ddl-auto=validate`: thêm cột thì cập nhật entity trong cùng thay đổi.

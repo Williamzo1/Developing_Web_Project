@@ -8,5 +8,5 @@ dist/
 *.log
 .idea/
 .vscode/
-
+/data/images/
 application-local-private.properties

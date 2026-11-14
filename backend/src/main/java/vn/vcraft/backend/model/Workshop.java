@@ -10,8 +10,12 @@ public class Workshop {
     @Id
     private Long id;
     private String name;
+    private String slug;
+    private boolean approved;
 
     protected Workshop() {}
+
+    public String slug() { return slug; }
 
     public String name() {
         return name;

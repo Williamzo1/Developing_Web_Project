@@ -12,9 +12,9 @@ Không phải sàn bán lẻ: không giỏ hàng, không thanh toán, Admin khô
 
 ```text
 backend/    Spring Boot 4.1.2, Java 17 — gói vn.vcraft.backend (controller/service/repository/model/dto/security/config/exception)
-            src/main/resources/db/migration  Flyway (đang ở V3; file kế tiếp là V4)
-            tests/phase02.py, tests/m1.py    kiểm thử HTTP
-frontend/   React 19 + React Router 7 + Vite 7, CSS thuần (hiện dồn trong src/main.jsx)
+            src/main/resources/db/migration  Flyway (đang ở V9; file kế tiếp là V10)
+            tests/specification.py             kiểm thử HTTP và hồi quy
+frontend/   React 19 + React Router 7 + Vite 7, CSS thuần và CSS Modules
 postman/    Collection + environment
 docs/       Tài liệu — xem docs/README.md
 compose.yaml, .env.example   Docker Compose: db (PostgreSQL 16), backend, frontend (Nginx)

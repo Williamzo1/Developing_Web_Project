@@ -44,6 +44,20 @@ public class AccountRepository {
         db.update("DELETE FROM account_sessions WHERE token_hash = ?", tokenHash);
     }
 
+    public String lockPassword(long accountId) {
+        return db.queryForObject("SELECT password_hash FROM accounts WHERE id = ? FOR UPDATE", String.class, accountId);
+    }
+
+    public void lockWorkshopAccount(long workshopId) {
+        db.query("SELECT id FROM accounts WHERE workshop_id = ? FOR UPDATE",
+                (rs, row) -> rs.getLong(1), workshopId);
+    }
+
+    public void changePassword(long accountId, String hash) {
+        db.update("UPDATE accounts SET password_hash = ? WHERE id = ?", hash, accountId);
+        db.update("DELETE FROM account_sessions WHERE account_id = ?", accountId);
+    }
+
     public void addArtisan(String username, String passwordHash, long workshopId) {
         db.update("INSERT INTO accounts(username, password_hash, role, workshop_id) VALUES (?, ?, 'ARTISAN', ?)",
                 username, passwordHash, workshopId);
@@ -59,5 +73,13 @@ public class AccountRepository {
                 INSERT INTO accounts(username, password_hash, role, workshop_id)
                 SELECT ?, ?, 'ARTISAN', id FROM workshops WHERE slug = ? ON CONFLICT DO NOTHING
                 """, slug, passwordHash, slug);
+    }
+
+    public void revokeWorkshopSessions(long workshopId) {
+        db.update("""
+                DELETE FROM account_sessions WHERE account_id IN (
+                    SELECT id FROM accounts WHERE workshop_id = ?
+                )
+                """, workshopId);
     }
 }

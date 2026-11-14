@@ -1130,6 +1130,989 @@
           ]
         }
       ]
+    },
+    {
+      "name": "Nghiệp vụ đã triển khai",
+      "description": "Đăng nhập bằng tài khoản theo vai trò và điền các ID hoặc mã lấy từ response. Chạy thao tác ghi trên database demo riêng.",
+      "item": [
+        {
+          "name": "Phân loại",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/categories"
+          }
+        },
+        {
+          "name": "Lọc danh mục",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/products/page?workshop=xuong-men-lam&category=coc-gom&sort=name-asc"
+          }
+        },
+        {
+          "name": "Sản phẩm theo slug",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/products/by-slug/coc-men-lam"
+          }
+        },
+        {
+          "name": "Công đoạn công khai",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/products/by-slug/coc-men-lam/steps"
+          }
+        },
+        {
+          "name": "Hộ gia đình",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/workshops?q=Men"
+          }
+        },
+        {
+          "name": "Hồ sơ công khai",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/workshops/xuong-men-lam"
+          }
+        },
+        {
+          "name": "Ghim bản đồ",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/map/workshops"
+          }
+        },
+        {
+          "name": "Hồ sơ của xưởng",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{artisanToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/artisan/workshop"
+          }
+        },
+        {
+          "name": "Lưu hồ sơ",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{artisanToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/artisan/workshop",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Xưởng Men Lam\",\n  \"latitude\": 20.976,\n  \"longitude\": 105.914\n}"
+            }
+          }
+        },
+        {
+          "name": "Khóa xưởng",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/admin/workshops/{{workshopId}}/suspend"
+          }
+        },
+        {
+          "name": "Đổi mật khẩu",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{artisanToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/password",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currentPassword\": \"{{demoPassword}}\",\n  \"newPassword\": \"{{newPassword}}\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Sản phẩm của xưởng",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{artisanToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/artisan/products"
+          }
+        },
+        {
+          "name": "Tạo sản phẩm",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{artisanToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/artisan/products",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Bình men\",\n  \"category\": \"binh-gom\",\n  \"price\": 150000,\n  \"priceVisible\": true,\n  \"hidden\": false\n}"
+            }
+          }
+        },
+        {
+          "name": "Chi tiết sản phẩm của xưởng",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{artisanToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/artisan/products/{{productId}}"
+          }
+        },
+        {
+          "name": "Sửa sản phẩm",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{artisanToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/artisan/products/{{productId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Bình men\",\n  \"category\": \"binh-gom\",\n  \"price\": 150000,\n  \"priceVisible\": true,\n  \"hidden\": false\n}"
+            }
+          }
+        },
+        {
+          "name": "Lưu công đoạn",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{artisanToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/artisan/products/{{productId}}/steps",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"steps\": [\n    {\n      \"name\": \"Tạo dáng\",\n      \"description\": \"Tạo dáng bằng bàn xoay\"\n    }\n  ]\n}"
+            }
+          }
+        },
+        {
+          "name": "Ẩn sản phẩm",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/admin/products/{{productId}}/hide"
+          }
+        },
+        {
+          "name": "Yêu cầu của Buyer",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{buyerToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/buyer/quote-requests"
+          }
+        },
+        {
+          "name": "Tạo nháp",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{buyerToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/buyer/quote-requests",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Mua bình gốm\",\n  \"category\": \"binh-gom\",\n  \"quantity\": 20,\n  \"unit\": \"chiếc\",\n  \"spec\": \"Men lam\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Chi tiết yêu cầu Buyer",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{buyerToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/buyer/quote-requests/{{requestId}}"
+          }
+        },
+        {
+          "name": "Sửa nháp",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{buyerToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/buyer/quote-requests/{{requestId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Mua bình gốm\",\n  \"category\": \"binh-gom\",\n  \"quantity\": 20,\n  \"unit\": \"chiếc\",\n  \"spec\": \"Men lam\",\n  \"version\": 0\n}"
+            }
+          }
+        },
+        {
+          "name": "Xóa nháp",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{buyerToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/buyer/quote-requests/{{requestId}}"
+          }
+        },
+        {
+          "name": "Gửi xưởng chỉ định",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{buyerToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/buyer/quote-requests/{{requestId}}/send",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"workshop\": \"xuong-men-lam\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Yêu cầu gửi xưởng",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{artisanToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/artisan/quote-requests"
+          }
+        },
+        {
+          "name": "Chi tiết yêu cầu của xưởng",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{artisanToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/artisan/quote-requests/{{requestId}}"
+          }
+        },
+        {
+          "name": "Gửi báo giá",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{artisanToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/artisan/quote-requests/{{requestId}}/quote",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"unitPrice\": 30000,\n  \"totalPrice\": 600000,\n  \"leadTimeDays\": 5\n}"
+            }
+          }
+        },
+        {
+          "name": "Báo giá Buyer nhận",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{buyerToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/buyer/quote-requests/{{requestId}}/quotes"
+          }
+        },
+        {
+          "name": "Chấp nhận báo giá",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{buyerToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/buyer/quote-requests/{{requestId}}/quotes/{{quoteId}}/accept",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"quoteUpdatedAt\": \"{{quoteUpdatedAt}}\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Bắt đầu sản xuất",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{artisanToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/artisan/quote-requests/{{requestId}}/start-production"
+          }
+        },
+        {
+          "name": "Đã giao",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{artisanToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/artisan/quote-requests/{{requestId}}/deliver"
+          }
+        },
+        {
+          "name": "Hủy yêu cầu",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{buyerToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/buyer/quote-requests/{{requestId}}/cancel"
+          }
+        },
+        {
+          "name": "Lô công khai",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/batches?kind=IN_STOCK"
+          }
+        },
+        {
+          "name": "Chi tiết lô công khai",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/batches/{{publicCode}}"
+          }
+        },
+        {
+          "name": "Chi tiết qua liên kết riêng",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/batches/{{publicCode}}?token={{shareToken}}"
+          }
+        },
+        {
+          "name": "Lô của xưởng",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{artisanToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/artisan/batches"
+          }
+        },
+        {
+          "name": "Chi tiết lô của xưởng",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{artisanToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/artisan/batches/{{batchId}}"
+          }
+        },
+        {
+          "name": "Tạo lô",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{artisanToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/artisan/batches",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": 1,\n  \"code\": \"LO-01\",\n  \"name\": \"Lô gốm men lam\",\n  \"kind\": \"IN_STOCK\",\n  \"quantity\": 20,\n  \"unit\": \"chiếc\",\n  \"priceVisible\": false,\n  \"visibility\": \"PRIVATE\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Sửa lô",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{artisanToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/artisan/batches/{{batchId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": 1,\n  \"code\": \"LO-01\",\n  \"name\": \"Lô gốm men lam\",\n  \"kind\": \"IN_STOCK\",\n  \"quantity\": 20,\n  \"unit\": \"chiếc\",\n  \"priceVisible\": false,\n  \"visibility\": \"PUBLIC\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Mốc sản xuất",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{artisanToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/artisan/batches/{{batchId}}/milestones",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"items\": [\n    {\n      \"title\": \"Nung\",\n      \"happenedOn\": \"2026-11-14\"\n    }\n  ]\n}"
+            }
+          }
+        },
+        {
+          "name": "Tạo liên kết riêng",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{artisanToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/artisan/batches/{{batchId}}/share-token"
+          }
+        },
+        {
+          "name": "Thu hồi liên kết riêng",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{artisanToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/artisan/batches/{{batchId}}/share-token"
+          }
+        },
+        {
+          "name": "Kiểm tra lô",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/admin/batches/{{batchId}}"
+          }
+        },
+        {
+          "name": "Ẩn lô",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/admin/batches/{{batchId}}/hide"
+          }
+        },
+        {
+          "name": "Tin công khai",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/news?kind=EVENT"
+          }
+        },
+        {
+          "name": "Chi tiết tin công khai",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/news/{{newsSlug}}"
+          }
+        },
+        {
+          "name": "Danh sách quản trị tin",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/admin/news"
+          }
+        },
+        {
+          "name": "Chi tiết quản trị tin",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/admin/news/{{newsId}}"
+          }
+        },
+        {
+          "name": "Đăng tin",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/admin/news",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Hội chợ gốm\",\n  \"body\": \"Chương trình tại Bát Tràng\",\n  \"kind\": \"EVENT\",\n  \"eventStart\": \"2026-11-20T04:00:00Z\",\n  \"eventPlace\": \"Bát Tràng\",\n  \"hidden\": false\n}"
+            }
+          }
+        },
+        {
+          "name": "Sửa hoặc ẩn tin",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/admin/news/{{newsId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Thông báo\",\n  \"body\": \"Thông tin cộng đồng\",\n  \"kind\": \"POLICY\",\n  \"hidden\": true\n}"
+            }
+          }
+        },
+        {
+          "name": "Thống kê",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/admin/stats"
+          }
+        },
+        {
+          "name": "Nội dung trang chủ",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/home"
+          }
+        },
+        {
+          "name": "Lựa chọn nổi bật",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/admin/featured"
+          }
+        },
+        {
+          "name": "Lưu lựa chọn nổi bật",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/admin/featured",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"workshopId\": 1,\n  \"productId\": 1,\n  \"batchId\": null\n}"
+            }
+          }
+        }
+      ]
     }
   ]
 }

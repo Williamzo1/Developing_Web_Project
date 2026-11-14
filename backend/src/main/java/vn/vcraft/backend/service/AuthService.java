@@ -6,9 +6,12 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import vn.vcraft.backend.dto.LoginRequest;
 import vn.vcraft.backend.dto.LoginResponse;
+import vn.vcraft.backend.dto.PasswordChange;
+import vn.vcraft.backend.model.Actor;
 import vn.vcraft.backend.repository.AccountRepository;
 import vn.vcraft.backend.security.BearerTokens;
 import static org.springframework.http.HttpStatus.*;
@@ -26,6 +29,7 @@ public class AuthService {
         this.dummyHash = passwords.encode(UUID.randomUUID().toString());
     }
 
+    @Transactional
     public LoginResponse login(@NotNull @Valid LoginRequest input) {
         var credentials = accounts.findActiveCredentials(input.username());
         String expected = credentials.map(AccountRepository.Credentials::passwordHash).orElse(dummyHash);
@@ -33,6 +37,10 @@ public class AuthService {
             throw new ResponseStatusException(UNAUTHORIZED, "Thông tin đăng nhập không hợp lệ");
         }
         var account = credentials.get();
+        String lockedHash = accounts.lockPassword(account.id());
+        if (!expected.equals(lockedHash) || accounts.findActiveCredentials(input.username()).isEmpty()) {
+            throw new ResponseStatusException(UNAUTHORIZED, "Thông tin đăng nhập không hợp lệ");
+        }
         String token = UUID.randomUUID().toString() + UUID.randomUUID();
         accounts.createSession(account.id(), BearerTokens.hash(token));
         return new LoginResponse(token, account.role());
@@ -40,5 +48,14 @@ public class AuthService {
 
     public void logout(String authorization) {
         BearerTokens.extract(authorization).ifPresent(token -> accounts.revokeSession(BearerTokens.hash(token)));
+    }
+
+    @Transactional
+    public void changePassword(Actor actor, @NotNull @Valid PasswordChange input) {
+        String current = accounts.lockPassword(actor.id());
+        if (!passwords.matches(input.currentPassword(), current)) {
+            throw new ResponseStatusException(BAD_REQUEST, "Mật khẩu hiện tại không đúng.");
+        }
+        accounts.changePassword(actor.id(), passwords.encode(input.newPassword()));
     }
 }

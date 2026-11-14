@@ -2,28 +2,28 @@
 
 > Tài liệu **sống**: cập nhật trong cùng thay đổi mỗi khi một yêu cầu đổi tình trạng. Đây là nơi duy nhất ghi "đã làm đến đâu".
 >
-> Cập nhật lần cuối: **2026-11-12** — bản M1 Backend Foundation từ Phase 02 MVC.
+> Cập nhật lần cuối: **2026-11-14** — nền frontend và các luồng nghiệp vụ đã rõ.
 
 Ký hiệu: ✅ xong (API + giao diện) · 🟡 một phần · ⬜ chưa làm.
 
 ## Tóm tắt
 
-Đã có nền backend (xác thực token, phân quyền 3 vai trò, cấp/duyệt hộ, sửa tên xưởng, đọc danh mục) và giao diện công khai tối thiểu (trang chủ, danh mục, chi tiết). **Bốn yêu cầu kỹ thuật của đề gốc (§4.1–4.4) đều chưa bắt đầu.**
+Đã nối đăng nhập/phân quyền với SPA. Có luồng báo giá chỉ định đi từ nháp đến giao hàng và luồng truy xuất lô qua trang công khai/liên kết riêng. Ảnh upload, QR, giờ mở cửa trên bản đồ, ghép tag và đăng ký Buyer còn phụ thuộc quyết định của nhóm.
 
 ## Theo module
 
 | Module | Tình trạng | Đã có | Còn thiếu |
 |---|---|---|---|
-| HOME | 🟡 | Trang chủ chủ đề gốm Bát Tràng (tĩnh) | Nội dung nổi bật động, điều hướng đầy đủ |
-| AUTH | 🟡 | API đăng nhập/đăng xuất/`me`; phân quyền theo vai trò; Admin cấp + duyệt hộ (FR-AUTH-01..03 phía API) | Toàn bộ giao diện đăng nhập, route guard; đăng ký Buyer (FR-AUTH-04) |
-| WS | 🟡 | Bảng `workshops` (tên, slug, approved); API sửa tên xưởng | Hồ sơ đầy đủ, ảnh, chứng nhận, tọa độ, giờ mở cửa, trang công khai |
-| PROD | 🟡 | `GET /api/products`, `GET /api/products/{id}`, `/api/products/page`; trang danh mục phân trang + chi tiết | Lọc theo hộ/phân loại, tìm kiếm, slug trên URL, CRUD của hộ, công đoạn sản xuất |
-| BATCH | ⬜ | — | Tất cả (lô, mốc sản xuất, landing page, QR, riêng tư) |
-| QUOTE | ⬜ | — | Tất cả (state machine, khóa bản ghi) |
-| MAP | ⬜ | — | Tất cả |
-| NEWS | ⬜ | — | Tất cả |
-| ADMIN | 🟡 | API danh sách xưởng, cấp tài khoản, duyệt | Giao diện quản trị, khóa hộ, thống kê, nổi bật, báo cáo |
-| MEDIA | ⬜ | Chỉ có handler lỗi 413; ảnh hiện là SVG tĩnh trong `frontend/public/images/` | Upload, resize, lưu trữ, phục vụ ảnh |
+| HOME | ✅ | Giới thiệu làng nghề, nội dung Admin chọn, điều hướng tới hộ, danh mục, lô, bản đồ, tin tức | — |
+| AUTH | 🟡 | Đăng nhập, đăng xuất, /me, phân quyền 3 vai trò, Admin cấp tài khoản hộ, đổi mật khẩu | Đăng ký/xác thực Buyer (Q-39) |
+| WS | 🟡 | Hồ sơ công khai và tìm theo tên, văn bản/liên hệ/tọa độ, huy hiệu duyệt, liên kết tới sản phẩm và lô của hộ | Ảnh, chứng nhận, giờ mở cửa |
+| PROD | 🟡 | Lọc theo hộ/phân loại, tìm theo tên, sắp xếp, phân trang, slug; tạo/sửa/ẩn, giá, công đoạn văn bản | Bộ ảnh và tag |
+| BATCH | 🟡 | Tạo/sửa, danh sách lọc, mốc sản xuất, landing page, giá, liên kết riêng tạo/thu hồi, API hậu kiểm | Ảnh và QR (Q-20) |
+| QUOTE | 🟡 | Nháp/gửi cho một hộ/hủy, gửi/sửa/chấp nhận báo giá, tiến độ, lịch sử, khóa dòng, hạn nhận | Yêu cầu mở (Q-38), ảnh tham khảo, liên hệ Buyer, báo số yêu cầu mới (Q-41), rút báo giá (Q-31) |
+| MAP | 🟡 | Bản đồ tương tác, ghim xưởng đã duyệt và chọn tọa độ trên hồ sơ | Giờ/trạng thái mở cửa (Q-29) và ảnh trong thông tin ghim |
+| NEWS | 🟡 | Đăng/sửa/ẩn, danh sách lọc, trang chi tiết và thời gian/địa điểm sự kiện | Ảnh bìa |
+| ADMIN | 🟡 | Giao diện cấp/duyệt/khóa hộ, tin tức, thống kê, chọn nội dung nổi bật và hậu kiểm sản phẩm/lô | Báo cáo (Q-40) |
+| MEDIA | ⬜ | Ảnh minh họa tĩnh và lazy loading | Upload, resize, lưu trữ và phục vụ ảnh |
 
 ## Nợ kỹ thuật đã biết
 
@@ -33,7 +33,7 @@ Ký hiệu: ✅ xong (API + giao diện) · 🟡 một phần · ⬜ chưa làm.
 | 2 | Đã sửa: ApiErrorResponse chung cho MVC và Security | Xong M1 backend |
 | 3 | Đã thêm Bean Validation tại DTO/service, constraint UTF-8 cho BCrypt | Xong M1 backend |
 | 4 | Đã có `/api/products/page`; API cũ giữ mảng. URL chi tiết còn id số | Một phần |
-| 5 | Frontend dồn trong một file `main.jsx`; chưa có `@vitejs/plugin-react`, chưa có client API/phiên đăng nhập | Trước khi 3 người cùng làm frontend |
+| 5 | Frontend có client API, hook và phiên dùng chung. Còn một số màn hình danh mục trong `main.jsx`. | Một phần |
 | 6 | Truy cập dữ liệu lẫn JPA và JDBC | Chấp nhận; mã mới theo `architecture.md` |
 | 7 | Chưa có CI, chưa có test tự động trong build | P1 |
 | 8 | Chưa cấu hình CORS (chỉ cần nếu frontend và backend khác origin) | Khi triển khai |
@@ -49,3 +49,5 @@ Ký hiệu: ✅ xong (API + giao diện) · 🟡 một phần · ⬜ chưa làm.
 | 2026-11-10 | Chốt Q-18 (CSS thuần + CSS Modules) và Q-19 (hook tự viết + client API chung) — ADR-0003. Phần giao diện không còn bị chặn. |
 
 | 2026-11-12 | Hoàn thành phần backend foundation của M1: lỗi JSON chung, Bean Validation, phân trang danh mục thật, quyền Buyer và cấu hình local. Không thay migration. MEDIA và phần frontend foundation chưa hoàn thành. |
+
+| 2026-11-14 | Thêm nền frontend, hồ sơ xưởng, sản phẩm/lô, luồng báo giá chỉ định, bản đồ, tin tức, thống kê và nội dung nổi bật. |

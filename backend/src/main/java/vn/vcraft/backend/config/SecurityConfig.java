@@ -28,7 +28,9 @@ class SecurityConfig {
                     .accessDeniedHandler((req, res, ex) ->
                         errors.write(req, res, 403, "FORBIDDEN", "Bạn không có quyền thực hiện thao tác.")))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.GET, "/api/health", "/api/health/**", "/api/products/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/health", "/api/health/**", "/api/products/**",
+                                "/api/categories", "/api/workshops", "/api/workshops/**", "/api/batches", "/api/batches/**",
+                                "/api/news", "/api/news/**", "/api/home", "/api/map/workshops").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/login").permitAll()
                         .requestMatchers("/error").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")

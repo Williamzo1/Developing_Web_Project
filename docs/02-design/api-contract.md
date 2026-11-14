@@ -1,6 +1,6 @@
 # Hợp đồng API
 
-> Mục 2 mô tả API **đang có** (đối chiếu mã ngày 2026-11-12). Mục 3 là **đề xuất** cho các module chưa làm: chỉ là khung đường dẫn; khi cài đặt một endpoint, bổ sung request/response cụ thể vào đây trong cùng thay đổi và chuyển nó lên mục 2. Mã nguồn controller + DTO luôn là nguồn sự thật cuối cùng.
+> Mục 2 mô tả API **đang có** (đối chiếu mã ngày 2026-11-14). Mục 3 là **đề xuất** cho các module chưa làm: chỉ là khung đường dẫn; khi cài đặt một endpoint, bổ sung request/response cụ thể vào đây trong cùng thay đổi và chuyển nó lên mục 2. Mã nguồn controller + DTO luôn là nguồn sự thật cuối cùng.
 
 ## 1. Quy ước chung
 
@@ -8,7 +8,7 @@
 - Xác thực: `Authorization: Bearer <token>` (token lấy từ `POST /api/login`).
 - Phân vùng theo vai trò: công khai `GET /api/...` · `/api/buyer/**` · `/api/artisan/**` · `/api/admin/**`.
 - Tài nguyên công khai định danh bằng `slug` (lô dùng `publicCode`); thao tác quản lý dùng `id`.
-- Phân trang đã cài đặt: `/api/products/page?page=0&size=12`; `page` 0..100000, `size` 1..50, mặc định 12. Response `{items,page,size,totalElements,totalPages,first,last}`, sắp `id ASC`. `/api/products` giữ mảng để tương thích; admin list chưa phân trang.
+- Phân trang đã cài đặt: `/api/products/page?page=0&size=12`; `page` 0..100000, `size` 1..50, mặc định 12. Response `{items,page,size,totalElements,totalPages,first,last}`, mặc định sắp `id ASC`. `/api/products` giữ mảng để tương thích; admin list chưa phân trang.
 - Thời gian ISO-8601 có múi giờ; ngày `YYYY-MM-DD`; tiền là số nguyên VND.
 - Giá bị hộ ẩn (`priceVisible = false`) thì response công khai trả `price: null` — không gửi giá về client rồi ẩn bằng giao diện.
 - Ảnh trong response là đối tượng `{ "id", "thumbUrl", "mediumUrl", "largeUrl", "width", "height" }`. *(Đề xuất; hiện `ProductResponse` chỉ có `imageUrl`.)*
@@ -41,7 +41,7 @@ Frontend rẽ nhánh theo status/code; đưa fieldErrors tới ô nhập, messag
 | Phương thức | Đường dẫn | Quyền | Mô tả |
 |---|---|---|---|
 | GET | `/api/health`, `/api/health/db` | Công khai | Kiểm tra dịch vụ và kết nối DB. |
-| GET | `/api/products` | Công khai | Danh sách sản phẩm: mảng `ProductResponse { id, slug, name, workshop, category, description, imageUrl }`. Chưa lọc, chưa phân trang. |
+| GET | `/api/products` | Công khai | Danh sách sản phẩm: mảng `ProductResponse { id, slug, name, workshop, category, description, imageUrl, workshopSlug, price }`. Endpoint mảng giữ tương thích. |
 | GET | `/api/products/page?page=0&size=12` | Công khai | PageResponse; ví dụ/trường/giới hạn ở mục 1. |
 | GET | `/api/buyer/me` | BUYER | Actor của Buyer; Artisan/Admin → 403, Guest → 401. Endpoint kiểm tra vùng quyền; chưa là nghiệp vụ báo giá. |
 | GET | `/api/products/{id}` | Công khai | Chi tiết theo `id` số. |
@@ -53,66 +53,54 @@ Frontend rẽ nhánh theo status/code; đưa fieldErrors tới ô nhập, messag
 | POST | `/api/admin/workshops/{id}/approve` | ADMIN | Duyệt xưởng. |
 | PATCH | `/api/artisan/workshops/{id}` | ARTISAN (chủ xưởng) | `{ name }`; xưởng khác → 403. |
 
+### Các endpoint bổ sung
+
+| Phương thức và đường dẫn | Hợp đồng |
+|---|---|
+| GET `/api/categories` | Mảng `{slug,name}`. |
+| GET `/api/products/page` | Thêm `q` (tên chứa chuỗi, bỏ qua hoa/thường), `workshop`, `category` (slug), `sort=id\|name-asc\|name-desc`. |
+| GET `/api/products/by-slug/{slug}`, `/api/products/by-slug/{slug}/steps` | Chi tiết hoặc mảng `{name,description}` có thứ tự. Endpoint chi tiết theo ID cũ vẫn dùng được. Giá ẩn trả `price: null`. |
+| GET `/api/workshops?q=&page=&size=`, `/api/workshops/{slug}` | Trang `{slug,name}` của hộ đã duyệt hoặc hồ sơ đầy đủ. Hồ sơ có `name,description,familyHistory,address,phone,contactEmail,facebookUrl,latitude,longitude,slug,approved`. |
+| GET, PUT `/api/artisan/workshop` | Hồ sơ xưởng của phiên. PUT nhận các trường hồ sơ trừ `slug,approved`, tọa độ đi theo cặp hoặc cả hai để trống. |
+| POST `/api/admin/workshops/{id}/suspend` | Đặt `approved=false`, thu hồi phiên của hộ, trả `WorkshopResponse`. |
+| GET, POST `/api/artisan/products` · GET, PUT `/api/artisan/products/{id}` | Danh sách phân trang hoặc sản phẩm của xưởng. POST/PUT gửi `{name,category,description,price,priceVisible,hidden}`, `category` là slug. Trả thêm `id,slug,adminHidden,steps`; danh sách không tải công đoạn. |
+| PUT `/api/artisan/products/{id}/steps` | `{steps:[{name,description}]}` thay toàn bộ quy trình theo thứ tự gửi. |
+| POST `/api/admin/products/{id}/hide` | 204, cờ hậu kiểm riêng với cờ ẩn của hộ. |
+| GET `/api/batches?product=&workshop=&kind=&page=&size=` · GET `/api/batches/{publicCode}?token=` | Danh sách công khai lọc theo slug sản phẩm/xưởng và loại lô. Chi tiết trả `{batch,milestones,steps}`; lô riêng tư yêu cầu liên kết hợp lệ. |
+| GET, POST `/api/artisan/batches` · GET, PUT `/api/artisan/batches/{id}` | Danh sách phân trang hoặc chi tiết. Ghi nhận `{productId,code,name,description,kind,quantity,unit,price,priceVisible,supplyCapacity,availableFrom,visibility,partnerNote}`. Loại `IN_STOCK\|MADE_TO_ORDER`, hiển thị `PUBLIC\|PRIVATE`. |
+| PUT `/api/artisan/batches/{id}/milestones` | Thay danh sách mốc bằng `{items:[{title,note,happenedOn}]}`. |
+| POST, DELETE `/api/artisan/batches/{id}/share-token` | POST trả `{token}` mới và thu hồi mã cũ; ghép vào `/lo/{publicCode}?token=...`. DELETE trả 204. |
+| GET `/api/admin/batches/{id}` · POST `/api/admin/batches/{id}/hide` | Xem nội dung để hậu kiểm hoặc ẩn (204). |
+| GET, POST `/api/buyer/quote-requests` · GET, PUT, DELETE `/api/buyer/quote-requests/{id}` | Danh sách yêu cầu của Buyer hoặc `{request,quotes,events}`. Ghi nháp `{title,category,quantity,unit,spec,desiredBy,note,biddingDeadline,version}`; `category` là slug, PUT cần phiên bản nháp. DELETE nháp trả 204. |
+| POST `/api/buyer/quote-requests/{id}/send`, `.../{id}/cancel` | Gửi chỉ định một xưởng bằng `{workshop}` (slug), hoặc hủy. Trả chi tiết mới. |
+| GET `/api/buyer/quote-requests/{id}/quotes` · POST `/api/buyer/quote-requests/{id}/quotes/{quoteId}/accept` | Liệt kê báo giá hoặc chấp nhận bằng `{quoteUpdatedAt}`. Đồng thời/dữ liệu cũ trả 409. |
+| GET `/api/artisan/quote-requests[/{id}]` · PUT `.../{id}/quote` | Xưởng đọc yêu cầu được chỉ định và báo giá của mình. Gửi/sửa bằng `{unitPrice,totalPrice,leadTimeDays,note}`. |
+| POST `/api/artisan/quote-requests/{id}/start-production`, `.../{id}/deliver` | Xưởng được chọn cập nhật tiến độ. |
+| GET `/api/news?kind=&page=&size=` · GET `/api/news/{slug}` | Tin công khai, phân trang và lọc, chi tiết theo slug. |
+| GET, POST `/api/admin/news` · GET, PUT `/api/admin/news/{id}` | Quản lý tin, ghi `{title,body,kind,eventStart,eventEnd,eventPlace,hidden}`. Loại `MATERIAL_PRICE\|POWER_CUT\|POLICY\|EVENT`. |
+| GET `/api/admin/stats` | Tổng số `{workshops,products,batches,quoteRequests}`. |
+
+| GET `/api/map/workshops` | Ghim `{slug,name,description,latitude,longitude}` của xưởng đã duyệt có tọa độ. |
+| GET `/api/home` · GET, PUT `/api/admin/featured` | Trang chủ trả `{workshop,product,batch}`, mỗi mục công khai có `{id,code,name,imageUrl}`. Admin gửi/nhận `{workshopId,productId,batchId}` (ID hoặc null). |
+| PUT `/api/password` | Tài khoản đang đăng nhập gửi `{currentPassword,newPassword}`; trả 204 và thu hồi các phiên của chính tài khoản đó. |
+
+Sai chủ sở hữu trả 404 ở các tài nguyên mới. PATCH đổi tên xưởng cũ tiếp tục theo hợp đồng Phase 02.
+
 Collection Postman: `postman/`. Kiểm thử HTTP: `backend/tests/phase02.py`, `backend/tests/m1.py`.
 
 ## 3. API dự kiến (đề xuất)
 
-### Công khai
-
-| Phương thức | Đường dẫn | FR |
+| Phương thức | Đường dẫn | FR hoặc phụ thuộc |
 |---|---|---|
-| POST | `/api/register` (đăng ký Buyer: username, mật khẩu, tên hiển thị, email, SĐT) · các endpoint xác thực email/SĐT — chờ Q-39 | FR-AUTH-04 |
-| GET | `/api/home` (nội dung nổi bật) | FR-HOME-02 |
-| GET | `/api/categories` · `/api/tags` | FR-PROD-03, FR-PROD-06 |
-| GET | `/api/workshops?q=&page=` · `/api/workshops/{slug}` | FR-WS-01, 06, 07 |
-| GET | `/api/workshops/map` (chỉ trường cần cho ghim: slug, tên, tọa độ, giờ mở cửa, `openNow`, ảnh thumb) | FR-MAP-01..03 |
-| GET | `/api/products?workshop=&category=&tag=&q=&sort=&page=` · `/api/products/{slug}` (kèm công đoạn và lô công khai) | FR-PROD-03..05 |
-| GET | `/api/batches?product=&workshop=&kind=&page=` | FR-BATCH-07 |
-| GET | `/api/batches/{publicCode}` (landing page: thông tin lô + mốc thời gian + quy trình + ảnh; lô riêng tư cần `?token=`; sai → 404) | FR-BATCH-02, 03, 05, 06 |
-| GET | `/api/batches/{publicCode}/qr.png` (lô công khai) — với lô riêng tư, QR chứa liên kết riêng nên chỉ chủ lô lấy được qua `/api/artisan/batches/{id}/qr.png` | FR-BATCH-04 |
-| GET | `/api/news?kind=&page=` · `/api/news/{slug}` | FR-NEWS-02 |
-| POST | `/api/reports` | FR-ADMIN-04 |
-
-Đổi `GET /api/products/{id}` sang slug là thay đổi phá vỡ: sửa frontend và Postman cùng lúc.
-
-### ARTISAN — `/api/artisan`
-
-Mọi thao tác ngầm định trên xưởng của người đăng nhập; không nhận `workshopId` từ client.
-
-| Phương thức | Đường dẫn | FR |
-|---|---|---|
-| GET, PUT | `/workshop` (hồ sơ của tôi) | FR-WS-02, 05 |
-| POST, PUT, DELETE | `/workshop/certificates[/{id}]` | FR-WS-03 |
-| GET, POST | `/products` · GET, PUT, DELETE `/products/{id}` | FR-PROD-01 |
-| PUT | `/products/{id}/steps` (ghi cả danh sách công đoạn theo thứ tự) | FR-PROD-02 |
-| GET, POST | `/batches` · GET, PUT `/batches/{id}` | FR-BATCH-01, 05 |
-| PUT | `/batches/{id}/milestones` | FR-BATCH-03 |
-| POST, DELETE | `/batches/{id}/share-token` | FR-BATCH-06 |
-| GET | `/quote-requests?tab=open|targeted|mine` · `/quote-requests/{id}` | FR-QUOTE-03, 04, 10 |
-| PUT, DELETE | `/quote-requests/{id}/quote` (gửi/sửa, rút báo giá của tôi) | FR-QUOTE-04 |
-| POST | `/quote-requests/{id}/start-production` · `/quote-requests/{id}/deliver` | FR-QUOTE-07 |
-
-### BUYER — `/api/buyer`
-
-| Phương thức | Đường dẫn | FR |
-|---|---|---|
-| GET, POST | `/quote-requests` · GET, PUT, DELETE `/quote-requests/{id}` (sửa/xóa chỉ khi `DRAFT`) | FR-QUOTE-01 |
-| POST | `/quote-requests/{id}/send` (`{ mode, workshopId? }` — chỉ định một hộ hoặc mở) | FR-QUOTE-02 |
-| POST | `/quote-requests/{id}/cancel` | FR-QUOTE-08 |
-| GET | `/quote-requests/{id}/quotes` | FR-QUOTE-05 |
-| POST | `/quote-requests/{id}/quotes/{quoteId}/accept` (`{ quoteUpdatedAt }`) | FR-QUOTE-06 |
-
-### ADMIN — `/api/admin`
-
-| Phương thức | Đường dẫn | FR |
-|---|---|---|
-| POST | `/workshops/{id}/suspend` | FR-ADMIN-01 |
-| GET, POST | `/news` · PUT, DELETE `/news/{id}` | FR-NEWS-01 |
-| GET | `/stats` | FR-ADMIN-02 |
-| POST | `/products/{id}/hide` · `/batches/{id}/hide` (hậu kiểm) | FR-ADMIN-05 |
-| GET, POST, PUT, DELETE | `/tags[/{id}]` | FR-ADMIN-06 |
-| PUT | `/featured` | FR-ADMIN-03 |
-| GET | `/reports` · POST `/reports/{id}/resolve` | FR-ADMIN-04 |
+| POST | `/api/register` và các endpoint xác thực email/SĐT | FR-AUTH-04, Q-39 |
+| GET | `/api/tags`, thêm tham số tag vào danh mục | FR-PROD-06, Q-38 |
+| GET | `/api/batches/{publicCode}/qr.png` và `/api/artisan/batches/{id}/qr.png` | FR-BATCH-04, Q-20 |
+| POST, PUT, DELETE | `/api/artisan/workshop/certificates[/{id}]` | FR-WS-03 và ảnh chứng nhận |
+| GET, POST | Mở yêu cầu và khớp yêu cầu theo tag trong API báo giá | FR-QUOTE-02, 03, Q-38 |
+| DELETE | `/api/artisan/quote-requests/{id}/quote` | Phần rút báo giá chưa chốt của Q-31 |
+| GET, POST, PUT, DELETE | `/api/admin/tags[/{id}]` | FR-ADMIN-06, Q-38 |
+| POST | `/api/reports` | FR-ADMIN-04, Q-40 |
+| GET, POST | `/api/admin/reports` · `/api/admin/reports/{id}/resolve` | FR-ADMIN-04, Q-40 |
 
 ### Ảnh (ARTISAN, ADMIN, BUYER cho ảnh tham khảo)
 
