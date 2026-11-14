@@ -1,0 +1,10 @@
+# Mẫu cấu hình riêng cho máy của bạn. KHÔNG commit file thật.
+# Cách dùng: chép file này thành "application-local-private.properties" trong thư mục backend/
+# (cùng chỗ với pom.xml), rồi sửa giá trị bên dưới. File thật đã nằm trong .gitignore.
+# Chỉ có hiệu lực khi chạy với profile local (SPRING_PROFILES_ACTIVE=local).
+
+VCRAFT_DB_PASSWORD=CHANGE_ME
+
+# Bỏ dấu # nếu máy bạn dùng database hoặc tài khoản khác mặc định:
+# VCRAFT_DB_URL=jdbc:postgresql://localhost:5432/vcraft_local
+# VCRAFT_DB_USER=postgres

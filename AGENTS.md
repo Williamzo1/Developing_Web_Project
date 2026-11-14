@@ -29,7 +29,7 @@ compose.yaml, .env.example   Docker Compose: db (PostgreSQL 16), backend, fronte
 | Build backend | `./mvnw -B package` | `backend/` |
 | Chạy frontend | `npm ci` rồi `npm run dev` (http://localhost:5173) | `frontend/` |
 | Build frontend | `npm run build` | `frontend/` |
-| Kiểm thử HTTP | `python backend/tests/phase02.py` (backend phải đang chạy, profile `local`) | gốc |
+| Kiểm thử HTTP | `python backend/tests/m1.py` (chạy cả `phase02.py`; backend phải đang chạy với profile `local` trên database thử) | gốc |
 
 Chi tiết và tài khoản mẫu: `docs/03-engineering/setup.md`.
 

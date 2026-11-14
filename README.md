@@ -20,7 +20,36 @@ Không chạy SQL tạo bảng bằng tay. Spring Boot chạy Flyway V1–V3, sa
 
 ### Bước 2 — Backend trong IntelliJ
 
-Thay đổi mật khẩu và user nếu cần thiết ở application-local-private.properties
+1. Open `backend/pom.xml` dưới dạng Maven project và Reload Maven.
+2. Đặt Project SDK, Module SDK, Maven Runner JRE và Run Configuration JRE đều là **JDK 17**.
+3. Mở `VCraftApplication`. Trong Run → Edit Configurations, đặt **Working directory** là đường dẫn thư mục `backend`.
+4. Profile `local` **không tự bật**. Trong cùng cửa sổ đó, điền Environment variables:
+
+```text
+SPRING_PROFILES_ACTIVE=local
+```
+
+5. Khai mật khẩu database theo **một trong hai** cách:
+   - **File riêng (khuyên dùng):** chép `backend/application-local-private.properties.example` thành `backend/application-local-private.properties`, sửa `VCRAFT_DB_PASSWORD` (và URL/user nếu máy bạn khác mặc định). File này đã nằm trong `.gitignore`, không commit.
+   - **Biến môi trường:** thêm vào Environment variables ở bước 4: `SPRING_PROFILES_ACTIVE=local;VCRAFT_DB_PASSWORD=MAT_KHAU_CUA_BAN` (tùy chọn thêm `VCRAFT_DB_URL`, `VCRAFT_DB_USER`).
+6. Run; đợi log `Started VCraftApplication` và seed chạy xong. Kiểm tra `http://localhost:8080/api/health/db` trả `200 {"status":"UP"}`.
+
+**Chạy bằng PowerShell thay cho IntelliJ** (đang ở `backend/`):
+
+```powershell
+$env:SPRING_PROFILES_ACTIVE = "local"
+$env:VCRAFT_DB_PASSWORD = "MAT_KHAU_CUA_BAN"   # bỏ dòng này nếu đã dùng file riêng
+.\mvnw.cmd spring-boot:run
+```
+
+Lỗi thường gặp khi khởi động:
+
+| Thông báo | Nguyên nhân |
+|---|---|
+| `Failed to configure a DataSource: 'url' attribute is not specified` | Chưa bật profile: thiếu `SPRING_PROFILES_ACTIVE=local`. |
+| `password authentication failed` | Sai mật khẩu, hoặc đã bật `local` nhưng chưa khai mật khẩu ở file riêng lẫn biến môi trường. |
+| `Connection refused` | PostgreSQL chưa chạy hoặc sai cổng/URL. |
+
 Nếu wrapper báo `'powershell' is not recognized`, kiểm tra PATH Windows có `C:\Windows\System32\WindowsPowerShell\v1.0\`; hoặc chạy Maven goal `spring-boot:run` trong cửa sổ Maven của IntelliJ. Không đổi Spring Boot chỉ để sửa lỗi PATH.
 
 ### Bước 3 — React ở terminal thứ hai

@@ -49,3 +49,4 @@ Ký hiệu: ✅ xong (API + giao diện) · 🟡 một phần · ⬜ chưa làm.
 | 2026-11-10 | Chốt Q-18 (CSS thuần + CSS Modules) và Q-19 (hook tự viết + client API chung) — ADR-0003. Phần giao diện không còn bị chặn. |
 
 | 2026-11-12 | Hoàn thành phần backend foundation của M1: lỗi JSON chung, Bean Validation, phân trang danh mục thật, quyền Buyer và cấu hình local. Không thay migration. MEDIA và phần frontend foundation chưa hoàn thành. |
+| 2026-11-14 | Sửa cấu hình khởi động M1: file `application-local-private.properties` thành tùy chọn (trước đó bắt buộc nên bản clone mới không chạy được), thêm file mẫu ở `backend/`, bỏ `spring.profiles.active=local` khỏi cấu hình chung cho khớp ADR-0004, khôi phục hướng dẫn chạy trong README, bỏ theo dõi `backend.iml`. Đã build và thử khởi động jar; chưa chạy lại `m1.py` (máy kiểm tra không có PostgreSQL) và chưa thử Docker Compose. |
