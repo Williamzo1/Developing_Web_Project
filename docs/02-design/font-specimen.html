@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>vCraft — so sánh font tiêu đề</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400..800;1,400..800&family=Be+Vietnam+Pro:wght@400;500;600&family=Carattere&family=Charm:wght@400;700&family=Charmonman:wght@400;700&family=Cormorant+Upright:wght@500;700&family=Dancing+Script:wght@500;700&family=Kolker+Brush&family=Playwrite+VN:wght@100..400&family=Sriracha&family=Viaoda+Libre&family=Water+Brush&display=swap" />
+  <style>
+    :root { --ink: #203b37; --muted: #5d6f6b; --paper: #faf6ec; --line: #dfd8ca; --deep: #193f43; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font-family: "Be Vietnam Pro", system-ui, sans-serif; line-height: 1.6; }
+    .wrap { width: min(1080px, calc(100% - 32px)); margin-inline: auto; padding-block: 32px 64px; }
+    h1.page { font-family: "Alegreya", serif; font-size: 2rem; line-height: 1.2; margin: 0 0 8px; }
+    .intro { max-width: 70ch; color: var(--muted); margin: 0 0 8px; }
+    .group { margin: 40px 0 4px; font-weight: 600; font-size: 1.05rem; }
+    .group + p { margin: 0 0 8px; color: var(--muted); max-width: 70ch; }
+    .row { display: grid; grid-template-columns: 230px 1fr; gap: 24px; padding: 22px 0; border-top: 1px solid var(--line); align-items: start; }
+    .meta b { display: block; font-size: 1rem; }
+    .meta span { display: block; font-size: .875rem; color: var(--muted); }
+    .meta .tag { display: inline-block; margin-top: 8px; padding: 2px 10px; border: 1px solid var(--line); border-radius: 999px; font-size: .8rem; color: var(--ink); background: #fffcf6; }
+    .sample { min-width: 0; }
+    .title { font-size: var(--size, 3rem); line-height: 1.25; margin: 0 0 6px; color: var(--deep); overflow-wrap: anywhere; }
+    .sub { font-size: calc(var(--size, 3rem) * .52); line-height: 1.4; margin: 0 0 6px; }
+    .marks { font-size: calc(var(--size, 3rem) * .42); line-height: 1.5; margin: 0; color: var(--muted); }
+    .pair { margin: 10px 0 0; max-width: 62ch; font-size: .95rem; }
+    @media (max-width: 720px) { .row { grid-template-columns: 1fr; gap: 8px; } .title { font-size: calc(var(--size, 3rem) * .72); } }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <h1 class="page">So sánh font tiêu đề cho vCraft</h1>
+  <p class="intro">Mỗi dòng dùng cùng một nội dung: tiêu đề trang chủ, tên nghệ nhân, và một dòng chữ nhiều dấu để soi lỗi dấu tiếng Việt. Đoạn văn bên dưới mỗi mẫu là Be Vietnam Pro — font nội dung đã chọn — để thấy hai font đứng cạnh nhau ra sao. Tất cả đều miễn phí trên Google Fonts và có đủ ký tự tiếng Việt.</p>
+
+  <p class="group">Đang dùng</p>
+  <p>Serif nét bút, không phải chữ viết tay.</p>
+  <div class="row" style="--size:3rem">
+    <div class="meta"><b>Alegreya</b><span>Serif nét bút, nhiều độ đậm</span><span class="tag">Hiện tại</span></div>
+    <div class="sample" style="font-family:'Alegreya',serif">
+      <p class="title" style="font-weight:700">Gốm Bát Tràng, từ đất đến lửa</p>
+      <p class="sub">Nghệ nhân Nguyễn Thị Hường, xưởng Men Lam</p>
+      <p class="marks">Ấm chén, đĩa ngũ sắc, lọ lục bình, tượng Phật Di Lặc, tháng Mười Một</p>
+      <p class="pair" style="font-family:'Be Vietnam Pro',sans-serif">Mỗi xưởng một câu chuyện: nhào đất, vuốt trên bàn xoay, vẽ men lam rồi nung suốt ba ngày đêm.</p>
+    </div>
+  </div>
+
+  <p class="group">Nhóm 1 — Nét bút lông, gần thư pháp chữ Việt nhất</p>
+  <p>Nét thanh đậm rõ, đầu nét nhọn như bút lông. Hợp làm tiêu đề lớn, tên thương hiệu, lời trích.</p>
+  <div class="row" style="--size:3.1rem">
+    <div class="meta"><b>Charm</b><span>Bút lông mềm, dễ đọc, có 2 độ đậm</span><span class="tag">Đề xuất 1</span></div>
+    <div class="sample" style="font-family:'Charm',cursive">
+      <p class="title" style="font-weight:700">Gốm Bát Tràng, từ đất đến lửa</p>
+      <p class="sub">Nghệ nhân Nguyễn Thị Hường, xưởng Men Lam</p>
+      <p class="marks">Ấm chén, đĩa ngũ sắc, lọ lục bình, tượng Phật Di Lặc, tháng Mười Một</p>
+      <p class="pair" style="font-family:'Be Vietnam Pro',sans-serif">Mỗi xưởng một câu chuyện: nhào đất, vuốt trên bàn xoay, vẽ men lam rồi nung suốt ba ngày đêm.</p>
+    </div>
+  </div>
+  <div class="row" style="--size:2.9rem">
+    <div class="meta"><b>Charmonman</b><span>Cùng họ với Charm, nét uốn lượn và bay bướm hơn</span></div>
+    <div class="sample" style="font-family:'Charmonman',cursive">
+      <p class="title" style="font-weight:700">Gốm Bát Tràng, từ đất đến lửa</p>
+      <p class="sub">Nghệ nhân Nguyễn Thị Hường, xưởng Men Lam</p>
+      <p class="marks">Ấm chén, đĩa ngũ sắc, lọ lục bình, tượng Phật Di Lặc, tháng Mười Một</p>
+      <p class="pair" style="font-family:'Be Vietnam Pro',sans-serif">Mỗi xưởng một câu chuyện: nhào đất, vuốt trên bàn xoay, vẽ men lam rồi nung suốt ba ngày đêm.</p>
+    </div>
+  </div>
+  <div class="row" style="--size:3.6rem">
+    <div class="meta"><b>Water Brush</b><span>Bút lông đậm mực, nét phóng khoáng</span></div>
+    <div class="sample" style="font-family:'Water Brush',cursive">
+      <p class="title">Gốm Bát Tràng, từ đất đến lửa</p>
+      <p class="sub">Nghệ nhân Nguyễn Thị Hường, xưởng Men Lam</p>
+      <p class="marks">Ấm chén, đĩa ngũ sắc, lọ lục bình, tượng Phật Di Lặc, tháng Mười Một</p>
+      <p class="pair" style="font-family:'Be Vietnam Pro',sans-serif">Mỗi xưởng một câu chuyện: nhào đất, vuốt trên bàn xoay, vẽ men lam rồi nung suốt ba ngày đêm.</p>
+    </div>
+  </div>
+  <div class="row" style="--size:4rem">
+    <div class="meta"><b>Kolker Brush</b><span>Bút khô, nét xước, rất thủ công</span></div>
+    <div class="sample" style="font-family:'Kolker Brush',cursive">
+      <p class="title">Gốm Bát Tràng, từ đất đến lửa</p>
+      <p class="sub">Nghệ nhân Nguyễn Thị Hường, xưởng Men Lam</p>
+      <p class="marks">Ấm chén, đĩa ngũ sắc, lọ lục bình, tượng Phật Di Lặc, tháng Mười Một</p>
+      <p class="pair" style="font-family:'Be Vietnam Pro',sans-serif">Mỗi xưởng một câu chuyện: nhào đất, vuốt trên bàn xoay, vẽ men lam rồi nung suốt ba ngày đêm.</p>
+    </div>
+  </div>
+  <div class="row" style="--size:2.8rem">
+    <div class="meta"><b>Sriracha</b><span>Bút lông nét tròn, đậm, thân thiện</span></div>
+    <div class="sample" style="font-family:'Sriracha',cursive">
+      <p class="title">Gốm Bát Tràng, từ đất đến lửa</p>
+      <p class="sub">Nghệ nhân Nguyễn Thị Hường, xưởng Men Lam</p>
+      <p class="marks">Ấm chén, đĩa ngũ sắc, lọ lục bình, tượng Phật Di Lặc, tháng Mười Một</p>
+      <p class="pair" style="font-family:'Be Vietnam Pro',sans-serif">Mỗi xưởng một câu chuyện: nhào đất, vuốt trên bàn xoay, vẽ men lam rồi nung suốt ba ngày đêm.</p>
+    </div>
+  </div>
+
+  <p class="group">Nhóm 2 — Chữ viết tay nối nét</p>
+  <p>Gợi nét chữ viết tay của người Việt: chữ nối liền, nét móc, nét khuyết.</p>
+  <div class="row" style="--size:2.3rem">
+    <div class="meta"><b>Playwrite Việt Nam</b><span>Dựng theo mẫu chữ viết tay dạy ở tiểu học Việt Nam</span><span class="tag">Đề xuất 2</span></div>
+    <div class="sample" style="font-family:'Playwrite VN',cursive">
+      <p class="title" style="font-weight:400;line-height:1.6">Gốm Bát Tràng, từ đất đến lửa</p>
+      <p class="sub" style="line-height:1.8">Nghệ nhân Nguyễn Thị Hường, xưởng Men Lam</p>
+      <p class="marks" style="line-height:1.9">Ấm chén, đĩa ngũ sắc, lọ lục bình, tượng Phật Di Lặc, tháng Mười Một</p>
+      <p class="pair" style="font-family:'Be Vietnam Pro',sans-serif">Mỗi xưởng một câu chuyện: nhào đất, vuốt trên bàn xoay, vẽ men lam rồi nung suốt ba ngày đêm.</p>
+    </div>
+  </div>
+  <div class="row" style="--size:3.2rem">
+    <div class="meta"><b>Dancing Script</b><span>Viết tay nối nét, nhịp nhảy, phổ biến</span></div>
+    <div class="sample" style="font-family:'Dancing Script',cursive">
+      <p class="title" style="font-weight:700">Gốm Bát Tràng, từ đất đến lửa</p>
+      <p class="sub">Nghệ nhân Nguyễn Thị Hường, xưởng Men Lam</p>
+      <p class="marks">Ấm chén, đĩa ngũ sắc, lọ lục bình, tượng Phật Di Lặc, tháng Mười Một</p>
+      <p class="pair" style="font-family:'Be Vietnam Pro',sans-serif">Mỗi xưởng một câu chuyện: nhào đất, vuốt trên bàn xoay, vẽ men lam rồi nung suốt ba ngày đêm.</p>
+    </div>
+  </div>
+  <div class="row" style="--size:3.6rem">
+    <div class="meta"><b>Carattere</b><span>Bút sắt nghiêng, trang trọng kiểu thư pháp phương Tây</span></div>
+    <div class="sample" style="font-family:'Carattere',cursive">
+      <p class="title">Gốm Bát Tràng, từ đất đến lửa</p>
+      <p class="sub">Nghệ nhân Nguyễn Thị Hường, xưởng Men Lam</p>
+      <p class="marks">Ấm chén, đĩa ngũ sắc, lọ lục bình, tượng Phật Di Lặc, tháng Mười Một</p>
+      <p class="pair" style="font-family:'Be Vietnam Pro',sans-serif">Mỗi xưởng một câu chuyện: nhào đất, vuốt trên bàn xoay, vẽ men lam rồi nung suốt ba ngày đêm.</p>
+    </div>
+  </div>
+
+  <p class="group">Nhóm 3 — Chữ in có nét uốn lượn</p>
+  <p>Không phải chữ viết tay nhưng có đường cong mềm; đọc dễ hơn hai nhóm trên khi dùng nhiều.</p>
+  <div class="row" style="--size:3.1rem">
+    <div class="meta"><b>Viaoda Libre</b><span>Do nhà thiết kế Việt Nam vẽ, lấy cảm hứng từ tà áo dài</span><span class="tag">Đề xuất 3</span></div>
+    <div class="sample" style="font-family:'Viaoda Libre',serif">
+      <p class="title">Gốm Bát Tràng, từ đất đến lửa</p>
+      <p class="sub">Nghệ nhân Nguyễn Thị Hường, xưởng Men Lam</p>
+      <p class="marks">Ấm chén, đĩa ngũ sắc, lọ lục bình, tượng Phật Di Lặc, tháng Mười Một</p>
+      <p class="pair" style="font-family:'Be Vietnam Pro',sans-serif">Mỗi xưởng một câu chuyện: nhào đất, vuốt trên bàn xoay, vẽ men lam rồi nung suốt ba ngày đêm.</p>
+    </div>
+  </div>
+  <div class="row" style="--size:3.2rem">
+    <div class="meta"><b>Cormorant Upright</b><span>Chữ nghiêng dựng thẳng, thanh mảnh, sang</span></div>
+    <div class="sample" style="font-family:'Cormorant Upright',serif">
+      <p class="title" style="font-weight:700">Gốm Bát Tràng, từ đất đến lửa</p>
+      <p class="sub" style="font-weight:500">Nghệ nhân Nguyễn Thị Hường, xưởng Men Lam</p>
+      <p class="marks" style="font-weight:500">Ấm chén, đĩa ngũ sắc, lọ lục bình, tượng Phật Di Lặc, tháng Mười Một</p>
+      <p class="pair" style="font-family:'Be Vietnam Pro',sans-serif">Mỗi xưởng một câu chuyện: nhào đất, vuốt trên bàn xoay, vẽ men lam rồi nung suốt ba ngày đêm.</p>
+    </div>
+  </div>
+</div>
+</body>
+</html>
