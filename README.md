@@ -42,6 +42,7 @@ $env:VCRAFT_DB_PASSWORD = "MAT_KHAU_CUA_BAN"   # bỏ dòng này nếu đã dùn
 .\mvnw.cmd spring-boot:run
 ```
 
+
 Lỗi thường gặp khi khởi động:
 
 | Thông báo | Nguyên nhân |
