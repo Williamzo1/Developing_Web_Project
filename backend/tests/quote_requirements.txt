@@ -1,0 +1,2 @@
+# Optional database assertions and a deterministic row-lock test.
+pg8000==1.31.5
