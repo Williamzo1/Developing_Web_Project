@@ -1,7 +1,5 @@
 # Máy trạng thái yêu cầu báo giá
 
-> Bản backend 2026-11-13 đã cài đặt máy trạng thái này. Chi tiết API/version/khóa: `../03-engineering/quote-backend.md`. Ảnh và UI chưa làm.
->
 > Trạng thái tài liệu: **Nhóm đã chốt** các điểm nghiệp vụ ngày 2026-11-10 (Q-03, Q-04, Q-11, Q-14, Q-15, Q-31); chi tiết cài đặt (khóa, mã lỗi) là đề xuất kỹ thuật. Còn chờ: cách tổ chức tag (Q-38) — chỉ ảnh hưởng câu truy vấn "hộ phù hợp". Đáp ứng đề gốc §4.2 (6 trạng thái + khóa bản ghi) trong giới hạn của đặc tả (không quản lý hợp đồng/thanh toán/giao hàng).
 
 ## 1. Trạng thái của yêu cầu (`quote_requests.status`)
@@ -55,7 +53,6 @@ Các tình huống tranh chấp phải xử lý đúng (đây là điểm kỹ t
 | Tình huống | Rủi ro | Cách xử lý |
 |---|---|---|
 | Buyer bấm chấp nhận hai báo giá gần như cùng lúc (hai tab) | Hai báo giá cùng `ACCEPTED` | Trong một giao dịch: `SELECT ... FOR UPDATE` dòng `quote_requests` → kiểm tra `status = BIDDING` → cập nhật. Chốt chặn cuối: unique index một phần trên `quotes(request_id) WHERE status = 'ACCEPTED'`. |
-| Hộ sửa/rút báo giá đúng lúc Buyer chấp nhận | Chấp nhận một báo giá đã đổi giá hoặc đã rút | Thao tác trên báo giá cũng khóa dòng yêu cầu cha trước (cùng thứ tự khóa: **yêu cầu trước, báo giá sau**, tránh deadlock). Request chấp nhận gửi kèm `version` của báo giá mà Buyer đang xem; lệch → `409 STALE_DATA`. |
 | Hộ gửi báo giá đúng lúc Buyer hủy/chấp nhận | Báo giá mới lọt vào yêu cầu đã đóng | Gửi báo giá cũng khóa dòng yêu cầu và kiểm tra trạng thái trong giao dịch. |
 | Một hộ gửi hai báo giá cùng lúc | Trùng báo giá | Unique (`request_id`, `workshop_id`). |
 | Hai thao tác sửa nội dung yêu cầu nháp | Ghi đè mất dữ liệu | Khóa lạc quan bằng cột `version` (`@Version`). |
@@ -85,7 +82,3 @@ Nguyên tắc cài đặt:
 ## 6. Kịch bản demo điểm kỹ thuật
 
 Mở hai tab cùng tài khoản Buyer, cùng bấm chấp nhận hai báo giá khác nhau → một tab thành công, tab kia báo "yêu cầu đã chọn báo giá khác". Xem thêm `04-plan/demo-script.md`.
-
-## 7. Quy ước đã cài đặt
-
-Accept gửi `{version}` của quote; các thao tác send/cancel/start/deliver gửi `{version}` của request. Tất cả action lock cha trước; @Version trên cả request/quote; mọi transition ghi event trong cùng transaction. Lặp action đã hoàn tất trả 409, không tự retry. Sau deadline cấm quote mới/gửi lại, vẫn cho sửa/rút và chấp nhận quote đã có. Nháp có thể thiếu thông tin; gửi phải đủ dữ liệu theo API contract. Liên hệ Buyer chỉ đưa cho hộ sau khi hộ đã báo giá (theo FR-QUOTE-09); lịch sử hộ ẩn ID người khác.

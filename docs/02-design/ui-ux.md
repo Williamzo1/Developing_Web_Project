@@ -54,8 +54,6 @@ Ba khu vực có bố cục riêng: **công khai** (header + footer giàu hình 
 - Mọi chữ hiển thị bằng tiếng Việt; dùng đúng thuật ngữ ở `01-requirements/glossary.md`.
 - Định dạng: tiền `1.250.000 ₫`, ngày `dd/MM/yyyy`. Giá bị hộ ẩn hiển thị "Liên hệ báo giá".
 
-## 5. Việc còn thiếu
 
 - [ ] Wireframe cho 5 màn hình trọng điểm.
-- [ ] Chốt bảng màu, kiểu chữ, bộ ảnh thật (tự chụp hoặc có giấy phép sử dụng — ghi nguồn).
 - [x] Style: CSS thuần + biến CSS + CSS Modules, không dùng thư viện UI (Q-18 đã chốt, ADR-0003).

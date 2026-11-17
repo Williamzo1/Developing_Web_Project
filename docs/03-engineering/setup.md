@@ -21,6 +21,3 @@ Tài khoản: buyer, admin, xuong-men-lam, xuong-dat-nung, mật khẩu demo tro
 | Kiểm tra Phase02 và M1 | python backend/tests/m1.py | gốc; DB test riêng, backend đã chạy |
 | Postman | Import hai JSON, chọn vCraft local, mở folder M1 trong Collection | Postman |
 
-Chỉ thay schema bằng migration mới V5 trở đi; không sửa checksum V1–V4, không bật Hibernate update, không baseline schema thủ công chưa đối chiếu. Trước khi chuyển dữ liệu cũ cần sao lưu và so schema. Các file Compose/Docker có sẵn được giữ như tài nguyên cũ tùy chọn; chưa kiểm tra Docker trong chặng này.
-
-Backend báo giá: xem [quote-backend.md](quote-backend.md). Chạy terminal `.\run-local.cmd` ở backend để tự chọn profile local, không cần Edit Configurations; giữ file private ngang pom.xml.

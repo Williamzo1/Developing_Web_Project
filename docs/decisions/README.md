@@ -38,5 +38,3 @@ ADR đã chốt thì không sửa nội dung; muốn đổi thì viết ADR mớ
 | [0003](0003-frontend-style-va-du-lieu.md) | Frontend: CSS thuần + CSS Modules, hook tự viết để lấy dữ liệu | Đã chốt |
 
 | [0004](0004-backend-foundation.md) | Hợp đồng lỗi, validation, phân trang và cấu hình M1 backend | Đã áp dụng |
-
-| [0005](0005-quote-backend.md) | Máy trạng thái, khóa, phiên bản, matching và quyền riêng tư báo giá | Đã áp dụng; Q-38 còn giả định |

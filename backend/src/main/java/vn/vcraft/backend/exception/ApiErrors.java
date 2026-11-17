@@ -1,7 +1,5 @@
 package vn.vcraft.backend.exception;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.ConstraintViolationException;
 import java.time.Instant;
 import java.util.Map;
 import java.util.TreeMap;
@@ -24,65 +22,20 @@ class ApiErrors {
   }
 
   @ExceptionHandler(MethodArgumentNotValidException.class)
-  ResponseEntity<ApiErrorResponse> validation(
-      MethodArgumentNotValidException error, HttpServletRequest request) {
     Map<String, String> fields = new TreeMap<>();
-    error
-        .getBindingResult()
-        .getFieldErrors()
-        .forEach(
-            field ->
-                fields.merge(
-                    field.getField(),
-                    field.isBindingFailure()
-                        ? "Giá trị phải là số nguyên hợp lệ."
-                        : field.getDefaultMessage() == null
-                            ? "Giá trị không hợp lệ."
-                            : field.getDefaultMessage(),
                     (left, right) -> left.compareTo(right) <= 0 ? left : right));
-    return ResponseEntity.badRequest()
-        .body(
-            new ApiErrorResponse(
-                Instant.now(),
-                400,
-                "VALIDATION_FAILED",
-                "Vui lòng kiểm tra dữ liệu nhập.",
-                request.getRequestURI(),
-                fields));
   }
 
   @ExceptionHandler(ConstraintViolationException.class)
-  ResponseEntity<ApiErrorResponse> serviceValidation(
-      ConstraintViolationException error, HttpServletRequest request) {
     Map<String, String> fields = new TreeMap<>();
-    error
-        .getConstraintViolations()
-        .forEach(
-            field -> {
               String path = field.getPropertyPath().toString();
               String name = path.substring(path.lastIndexOf('.') + 1);
               fields.putIfAbsent(name, field.getMessage());
             });
-    return ResponseEntity.badRequest()
-        .body(
-            new ApiErrorResponse(
-                Instant.now(),
-                400,
-                "VALIDATION_FAILED",
-                "Vui lòng kiểm tra dữ liệu nhập.",
-                request.getRequestURI(),
-                fields));
   }
 
   @ExceptionHandler(ResponseStatusException.class)
-  ResponseEntity<ApiErrorResponse> status(
-      ResponseStatusException error, HttpServletRequest request) {
     int status = error.getStatusCode().value();
-    return response(
-        status,
-        code(status),
-        error.getReason() == null ? "Không thể thực hiện yêu cầu." : error.getReason(),
-        request);
   }
 
   @ExceptionHandler({
@@ -96,14 +49,7 @@ class ApiErrors {
 
   @ExceptionHandler(org.springframework.web.HttpRequestMethodNotSupportedException.class)
   ResponseEntity<ApiErrorResponse> method(
-      org.springframework.web.HttpRequestMethodNotSupportedException error,
-      HttpServletRequest request) {
     var builder = ResponseEntity.status(405);
-    if (error.getSupportedHttpMethods() != null)
-      builder.allow(error.getSupportedHttpMethods().toArray(HttpMethod[]::new));
-    return builder.body(
-        ApiErrorResponse.of(
-            405, "METHOD_NOT_ALLOWED", "Phương thức không được hỗ trợ.", request.getRequestURI()));
   }
 
   @ExceptionHandler({
@@ -117,17 +63,6 @@ class ApiErrors {
   @ExceptionHandler(org.springframework.web.multipart.MaxUploadSizeExceededException.class)
   ResponseEntity<ApiErrorResponse> upload(Exception error, HttpServletRequest request) {
     return response(413, "UPLOAD_TOO_LARGE", "Ảnh vượt giới hạn tải lên.", request);
-  }
-
-  @ExceptionHandler(org.springframework.dao.OptimisticLockingFailureException.class)
-  ResponseEntity<ApiErrorResponse> stale(Exception error, HttpServletRequest request) {
-    return response(409, "STALE_DATA", "Dữ liệu đã thay đổi, vui lòng tải lại.", request);
-  }
-
-  @ExceptionHandler(org.springframework.dao.PessimisticLockingFailureException.class)
-  ResponseEntity<ApiErrorResponse> busy(Exception error, HttpServletRequest request) {
-    return response(
-        409, "CONCURRENT_UPDATE", "Dữ liệu đang được cập nhật, vui lòng thử lại.", request);
   }
 
   @ExceptionHandler(DataIntegrityViolationException.class)
@@ -151,10 +86,6 @@ class ApiErrors {
     return response(500, "INTERNAL_ERROR", "Có lỗi hệ thống, vui lòng thử lại.", request);
   }
 
-  private ResponseEntity<ApiErrorResponse> response(
-      int status, String code, String message, HttpServletRequest request) {
-    return ResponseEntity.status(status)
-        .body(ApiErrorResponse.of(status, code, message, request.getRequestURI()));
   }
 
   private String code(int status) {

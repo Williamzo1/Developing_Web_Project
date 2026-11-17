@@ -2,13 +2,11 @@
 
 > Tài liệu **sống**: cập nhật trong cùng thay đổi mỗi khi một yêu cầu đổi tình trạng. Đây là nơi duy nhất ghi "đã làm đến đâu".
 >
-> Cập nhật lần cuối: **2026-11-13** — backend báo giá sau M1.
 
 Ký hiệu: ✅ xong (API + giao diện) · 🟡 một phần · ⬜ chưa làm.
 
 ## Tóm tắt
 
-Đã có nền backend (xác thực token, phân quyền 3 vai trò, cấp/duyệt hộ, sửa tên xưởng, đọc danh mục) và giao diện công khai tối thiểu (trang chủ, danh mục, chi tiết). Đã có API máy trạng thái báo giá và khóa dòng PostgreSQL (§4.2); ảnh/lô/QR/bản đồ và UI báo giá chưa hoàn thiện.
 
 ## Theo module
 
@@ -19,7 +17,6 @@ Ký hiệu: ✅ xong (API + giao diện) · 🟡 một phần · ⬜ chưa làm.
 | WS | 🟡 | Bảng `workshops` (tên, slug, approved); API sửa tên xưởng | Hồ sơ đầy đủ, ảnh, chứng nhận, tọa độ, giờ mở cửa, trang công khai |
 | PROD | 🟡 | `GET /api/products`, `GET /api/products/{id}`, `/api/products/page`; trang danh mục phân trang + chi tiết | Lọc theo hộ/phân loại, tìm kiếm, slug trên URL, CRUD của hộ, công đoạn sản xuất |
 | BATCH | ⬜ | — | Tất cả (lô, mốc sản xuất, landing page, QR, riêng tư) |
-| QUOTE | 🟡 | Backend nháp/gửi/hủy; báo giá/sửa/rút/chọn; row lock + version; tiến độ; lịch sử; deadline; liên hệ; matching tag tạm | UI, ảnh tham khảo (MEDIA), badge FR-QUOTE-10; quản trị tag/Q-38 còn mở |
 | MAP | ⬜ | — | Tất cả |
 | NEWS | ⬜ | — | Tất cả |
 | ADMIN | 🟡 | API danh sách xưởng, cấp tài khoản, duyệt | Giao diện quản trị, khóa hộ, thống kê, nổi bật, báo cáo |
@@ -49,5 +46,3 @@ Ký hiệu: ✅ xong (API + giao diện) · 🟡 một phần · ⬜ chưa làm.
 | 2026-11-10 | Chốt Q-18 (CSS thuần + CSS Modules) và Q-19 (hook tự viết + client API chung) — ADR-0003. Phần giao diện không còn bị chặn. |
 
 | 2026-11-12 | Hoàn thành phần backend foundation của M1: lỗi JSON chung, Bean Validation, phân trang danh mục thật, quyền Buyer và cấu hình local. Không thay migration. MEDIA và phần frontend foundation chưa hoàn thành. |
-
-| 2026-11-13 | Thêm V4 và backend báo giá; Postman, test HTTP và PostgreSQL đồng thời; giữ M1. Xem quote-verification.md về kết quả thật. |

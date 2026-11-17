@@ -36,7 +36,3 @@ Bài được chấm bằng demo trực tiếp, không slide. Kịch bản đi t
 - QR sinh ở đâu, mã hóa gì? Lô riêng tư bảo vệ thế nào?
 - Phân quyền kiểm ở đâu? → Vai trò ở `SecurityConfig`, quyền sở hữu ở service.
 - Mỗi thành viên cần giải thích được phần mã mình phụ trách, kể cả phần có AI hỗ trợ.
-
-## Demo backend báo giá hiện tại (2026-11-13)
-
-Chưa có UI báo giá. Import Collection + Environment, chạy folder Quote Backend — Luồng báo giá rồi Quote Backend — Rút và hủy. Giải thích version request khác version quote, các lỗi 401/403/404/409. Chạy quotes.py với DB URL để chứng minh cạnh tranh và chờ khóa thật; query unique ACCEPTED trong pgAdmin. Workflow theo từng file: `../03-engineering/quote-backend.md`. Không mô tả màn hình báo giá trong các kịch bản dự kiến ở trên là đã hoàn thành.

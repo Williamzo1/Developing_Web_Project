@@ -32,7 +32,6 @@ Dựa trên các câu đã chốt. "Sẵn sàng" = không còn câu hỏi mở n
 | # | Việc | FR | Ghi chú |
 |---|---|---|---|
 | 1 | Nền backend: validation, chuẩn hóa mã lỗi, khung phân trang, thêm `/api/buyer/**` vào `SecurityConfig`, dọn `application.properties` | — | Mọi việc khác dựa vào. Giữ cấu trúc gói hiện tại (Q-17 chưa chốt, nhưng đây là hiện trạng nên không phát sinh việc làm lại). |
-| 2 | **Luồng báo giá phía backend — đã cài backend (2026-11-13), ảnh tham khảo chờ MEDIA**: yêu cầu nháp/gửi/hủy, báo giá gửi/sửa, chấp nhận có khóa dòng, `In Production`/`Delivered`, lịch sử trạng thái, hạn chót tùy chọn, kiểm thử song song | FR-QUOTE-01, 02, 04..09, 11, 12 | Phần nặng điểm kỹ thuật nhất và đã chốt đủ. Dùng tài khoản `buyer` có sẵn trong seed. Riêng việc khớp yêu cầu mở (FR-QUOTE-03) gói trong **một** hàm truy vấn để thay khi chốt Q-38. |
 | 3 | Sản phẩm phía backend: CRUD của hộ, công đoạn sản xuất, lọc theo hộ/phân loại, tìm kiếm, phân trang, chi tiết theo slug, giá + cờ công khai/ẩn giá, Admin ẩn sản phẩm | FR-PROD-01..05, FR-ADMIN-05 | Chưa gồm tag (Q-38) và bộ ảnh (Q-13). |
 | 4 | Lô phía backend: CRUD, mốc sản xuất (ngày + ghi chú), công khai/riêng tư, liên kết riêng tạo/thu hồi, endpoint landing page | FR-BATCH-01..03, 05..08 | Ảnh của mốc chờ MEDIA. |
 | 5 | Hồ sơ hộ phía backend: giới thiệu, lịch sử, địa chỉ, liên hệ, Gmail + Facebook, tọa độ; danh sách hộ; endpoint ghim bản đồ (tọa độ + tóm tắt) | FR-WS-01, 02, 04, 06, 07, FR-MAP-01, 02 | Chưa gồm giờ mở cửa/trạng thái (Q-29). |
@@ -65,10 +64,6 @@ Dựa trên các câu đã chốt. "Sẵn sàng" = không còn câu hỏi mở n
 - [ ] **MEDIA**: upload nhiều ảnh + resize + phục vụ ảnh (FR-MEDIA-01..03) — làm sớm vì mọi module nội dung đều cần.
 - [ ] Seed tối thiểu (tài khoản mẫu, phân loại, tag, vài hộ/sản phẩm).
 - [ ] **Triển khai lên Internet ngay sau M1** (bắt buộc — Q-09) để nhóm nhập dữ liệu thật dần qua giao diện; thiết lập sao lưu DB + ảnh.
-
-### Tiến độ bổ sung ngày 2026-11-13
-
-Backend của việc 2 đã cài đặt: nháp/gửi/hủy, báo giá/sửa/rút, chấp nhận có khóa dòng, sản xuất/giao, lịch sử, deadline, liên hệ và kiểm thử đồng thời. FR-QUOTE-01 còn ảnh tham khảo chờ MEDIA; FR-QUOTE-03 tạm theo Q-38 và cô lập predicate; FR-QUOTE-10/badge, UI báo giá chưa làm. Không đánh dấu xong toàn bộ module. Xem `../03-engineering/quote-backend.md`.
 
 ### M2 — Ba luồng song song (mỗi người một luồng)
 
