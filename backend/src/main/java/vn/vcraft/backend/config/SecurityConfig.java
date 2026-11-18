@@ -20,9 +20,47 @@ class SecurityConfig {
   }
 
   @Bean
+  SecurityFilterChain security(
+          HttpSecurity http, AccountRepository accounts, SecurityErrorWriter errors) throws Exception {
     return http.csrf(csrf -> csrf.disable())
-        .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                            errors.write(req, res, 401, "UNAUTHENTICATED", "Vui lòng đăng nhập."))
-        .build();
+            .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .exceptionHandling(
+                    e ->
+                            e.authenticationEntryPoint(
+                                            (req, res, ex) ->
+                                                    errors.write(req, res, 401, "UNAUTHENTICATED", "Vui lòng đăng nhập."))
+                                    .accessDeniedHandler(
+                                            (req, res, ex) ->
+                                                    errors.write(
+                                                            req,
+                                                            res,
+                                                            403,
+                                                            "FORBIDDEN",
+                                                            "Bạn không có quyền thực hiện thao tác.")))
+            .authorizeHttpRequests(
+                    auth ->
+                            auth.requestMatchers(
+                                            HttpMethod.GET,
+                                            "/api/health",
+                                            "/api/health/**",
+                                            "/api/products/**",
+                                            "/api/quote-tags",
+                                            "/api/quote-categories")
+                                    .permitAll()
+                                    .requestMatchers(HttpMethod.POST, "/api/login")
+                                    .permitAll()
+                                    .requestMatchers("/error")
+                                    .permitAll()
+                                    .requestMatchers("/api/admin/**")
+                                    .hasRole("ADMIN")
+                                    .requestMatchers("/api/buyer/**")
+                                    .hasRole("BUYER")
+                                    .requestMatchers("/api/artisan/**")
+                                    .hasRole("ARTISAN")
+                                    .anyRequest()
+                                    .authenticated())
+            .addFilterBefore(
+                    new BearerTokenFilter(accounts), UsernamePasswordAuthenticationFilter.class)
+            .build();
   }
 }

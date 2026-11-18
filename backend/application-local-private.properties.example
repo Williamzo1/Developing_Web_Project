@@ -1,0 +1,5 @@
+# Copy to backend/application-local-private.properties (next to pom.xml).
+# This example contains no real credentials. Use your PostgreSQL login.
+VCRAFT_DB_URL=jdbc:postgresql://localhost:5432/vcraft_local
+VCRAFT_DB_USER=postgres
+VCRAFT_DB_PASSWORD=CHANGE_ME

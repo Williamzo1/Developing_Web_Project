@@ -18,7 +18,18 @@ class ArtisanWorkshopController {
   }
 
   @PatchMapping("/{id}")
-      @Valid @RequestBody WorkshopUpdateRequest input) {
+  WorkshopResponse rename(
+          @AuthenticationPrincipal Actor actor,
+          @PathVariable long id,
+          @Valid @RequestBody WorkshopUpdateRequest input) {
     return workshops.rename(actor, id, input);
+  }
+
+  @PatchMapping("/{id}/contact")
+  vn.vcraft.backend.dto.ContactResponse contact(
+          @AuthenticationPrincipal Actor actor,
+          @PathVariable long id,
+          @Valid @RequestBody vn.vcraft.backend.dto.WorkshopContactInput input) {
+    return workshops.updateContact(actor, id, input);
   }
 }
