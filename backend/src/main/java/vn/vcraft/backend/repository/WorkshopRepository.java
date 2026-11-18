@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import vn.vcraft.backend.dto.ContactResponse;
 import vn.vcraft.backend.dto.WorkshopResponse;
 
 @Repository
@@ -15,17 +16,51 @@ public class WorkshopRepository {
   }
 
   public List<WorkshopResponse> list() {
+    return db.query(
+        """
         SELECT w.id, w.name, w.slug, w.approved, a.username
         FROM workshops w LEFT JOIN accounts a ON a.workshop_id = w.id ORDER BY w.id
+        """,
+        (rs, row) -> new WorkshopResponse(
+            rs.getLong("id"), rs.getString("name"), rs.getString("slug"),
+            rs.getBoolean("approved"), rs.getString("username")));
   }
 
   public WorkshopResponse createPending(String slug, String name) {
-INSERT INTO workshops(slug, name, approved) VALUES (?, ?, false) RETURNING id, name, approved
+    return db.queryForObject(
+        """
+        INSERT INTO workshops(slug, name, approved) VALUES (?, ?, false)
+        RETURNING id, name, approved
+        """,
+        (rs, row) -> new WorkshopResponse(
+            rs.getLong("id"), rs.getString("name"), null, rs.getBoolean("approved"), null),
+        slug, name);
   }
 
   public Optional<WorkshopResponse> approve(long id) {
+    return db.query(
+        "UPDATE workshops SET approved = true WHERE id = ? RETURNING id, name, approved",
+        (rs, row) -> new WorkshopResponse(
+            rs.getLong("id"), rs.getString("name"), null, rs.getBoolean("approved"), null),
+        id).stream().findFirst();
   }
 
   public Optional<WorkshopResponse> rename(long id, String name) {
+    return db.query(
+        "UPDATE workshops SET name = ? WHERE id = ? AND approved RETURNING id, name, slug",
+        (rs, row) -> new WorkshopResponse(
+            rs.getLong("id"), rs.getString("name"), rs.getString("slug"), null, null),
+        name, id).stream().findFirst();
+  }
+
+  public Optional<ContactResponse> updateContact(long id, String email, String phone) {
+    return db.query(
+        """
+        UPDATE workshops SET contact_email = ?, phone = ?
+        WHERE id = ? AND approved RETURNING name, contact_email, phone
+        """,
+        (rs, row) -> new ContactResponse(
+            rs.getString("name"), rs.getString("contact_email"), rs.getString("phone")),
+        email, phone, id).stream().findFirst();
   }
 }
