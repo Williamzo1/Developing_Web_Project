@@ -4,6 +4,7 @@
 >
 > **Nguồn sự thật của schema là các file Flyway** trong `backend/src/main/resources/db/migration/`. Tài liệu này mô tả ý đồ. Mục 1 là hiện trạng (V1–V3). Mục 2 là **đề xuất**, chưa có migration; khi viết migration cho một bảng, cập nhật lại mục tương ứng và chuyển nó lên "hiện trạng".
 
+## 1. Hiện trạng (Flyway V1–V4)
 
 | Bảng | Cột | Ghi chú |
 |---|---|---|
@@ -12,6 +13,18 @@
 | `products` | `id`, `workshop_id` → workshops, `category_id` → categories, `slug` (unique), `name`, `description`, `image_path` | Loại sản phẩm. |
 | `accounts` | `id`, `username` (unique, `^[a-z0-9-]{3,60}$`), `password_hash`, `role` (`BUYER`/`ARTISAN`/`ADMIN`), `workshop_id` (unique) | Ràng buộc: `role = 'ARTISAN'` ⇔ có `workshop_id`. |
 | `account_sessions` | `token_hash` (PK), `account_id` → accounts (cascade), `expires_at` | Phiên đăng nhập. |
+
+### V4 — đã áp dụng trong bản backend báo giá
+
+- Thêm workshops.contact_email, phone để hai bên trao đổi liên hệ sau khi có báo giá.
+- tags, product_tags, quote_request_tags: tag tạm theo giả định Q-38; không có CRUD tag.
+- quote_requests: buyer_account_id; nội dung nháp; contact snapshot; mode/target; deadline; status; accepted_quote_id; @Version; created/updated. Trường nội dung có thể null khi DRAFT, service bắt buộc khi gửi.
+- quotes: request/workshop, đơn giá/tổng giá, số ngày, ghi chú, status, @Version, timestamps; unique(request_id,workshop_id); index một phần chỉ một ACCEPTED/request.
+- Composite FK (request id, accepted_quote_id) → quotes(request_id,id) chặn chọn nhầm quote của request khác. CHECK trạng thái sau chấp nhận phải có accepted_quote_id và ngược lại.
+- quote_request_events: actor, from/to, note, thời điểm; tag/events cascade khi xóa nháp.
+- Nguồn schema: V4__quote_workflow.sql; seed mới db/seed/quotes.sql (local/demo), không seed giao dịch.
+
+Các hàng quote/tag ở phần mô hình tổng thể bên dưới là ý đồ đã được hiện thực bởi V4 nêu trên; các bảng lô/media/news vẫn là đề xuất. Source V4 là hợp đồng cột chính xác. V1–V3 giữ byte nguyên vẹn.
 
 ## 2. Đề xuất mở rộng
 
@@ -75,5 +88,6 @@ erDiagram
 - Tên bảng/cột: `snake_case`, tiếng Anh, bảng ở số nhiều.
 - Khóa chính `BIGINT GENERATED ... AS IDENTITY`. Thời gian `TIMESTAMPTZ`; ngày thuần `DATE`. Tiền `NUMERIC(15,2)` (VND).
 - Enum lưu dạng `VARCHAR` + `CHECK`, giá trị viết HOA, khớp enum Java.
+- Mỗi thay đổi là **một file migration mới** `V<n>__mo_ta_ngan.sql`; không sửa file đã merge vào nhánh chính. Số `n` kế tiếp hiện tại: **V5**. Hai người cùng thêm migration thì người merge sau đổi số.
 - Dữ liệu mẫu đặt ở `db/seed/`, phải idempotent (`ON CONFLICT ... DO NOTHING`), không đặt trong migration.
 - Entity JPA phải khớp schema vì `ddl-auto=validate`: thêm cột thì cập nhật entity trong cùng thay đổi.

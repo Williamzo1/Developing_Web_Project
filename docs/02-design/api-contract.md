@@ -55,6 +55,99 @@ Frontend rẽ nhánh theo status/code; đưa fieldErrors tới ô nhập, messag
 
 Collection Postman: `postman/`. Kiểm thử HTTP: `backend/tests/phase02.py`, `backend/tests/m1.py`.
 
+## 2.1. Backend báo giá — đã cài đặt 2026-11-13
+
+Các endpoint sau dùng token Phase02/M1 và lỗi JSON chung. `/api/quote-tags`, `/api/quote-categories` công khai trả mảng `{id,slug,name}` để form không hardcode ID. Các list request dùng PageResponse của M1, page bắt đầu 0, size mặc định 12/tối đa 50, sort id giảm dần.
+
+| Method | URL | Quyền | Body / kết quả |
+|---|---|---|---|
+| POST | `/api/buyer/quote-requests` | Buyer | QuoteRequestInput → 201 QuoteRequestResponse (DRAFT) |
+| GET | `/api/buyer/quote-requests?page=0&size=12` | Buyer | Chỉ của mình → PageResponse<QuoteRequestSummary> |
+| GET | `/api/buyer/quote-requests/{id}` | Buyer chủ yêu cầu | QuoteRequestResponse với tất cả quote |
+| PUT | `/api/buyer/quote-requests/{id}` | Buyer chủ yêu cầu | Chỉ DRAFT; QuoteRequestInput + version hiện tại |
+| DELETE | `/api/buyer/quote-requests/{id}` | Buyer chủ yêu cầu | Chỉ DRAFT; JSON `{version}` → 204 |
+| POST | `/api/buyer/quote-requests/{id}/send` | Buyer chủ yêu cầu | `{version}` của request → SENT |
+| POST | `/api/buyer/quote-requests/{id}/cancel` | Buyer chủ yêu cầu | `{version}` của request; SENT/BIDDING → CANCELLED |
+| GET | `/api/buyer/quote-requests/{id}/quotes` | Buyer chủ yêu cầu | Mảng QuoteResponse, dùng so sánh |
+| POST | `/api/buyer/quote-requests/{id}/quotes/{quoteId}/accept` | Buyer chủ yêu cầu | `{version}` **của quote đang xem** → ACCEPTED |
+| GET | `/api/buyer/quote-requests/{id}/events` | Buyer chủ yêu cầu | Mảng QuoteEventResponse với actor ID |
+| GET | `/api/artisan/quote-requests?page=0&size=12` | Artisan được duyệt | Inbox riêng: targeted, open khớp tag đang SENT/BIDDING, hoặc mình từng báo giá |
+| GET | `/api/artisan/quote-requests/{id}` | Artisan được xem | QuoteRequestResponse, chỉ quote của mình; buyerContact null trước khi mình báo giá |
+| GET | `/api/artisan/quote-requests/{id}/quotes` | Artisan được xem | Mảng quote của chính mình (0 hoặc 1 dòng), không có đối thủ |
+| POST | `/api/artisan/quote-requests/{id}/quotes` | Artisan đủ điều kiện | QuoteInput → 201; gửi lại WITHDRAWN cần version hiện tại |
+| GET | `/api/artisan/quotes/{id}` | Artisan chủ báo giá | QuoteResponse; quote hộ khác → 404 |
+| PUT | `/api/artisan/quotes/{id}` | Artisan chủ báo giá | QuoteInput + version quote; chỉ SUBMITTED khi request BIDDING |
+| POST | `/api/artisan/quotes/{id}/withdraw` | Artisan chủ báo giá | `{version}` của quote → WITHDRAWN; request về SENT nếu không còn quote SUBMITTED |
+| POST | `/api/artisan/quote-requests/{id}/start-production` | Chỉ hộ thắng | `{version}` của request; ACCEPTED → IN_PRODUCTION |
+| POST | `/api/artisan/quote-requests/{id}/deliver` | Chỉ hộ thắng | `{version}` của request; IN_PRODUCTION → DELIVERED |
+| GET | `/api/artisan/quote-requests/{id}/events` | Artisan được xem | Lịch sử ẩn actorAccountId của người khác; không có giá/note báo giá |
+| PATCH | `/api/artisan/workshops/{id}/contact` | Artisan chủ xưởng | `{email,phone}`, cần ít nhất một kênh; → ContactResponse |
+
+Admin không có quyền xem giao dịch qua các vùng Buyer/Artisan. Sai vai trò 403; tài nguyên riêng không tồn tại/không sở hữu 404.
+
+### QuoteRequestInput
+
+Ví dụ lấy categoryId/tagIds thực tế từ options trước khi gửi:
+
+```json
+{
+  "mode":"OPEN",
+  "categoryId":1,
+  "title":"Mua sỉ 100 cốc gốm",
+  "quantity":100,
+  "unit":"chiếc",
+  "spec":"Men lam thủ công, cần mẫu trước khi sản xuất",
+  "note":"Liên hệ để thống nhất đóng gói",
+  "desiredBy":"2099-12-31",
+  "biddingDeadline":null,
+  "tagIds":[1],
+  "buyerContactName":"Người mua demo",
+  "buyerContactEmail":"buyer@example.test",
+  "buyerContactPhone":"0900000001"
+}
+```
+
+- Tạo: mode bắt buộc; còn lại có thể thiếu khi nháp. PUT là thay toàn bộ nội dung nháp, thêm version hiện tại; trường bỏ qua sẽ về null/empty.
+- Gửi: cần category/title/quantity/unit/spec/desiredBy, tên liên hệ và email hoặc phone. OPEN cần >=1 tag; TARGETED cần targetWorkshopId của đúng một hộ đã duyệt, tag có thể rỗng. OPEN không nhận targetWorkshopId.
+- title/name tối đa 160; unit 40; spec 4000; note 2000; tagIds <=20 không trùng; quantity số nguyên dương; email/phone đúng định dạng; tag/category/target tồn tại. desiredBy không trước ngày UTC khi gửi. Deadline ISO-8601 có múi giờ và ở tương lai khi gửi, có thể null.
+- Client không gửi buyerAccountId/workshopId/status/acceptedQuoteId/totalPrice để tự quyết dữ liệu; service lấy chủ sở hữu từ Actor và tự chuyển trạng thái/tính giá.
+- Chưa có mediaIds/ảnh tham khảo, chờ MEDIA.
+
+### QuoteInput và VersionInput
+
+```json
+{"unitPrice":10000,"leadTimeDays":10,"note":"Chào giá riêng tư"}
+```
+
+Sửa hoặc gửi lại thêm `"version":0` (dùng giá trị thật đang xem). unitPrice >0, tối đa 13 chữ số nguyên/2 chữ số thập phân; leadTimeDays 1..3650; note <=2000. Backend tính totalPrice=unitPrice*quantity và kiểm tra tổng không vượt NUMERIC(15,2). Không coi dữ liệu này là hợp đồng/thanh toán.
+
+Các action dùng `{ "version": 0 }`; riêng accept là **quoteVersion**, còn send/cancel/start/deliver/delete là **requestVersion**. Sau bất kỳ chỉnh sửa trạng thái/quote, phải dùng version mới server trả về hoặc GET lại. Không tự tăng version phía frontend.
+
+### Response
+
+QuoteRequestSummary: `{id,title,mode,status,quantity,unit,biddingDeadline,updatedAt,version}`. List không gửi giá hoặc contact.
+
+QuoteRequestResponse: `{id,categoryId,title,quantity,unit,spec,note,desiredBy,biddingDeadline,mode,targetWorkshopId,tagIds,status,acceptedQuoteId,version,createdAt,updatedAt,buyerContact,quotes}`. Buyer thấy mọi quote; Artisan chỉ quote mình; acceptedQuoteId null với hộ không thắng; buyerContact null nếu hộ chưa báo giá.
+
+QuoteResponse: `{id,requestId,workshopId,unitPrice,totalPrice,leadTimeDays,note,status,version,createdAt,updatedAt,workshopContact}`. ContactResponse là `{name,email,phone}`. QuoteStatus: SUBMITTED/WITHDRAWN/ACCEPTED/NOT_SELECTED.
+
+QuoteEventResponse: `{id,actorAccountId,fromStatus,toStatus,note,createdAt}`; từ null sang DRAFT là sự kiện tạo. Note lịch sử chỉ mô tả hành động; nội dung note của quote không nằm trong lịch sử. Artisan không nhận ID actor khác.
+
+### Lỗi nghiệp vụ mới
+
+| HTTP | code | Frontend xử lý |
+|---|---|---|
+| 400 | REQUEST_INCOMPLETE | Hiển thị message chung (thiếu dữ liệu để gửi, ID tag/category sai, tổng tiền quá lớn...) |
+| 400 | VALIDATION_FAILED | fieldErrors gắn ô nhập |
+| 409 | STALE_DATA | Yêu cầu tải lại dữ liệu; không tự gửi lại thao tác chốt |
+| 409 | INVALID_STATE_TRANSITION | Trạng thái đã đổi hoặc thao tác lặp, GET lại request |
+| 409 | BIDDING_CLOSED | Hết hạn nhận báo giá mới/gửi lại |
+| 409 | QUOTE_ALREADY_EXISTS | Chuyển sang sửa quote hiện có |
+| 409 | CONCURRENT_UPDATE | Gặp lỗi lấy khóa/xung đột khóa, tải lại rồi thử sau |
+| 409 | DATA_CONFLICT | Chốt ràng buộc DB; tải lại và đối chiếu trạng thái |
+
+Quá hạn không tự đóng request; Buyer vẫn chọn quote đã có, hộ vẫn sửa/rút khi trạng thái cho phép. Hủy chỉ trước accept; không có hủy sau ACCEPTED. Không có API Admin phân bổ đơn.
+
 ## 3. API dự kiến (đề xuất)
 
 ### Công khai

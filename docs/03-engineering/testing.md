@@ -31,3 +31,7 @@ Riêng luồng báo giá: xem danh sách ở `02-design/quote-state-machine.md` 
 - Test phải tự dọn hoặc dùng dữ liệu có tên ngẫu nhiên để chạy lại nhiều lần được (script hiện tại đã làm vậy).
 - Test hỏng thì sửa nguyên nhân; không xóa hay nới lỏng assertion để cho qua.
 - Khi báo "đã xong", ghi rõ đã chạy những kiểm thử nào và kết quả; phần nào chưa kiểm được thì nói thẳng.
+
+## Backend báo giá đã có
+
+HTTP: `python backend/tests/quotes.py` với backend local và DB test. Cài `backend/tests/quote_requirements.txt`, cấu hình VCRAFT_TEST_DB_URL/DB_PASSWORD để bật SQL + held-row-lock checks; không cấu hình thì phần đó SKIP. Các ca race và kết quả PostgreSQL 16 thật: [quote-verification.md](quote-verification.md). Script tạo dữ liệu thử, không chạy trên DB dữ liệu thật.

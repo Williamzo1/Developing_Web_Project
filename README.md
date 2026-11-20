@@ -1,7 +1,31 @@
+# vCraft — Backend báo giá (sau M1)
+
+Bản tiếp tục từ **vCraft-M1-backend.zip**, bổ sung backend báo giá. Giữ Java 17.0.12 / Spring Boot 4.1.2 / Maven 3.9.11 / PostgreSQL / React. UI báo giá chưa làm.
+
+## Bắt đầu chặng báo giá
+
+1. Copy `backend/application-local-private.properties.example` thành `backend/application-local-private.properties` **ngang pom.xml**, điền URL/user/password PostgreSQL thật. Không đặt file private trong resources ở bản này.
+2. Trong terminal tại backend chạy `.\run-local.cmd` (Windows) hoặc `sh ./run-local.sh`. Script bật local và đặt đúng Working directory, không cần Run → Edit Configurations. Cần JDK 17/JAVA_HOME đúng.
+3. Dùng DB M1 có Flyway V1–V3: ứng dụng tự chạy **V4**, giữ tài khoản/sản phẩm cũ. Với DB mới trống, tự chạy V1–V4. Không xóa DB cũ hoặc sửa checksum migration.
+4. Import hai JSON trong postman, chọn vCraft local, chạy folder **Quote Backend — Luồng báo giá** từ trên xuống. Dùng buyer có sẵn; thêm buyer-other để test quyền sở hữu.
+5. Kiểm thử: từ gốc, backend đang chạy DB test riêng, `python backend/tests/quotes.py`. Hướng dẫn kiểm tra khóa bằng PostgreSQL thật ở tài liệu bên dưới.
+
+Đã có: nháp/sửa/xóa, gửi/hủy, OPEN/TARGETED, gửi/sửa/rút/gửi lại báo giá, chấp nhận một báo giá có khóa dòng + version, sản xuất/đã giao, lịch sử, liên hệ, deadline tùy chọn. Matching tag theo giả định Q-38 được cô lập trong một predicate. Chưa có ảnh tham khảo/MEDIA, UI báo giá, badge hoặc quản trị tag.
+
+- [Workflow, cấu trúc file, quyền và cách kiểm thử](docs/03-engineering/quote-backend.md)
+- [Hợp đồng API cho React](docs/02-design/api-contract.md)
+- [Kết quả kiểm thử thực tế](docs/03-engineering/quote-verification.md)
+- [Hiện trạng toàn dự án](docs/04-plan/status.md)
+
+Các mục dưới đây giữ hướng dẫn nền M1, đã cập nhật số migration cho bản báo giá. Workflow báo giá chi tiết nằm trong tài liệu liên kết ở trên.
+
+## 1. Nền M1 được giữ lại
+
 - Lỗi API thống nhất `{timestamp,status,code,message,path,fieldErrors}`, kể cả 401/403 từ Spring Security. Không trả stack trace, mật khẩu hoặc token trong lỗi.
 - Bean Validation tại DTO và service cho đăng nhập, cấp tài khoản hộ, sửa tên xưởng. Mật khẩu giới hạn **72 byte UTF-8** để phù hợp BCrypt; mật khẩu tạo mới ít nhất 10 ký tự và không chỉ chứa khoảng trắng.
 - Phân trang thật tại PostgreSQL qua JPA: `GET /api/products/page?page=0&size=12`. React danh mục dùng endpoint này. Endpoint cũ `/api/products` vẫn trả mảng để giữ tương thích.
 - `/api/buyer/**` chỉ cho BUYER; endpoint `GET /api/buyer/me` giúp kiểm tra quyền trước khi làm nghiệp vụ báo giá. ADMIN không tự động có quyền BUYER. `/api/me` vẫn dùng chung cho mọi tài khoản đã xác thực.
+- Tách cấu hình chung và profile local; bỏ mật khẩu DB khỏi mã dùng chung, không tự bật local. Giữ nguyên migration V1–V3; chặng báo giá bổ sung V4.
 
 ## 2. Chạy local từ bản ZIP
 
@@ -9,9 +33,34 @@ Cần **JDK 17** (không chỉ JRE), Node 22 LTS hoặc Node >=20.19, PostgreSQL
 
 ### Bước 1 — PostgreSQL
 
+Dùng pgAdmin tạo database **mới và trống** `vcraft_local` bằng tài khoản của bạn. Nếu tên này đã có schema tự tạo tay, dùng tên mới như `vcraft_m1` và đổi URL bên dưới. Không xóa database/volume cũ, không tự bật `baseline-on-migrate` để bỏ qua khác biệt. Nếu muốn giữ dữ liệu cũ, sao lưu rồi đối chiếu cấu trúc với V1–V4 trước khi lập kế hoạch chuyển dữ liệu.
 
+Không chạy SQL tạo bảng bằng tay. Spring Boot chạy Flyway V1–V4, sau đó JPA kiểm tra schema; profile local nạp seed và tài khoản mẫu idempotent.
 
 ### Bước 2 — Backend trong IntelliJ
+
+1. Open `backend/pom.xml` dưới dạng Maven project và Reload Maven.
+2. Đặt Project SDK, Module SDK, Maven Runner JRE và Run Configuration JRE đều là **JDK 17**.
+3. Mở `VCraftApplication`. Trong Run → Edit Configurations, đặt **Working directory** là đường dẫn thư mục `backend`.
+4. Điền Environment variables (đổi mật khẩu theo máy bạn):
+
+```text
+SPRING_PROFILES_ACTIVE=local;VCRAFT_DB_URL=jdbc:postgresql://localhost:5432/vcraft_local;VCRAFT_DB_USER=postgres;VCRAFT_DB_PASSWORD=YOUR_LOCAL_PASSWORD
+```
+
+5. Run; đợi log Started và seed chạy xong. Kiểm tra `http://localhost:8080/api/health/db` trả `200 {"status":"UP"}`.
+
+**Nếu muốn điền trong file properties:** copy `backend/application-local-private.properties.example` thành `backend/application-local-private.properties`, sửa `VCRAFT_DB_PASSWORD` cùng URL/user nếu cần. File private đã nằm trong `.gitignore`. Vẫn phải bật profile local và đặt Working directory là backend. Không gửi/commit file private. Không sửa mật khẩu trong file properties chung.
+
+**Chạy bằng PowerShell thay cho IntelliJ** (đang ở `backend/`):
+
+```powershell
+$env:JAVA_HOME = "C:\Program Files\Java\jdk-17"
+$env:Path = "$env:JAVA_HOME\bin;$env:Path"
+$env:SPRING_PROFILES_ACTIVE = "local"
+$env:VCRAFT_DB_PASSWORD = "YOUR_LOCAL_PASSWORD"
+.\mvnw.cmd spring-boot:run
+```
 
 Nếu wrapper báo `'powershell' is not recognized`, kiểm tra PATH Windows có `C:\Windows\System32\WindowsPowerShell\v1.0\`; hoặc chạy Maven goal `spring-boot:run` trong cửa sổ Maven của IntelliJ. Không đổi Spring Boot chỉ để sửa lỗi PATH.
 
@@ -34,6 +83,7 @@ Chạy folder M1 từ trên xuống: ba request đăng nhập lưu `buyerToken`,
 | Tên đăng nhập | Vai trò | Mật khẩu demo |
 |---|---|---|
 | buyer | BUYER | VcraftDemo17! |
+| buyer-other (test quyền sở hữu) | BUYER | VcraftDemo17! |
 | admin | ADMIN | VcraftDemo17! |
 | xuong-men-lam | ARTISAN | VcraftDemo17! |
 | xuong-dat-nung | ARTISAN | VcraftDemo17! |
@@ -92,6 +142,7 @@ Danh sách đầy đủ: `docs/02-design/api-contract.md`; chi tiết chặng: `
 
 ## 6. SQL, kiểm thử và bàn giao
 
+- Migration chính thức: `backend/src/main/resources/db/migration/`; đã có V1–V4. Schema mới dùng **V5__...sql**. Không sửa file đã áp dụng.
 - Seed: `backend/src/main/resources/db/seed/`, chỉ local/demo. JPA `validate`, SQL init `never`. Kiểm tra DB: `SELECT version,description,success FROM flyway_schema_history ORDER BY installed_rank;`, `SELECT COUNT(*) FROM products;`, `SELECT COUNT(*) FROM accounts;`. Khởi động lại không tăng số bản ghi seed; bộ test HTTP chủ động tạo thêm hộ với username riêng, đó không phải seed bị trùng.
 - Build backend: tại backend chạy `.\mvnw.cmd clean package` (Linux `./mvnw clean package`). Build frontend: `npm ci` rồi `npm run build` trong frontend.
 - Backend đang chạy với DB **test riêng**, từ gốc chạy `python backend/tests/m1.py`. Test này chạy cả Phase02, tạo/duyệt thêm một hộ để kiểm tra; không chạy trên dữ liệu thật.
@@ -99,3 +150,4 @@ Danh sách đầy đủ: `docs/02-design/api-contract.md`; chi tiết chặng: `
 
 Lỗi thường gặp: `password authentication failed` → kiểm tra user/password đúng PostgreSQL; `database does not exist` → tạo DB trống đúng tên; Flyway báo schema non-empty/no history → đổi sang DB mới và giữ DB cũ; cổng 8080 bận → dừng phiên backend cũ; React lỗi tải → gọi health/db trước và kiểm tra backend 8080; Java release không đúng → kiểm tra cả Maven Runner JRE, không chỉ Project SDK.
 
+Các phần chưa hoàn thành: upload/resize ảnh, CRUD danh mục đầy đủ, đăng ký Buyer, giao diện đăng nhập/quản trị/báo giá, lô/QR, bản đồ, tin tức, triển khai Internet. Không đánh dấu toàn bộ M1 hoặc đề bài là hoàn thành.
