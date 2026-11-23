@@ -11,6 +11,7 @@ Bộ tài liệu này là **nguồn sự thật** của dự án cho cả thành
 | `02-design/` | Làm **như thế nào**? | [architecture](02-design/architecture.md) · [data-model](02-design/data-model.md) · [api-contract](02-design/api-contract.md) · [quote-state-machine](02-design/quote-state-machine.md) · [ui-ux](02-design/ui-ux.md) |
 | `03-engineering/` | Chạy, viết mã, cộng tác, kiểm thử ra sao? | [setup](03-engineering/setup.md) · [conventions](03-engineering/conventions.md) · [git-workflow](03-engineering/git-workflow.md) · [testing](03-engineering/testing.md) |
 | `04-plan/` | Đã làm đến đâu, làm gì tiếp, demo thế nào? | [status](04-plan/status.md) · [roadmap](04-plan/roadmap.md) · [demo-script](04-plan/demo-script.md) |
+| `05-backend-supplement/` | Thiết kế backend chi tiết và code tham khảo nhập từ `backend.zip` (cần đối chiếu trước khi áp dụng) | [README và ghi chú tương thích](05-backend-supplement/README.md) |
 | `decisions/` | **Vì sao** quyết định như vậy? | [danh sách ADR](decisions/README.md) |
 
 ## Đọc gì cho việc gì
@@ -24,6 +25,8 @@ Bộ tài liệu này là **nguồn sự thật** của dự án cho cả thành
 | Đổi schema | `02-design/data-model.md` mục 3 |
 | Chạy dự án | `03-engineering/setup.md` |
 | Chuẩn bị vấn đáp | `04-plan/demo-script.md` + `01-requirements/traceability.md` |
+| Thiết kế backend M1–M4 | `05-backend-supplement/README.md` → Blueprint → Giai đoạn B → Giai đoạn C; đối chiếu `open-questions.md` trước khi code |
+| Tra cứu code mẫu backend / script M2 | `05-backend-supplement/implementation/` (không chép đè file hiện tại khi chưa review diff) |
 
 ## Nhãn độ chắc chắn
 
@@ -43,6 +46,7 @@ Mọi tài liệu ghi rõ mức chắc chắn; đừng coi một đề xuất l�
 | API đang có | Controller + DTO > `api-contract.md` |
 | Tình trạng cài đặt | `04-plan/status.md` |
 | Điều chưa rõ | `01-requirements/open-questions.md` |
+| Thiết kế/implementation bổ sung | `05-backend-supplement/` chỉ là tài liệu tham khảo; cần được nhóm duyệt và đồng bộ vào requirements/ADR trước khi coi là quyết định |
 
 Phát hiện tài liệu lệch với mã: sửa tài liệu (hoặc mã) ngay trong thay đổi đó, đừng để nguyên.
 
