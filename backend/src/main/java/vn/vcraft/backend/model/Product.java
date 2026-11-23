@@ -11,6 +11,12 @@ public class Product {
     private String name;
     private String description;
     private String imagePath;
+    private java.math.BigDecimal referencePrice;
+    private Boolean priceVisible;
+    private Boolean hidden;
+    private Boolean featured;
+    private java.time.Instant createdAt;
+    private java.time.Instant updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "workshop_id")
@@ -29,4 +35,21 @@ public class Product {
     public String getImagePath() { return imagePath; }
     public Workshop getWorkshop() { return workshop; }
     public Category getCategory() { return category; }
+    public java.math.BigDecimal getReferencePrice() { return referencePrice; }
+    public Boolean getPriceVisible() { return priceVisible; }
+    public Boolean getHidden()       { return hidden; }
+    public Boolean getFeatured()     { return featured; }
+    public java.time.Instant getCreatedAt() { return createdAt; }
+    public java.time.Instant getUpdatedAt() { return updatedAt; }
+
+    // Setters
+    public void setName(String v)                      { name = v; }
+    public void setDescription(String v)               { description = v; }
+    public void setImagePath(String v)                 { imagePath = v; }
+    public void setReferencePrice(java.math.BigDecimal v){ referencePrice = v; }
+    public void setPriceVisible(Boolean v)             { priceVisible = v; }
+    public void setHidden(Boolean v)                   { hidden = v; }
+    public void setFeatured(Boolean v)                 { featured = v; }
+    public void setCreatedAt(java.time.Instant v)      { createdAt = v; }
+    public void setUpdatedAt(java.time.Instant v)      { updatedAt = v; }
 }
