@@ -306,6 +306,7 @@ Nhóm không tự chốt được các câu này, nhưng nên thống nhất **p
 
 - **Bối cảnh:** Hiện chỉ có 3 ảnh SVG minh họa. Giao diện image-centric cần ảnh thật, chất lượng tốt.
 - **Gợi ý:** Ưu tiên ảnh tự chụp (đi Bát Tràng một buổi nếu được) hoặc ảnh giấy phép tự do (Wikimedia Commons, Unsplash, Pexels), ghi nguồn trong một file danh sách. **Cập nhật 2026-11-10 (chỉ dẫn chung của nhóm):** dữ liệu phải trông như có người dùng thật — nhóm tự tạo tài khoản Admin/Buyer/hộ và thao tác qua giao diện trên bản đã triển khai (đăng bài, tạo lô, gửi yêu cầu, chào giá). Vì vậy seed chỉ nên là bộ khung tối thiểu; phần còn lại nhập tay qua web và **sao lưu** để không mất. Mục tiêu: 6–8 hộ có tọa độ thật ở Bát Tràng, 60–100 sản phẩm thật + sinh thêm để đủ vài trăm cho bài toán hiệu năng, 4–5 lô có mốc sản xuất, 5–6 tin tức, vài yêu cầu ở các trạng thái khác nhau. Giao một người phụ trách.
+- **Cập nhật 2026-11-24:** Đã lọc 189 ảnh ứng viên (98 từ Wikimedia Commons, 91 từ Flickr qua Openverse; 99 ảnh sản phẩm) cho 6 hộ giả lập và 3 loại sản phẩm (bình lọ chum chậu · ấm chén bát đĩa · tượng & trang trí) — xem `04-plan/demo-image-sources.md`. **Đề xuất**, chưa nhập vào hệ thống. Nhóm chốt: giả định ảnh do các hộ tự chuẩn bị; không cần ghi nguồn ảnh trong hệ thống hay trên web. Còn mở: thêm phân loại thứ 3, bổ sung ảnh để đủ số lượng.
 - **Nhóm chốt:** _chưa_
 
 ### Q-36 🟢 Giao diện chỉ tiếng Việt?
