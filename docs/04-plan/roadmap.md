@@ -12,6 +12,18 @@
 
 Sau khi có nền, chia việc **theo tính năng** (mỗi người làm trọn cả API lẫn giao diện của tính năng mình nhận).
 
+### Việc tiếp theo của từng người (đề xuất 2026-11-24 — nhóm chốt lại)
+
+Dựa trên vai trò ở trên và hiện trạng ở `status.md`. Chưa phải quyết định của nhóm.
+
+| Thành viên | Việc tiếp theo |
+|---|---|
+| Huy | (1) Gộp prototype `developing/prototype_1` và hoàn tất nền frontend: tách `main.jsx`, client API, `useApi`/`useMutation`, AuthContext, route guard, bố cục 3 khu vực, design tokens, đăng nhập. (2) Wireframe 5 màn hình trọng điểm. (3) Giao diện Buyer + Artisan cho luồng báo giá (API đã có). |
+| Thắng | (1) Service/controller/DTO cho schema V5/V6: hồ sơ hộ + tọa độ + endpoint ghim bản đồ, tin tức + thống kê, CRUD sản phẩm + công đoạn. (2) Luồng lô: mốc, công khai/riêng tư, liên kết riêng, QR. (3) Migration `tags`/`product_tags` khi chốt Q-38. (4) Cập nhật `api-contract.md` và Postman. |
+| Dương | (1) MEDIA: upload nhiều ảnh, resize, phục vụ ảnh (chờ Q-13, Q-21). (2) Seed tối thiểu, CI + test tự động trong build. (3) Chuẩn bị triển khai Internet (chờ Q-23), sao lưu DB + ảnh, `restart` trong Compose, cache Nginx. (4) Chạy lại `backend/tests/phase02.py` kiểm hồi quy báo giá. |
+
+Cả nhóm: họp lần 2 chốt các câu 🔴 còn mở (xem M0).
+
 ## Giai đoạn
 
 ### M0 — Chốt tài liệu (đang làm)

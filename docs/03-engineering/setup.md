@@ -12,6 +12,20 @@ Không đặt local mặc định trong cấu hình chung. File .env không đư
 
 Tài khoản: buyer, admin, xuong-men-lam, xuong-dat-nung, mật khẩu demo trong README.
 
+## Chạy bằng Docker Compose (cả ba dịch vụ)
+
+Cần Docker Desktop (Windows: bật WSL2). Không cần cài JDK, Node hay PostgreSQL cho cách này.
+
+1. Sao `.env.example` thành `.env` ở thư mục gốc, đặt `POSTGRES_PASSWORD`. `.env` bị git bỏ qua; Compose tự đọc file này.
+2. `docker compose up -d --build` ở thư mục gốc. Lần đầu mất vài phút để tải dependency.
+3. Mở http://localhost:5173 (Nginx phục vụ giao diện và chuyển `/api/`, `/media/` sang backend). Backend trực tiếp: http://localhost:8080.
+   Nếu backend báo `password authentication failed for user "vcraft"`: volume DB đã được tạo với mật khẩu cũ, còn `.env` đang có mật khẩu khác (thường do sao đè `.env`). Chỉ đặt `POSTGRES_PASSWORD` khi chạy lần đầu; sau đó đổi mật khẩu trong DB bằng `ALTER USER`, hoặc xóa volume bằng `docker compose down -v` nếu không cần dữ liệu.
+4. Dừng: `docker compose down`. Thêm `-v` để xóa cả dữ liệu DB và ảnh upload.
+
+Compose chạy profile `local` nên có tài khoản và dữ liệu mẫu (xem README). Dữ liệu DB nằm ở volume `catalog_data`, ảnh upload ở `media_data`. Khi triển khai có tên miền, đặt `APP_BASE_URL` thành địa chỉ đó. Nginx cho phép body tới 60 MB để upload ảnh.
+
+CI (`.github/workflows/ci.yml`) build backend và frontend ở mỗi push và pull request.
+
 | Việc | Lệnh | Thư mục |
 |---|---|---|
 | Backend dev | ./mvnw spring-boot:run hoặc .\mvnw.cmd spring-boot:run | backend |

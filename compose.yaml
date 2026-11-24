@@ -1,6 +1,7 @@
 services:
   db:
     image: postgres:16-alpine
+    restart: unless-stopped
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-vcraft}
       POSTGRES_USER: ${POSTGRES_USER:-vcraft}
@@ -14,21 +15,39 @@ services:
       retries: 20
   backend:
     build: ./backend
+    restart: unless-stopped
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/${POSTGRES_DB:-vcraft}
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-vcraft}
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:?Copy .env.example to .env}
       SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-local}
+      # Ảnh upload nằm trên volume media_data, không mất khi tạo lại container.
+      MEDIA_STORAGE_PATH: /data/media
+      # Địa chỉ công khai dùng cho mã QR và CORS; đổi khi triển khai có tên miền.
+      APP_BASE_URL: ${APP_BASE_URL:-http://localhost:5173}
+      APP_FRONTEND_URL: ${APP_BASE_URL:-http://localhost:5173}
+      CORS_ALLOWED_ORIGINS: ${APP_BASE_URL:-http://localhost:5173}
+    volumes:
+      - media_data:/data/media
     depends_on:
       db:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8080/api/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+      start_period: 30s
     ports:
       - "127.0.0.1:${BACKEND_PORT:-8080}:8080"
   frontend:
     build: ./frontend
+    restart: unless-stopped
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
     ports:
       - "127.0.0.1:${FRONTEND_PORT:-5173}:80"
 volumes:
   catalog_data:
+  media_data:
