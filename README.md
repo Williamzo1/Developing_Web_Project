@@ -99,3 +99,10 @@ Danh sách đầy đủ: `docs/02-design/api-contract.md`; chi tiết chặng: `
 
 Lỗi thường gặp: `password authentication failed` → kiểm tra user/password đúng PostgreSQL; `database does not exist` → tạo DB trống đúng tên; Flyway báo schema non-empty/no history → đổi sang DB mới và giữ DB cũ; cổng 8080 bận → dừng phiên backend cũ; React lỗi tải → gọi health/db trước và kiểm tra backend 8080; Java release không đúng → kiểm tra cả Maven Runner JRE, không chỉ Project SDK.
 
+
+## Bản cập nhật THẮNG — M1 Backend bước 1–10
+
+Đọc [hướng dẫn cập nhật, kiểm thử và phần cần làm ở bước 11](docs/03-engineering/m1-steps-1-10.md).
+Hợp đồng API mới nằm ở [api-contract.md](docs/02-design/api-contract.md).
+Folder Postman `M1 steps 1–10` có 54 request bổ sung. Chạy kiểm thử mới bằng
+`python backend/tests/m1_extension.py` với backend local/demo đang chạy.

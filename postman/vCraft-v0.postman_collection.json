@@ -1129,6 +1129,981 @@
           ]
         }
       ]
+    },
+    {
+      "name": "M1 steps 1–10",
+      "description": "Các request dùng thủ công với DB thử. Không chạy toàn bộ bằng runner vì có thao tác ẩn/khóa/thu hồi. Đăng nhập bằng folder cũ để lấy token trước, chạy create và thiết lập biến môi trường trước các request phụ thuộc.",
+      "item": [
+        {
+          "name": "Home",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/home"
+          }
+        },
+        {
+          "name": "Buyer register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/register",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"m1-buyer\",\n  \"password\": \"VcraftDemo17!\",\n  \"displayName\": \"Buyer thử\",\n  \"email\": \"buyer@example.test\",\n  \"phone\": \"0901234567\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Verify email",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/register/verify-email",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"m1-buyer\",\n  \"otp\": \"{{otp}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Resend OTP",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/register/resend-otp",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"m1-buyer\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Public workshops",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/workshops?page=0&size=12"
+          }
+        },
+        {
+          "name": "Map pins",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/workshops/map"
+          }
+        },
+        {
+          "name": "Workshop detail",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/workshops/{{workshopSlug}}"
+          }
+        },
+        {
+          "name": "My workshop",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{artisanToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/artisan/workshop"
+          }
+        },
+        {
+          "name": "Update profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{artisanToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/artisan/workshop",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Xưởng Men Lam\",\n  \"description\": \"Giới thiệu xưởng\",\n  \"acceptsVisitors\": true,\n  \"latitude\": 20.9783,\n  \"longitude\": 105.9107,\n  \"mediaIds\": []\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Replace weekly hours",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{artisanToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/artisan/workshop/hours",
+            "body": {
+              "mode": "raw",
+              "raw": "[\n  {\n    \"dayOfWeek\": 1,\n    \"openTime\": \"08:00\",\n    \"closeTime\": \"17:00\"\n  }\n]",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Add closure",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{artisanToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/artisan/workshop/closures",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"closedOn\": \"{{closedOn}}\",\n  \"reason\": \"Nghỉ lễ\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Delete closure",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{artisanToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/artisan/workshop/closures/{{closureId}}"
+          }
+        },
+        {
+          "name": "List certificates",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{artisanToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/artisan/workshop/certificates"
+          }
+        },
+        {
+          "name": "Add certificate",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{artisanToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/artisan/workshop/certificates",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Chứng nhận chất lượng\",\n  \"issuer\": \"Đơn vị cấp\",\n  \"mediaIds\": []\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.environment.set(\"certificateId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Delete certificate",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{artisanToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/artisan/workshop/certificates/{{certificateId}}"
+          }
+        },
+        {
+          "name": "Filtered products",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/products/page?workshopId={{ownWorkshopId}}&categoryId={{categoryId}}&tagSlug={{tagSlug}}&page=0&size=12"
+          }
+        },
+        {
+          "name": "Product detail by slug",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/products/{{productSlug}}"
+          }
+        },
+        {
+          "name": "Product steps",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/products/{{productSlug}}/steps"
+          }
+        },
+        {
+          "name": "My products",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{artisanToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/artisan/products"
+          }
+        },
+        {
+          "name": "Create product",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{artisanToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/artisan/products",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Bình gốm thử M1\",\n  \"categoryId\": {{categoryId}},\n  \"description\": \"Mô tả sản phẩm\",\n  \"referencePrice\": 150000,\n  \"priceVisible\": true,\n  \"tagIds\": [],\n  \"mediaIds\": []\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.environment.set(\"productId\", pm.response.json().id);",
+                  "pm.environment.set(\"productSlug\", pm.response.json().slug);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "My product detail",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{artisanToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/artisan/products/{{productId}}"
+          }
+        },
+        {
+          "name": "Update product",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{artisanToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/artisan/products/{{productId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Bình gốm thử M1\",\n  \"categoryId\": {{categoryId}},\n  \"description\": \"Mô tả sản phẩm\",\n  \"referencePrice\": 150000,\n  \"priceVisible\": true,\n  \"tagIds\": [],\n  \"mediaIds\": []\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Replace product steps",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{artisanToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/artisan/products/{{productId}}/steps",
+            "body": {
+              "mode": "raw",
+              "raw": "[\n  {\n    \"name\": \"Tạo hình\",\n    \"description\": \"Tạo hình thủ công\",\n    \"mediaIds\": []\n  }\n]",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Replace product tags",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{artisanToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/artisan/products/{{productId}}/tags",
+            "body": {
+              "mode": "raw",
+              "raw": "[]",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Hide product",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{artisanToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/artisan/products/{{productId}}"
+          }
+        },
+        {
+          "name": "Public batches",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/batches?productId={{productId}}&workshopId={{ownWorkshopId}}&kind=IN_STOCK&page=0&size=12"
+          }
+        },
+        {
+          "name": "My batches",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{artisanToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/artisan/batches"
+          }
+        },
+        {
+          "name": "Create batch",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{artisanToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/artisan/batches",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": {{productId}},\n  \"code\": \"LO-M1\",\n  \"name\": \"Lô thử M1\",\n  \"kind\": \"IN_STOCK\",\n  \"quantity\": 20,\n  \"unit\": \"chiếc\",\n  \"visibility\": \"PRIVATE\",\n  \"priceVisible\": false,\n  \"mediaIds\": []\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.environment.set(\"batchId\", pm.response.json().id);",
+                  "pm.environment.set(\"publicCode\", pm.response.json().publicCode);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "My batch detail",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{artisanToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/artisan/batches/{{batchId}}"
+          }
+        },
+        {
+          "name": "Update batch",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{artisanToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/artisan/batches/{{batchId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": {{productId}},\n  \"code\": \"LO-M1\",\n  \"name\": \"Lô thử M1\",\n  \"kind\": \"IN_STOCK\",\n  \"quantity\": 20,\n  \"unit\": \"chiếc\",\n  \"visibility\": \"PRIVATE\",\n  \"priceVisible\": false,\n  \"mediaIds\": []\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Replace milestones",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{artisanToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/artisan/batches/{{batchId}}/milestones",
+            "body": {
+              "mode": "raw",
+              "raw": "[\n  {\n    \"title\": \"Đã tạo hình\",\n    \"note\": \"Kiểm tra chất lượng\",\n    \"happenedOn\": \"{{happenedOn}}\",\n    \"mediaIds\": []\n  }\n]",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Create share URL",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{artisanToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/artisan/batches/{{batchId}}/share-token"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.environment.set(\"shareToken\", pm.response.json().shareUrl.split(\"?token=\")[1]);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Private batch landing",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/batches/{{publicCode}}?token={{shareToken}}"
+          }
+        },
+        {
+          "name": "Revoke share URL",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{artisanToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/artisan/batches/{{batchId}}/share-token"
+          }
+        },
+        {
+          "name": "Public QR",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/batches/{{publicCode}}/qr.png"
+          }
+        },
+        {
+          "name": "Owner QR",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{artisanToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/artisan/batches/{{batchId}}/qr.png"
+          }
+        },
+        {
+          "name": "Upload images",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{artisanToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/media",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "files",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete media",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{artisanToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/media/{{mediaId}}"
+          }
+        },
+        {
+          "name": "Public news",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/news?page=0&size=12"
+          }
+        },
+        {
+          "name": "News detail",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/news/{{newsSlug}}"
+          }
+        },
+        {
+          "name": "Admin stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/admin/stats"
+          }
+        },
+        {
+          "name": "Lock workshop",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/admin/workshops/{{ownWorkshopId}}/lock",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"Kiểm thử khóa\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Unlock workshop",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/admin/workshops/{{ownWorkshopId}}/unlock"
+          }
+        },
+        {
+          "name": "Admin tags",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/admin/tags"
+          }
+        },
+        {
+          "name": "Create tag",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/admin/tags",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"slug\": \"tag-thu-m1\",\n  \"name\": \"Tag thử M1\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.environment.set(\"tagId\",pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Update tag",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/admin/tags/{{tagId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"slug\": \"tag-thu-m1\",\n  \"name\": \"Tag đã sửa\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Delete tag",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/admin/tags/{{tagId}}"
+          }
+        },
+        {
+          "name": "Admin hide product",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/admin/products/{{productId}}/hide"
+          }
+        },
+        {
+          "name": "Admin hide batch",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/admin/batches/{{batchId}}/hide"
+          }
+        },
+        {
+          "name": "Set featured",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/admin/featured",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"workshopIds\": [],\n  \"productIds\": [],\n  \"batchIds\": []\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Admin news",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/admin/news?page=0&size=12"
+          }
+        },
+        {
+          "name": "Create news",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/admin/news",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Tin thử M1\",\n  \"body\": \"Nội dung thông báo\",\n  \"kind\": \"OTHER\",\n  \"publish\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.environment.set(\"newsId\",pm.response.json().id);",
+                  "pm.environment.set(\"newsSlug\",pm.response.json().slug);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Update news",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/admin/news/{{newsId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Tin thử M1\",\n  \"body\": \"Nội dung thông báo\",\n  \"kind\": \"OTHER\",\n  \"publish\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Delete news",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/admin/news/{{newsId}}"
+          }
+        }
+      ]
     }
   ]
 }

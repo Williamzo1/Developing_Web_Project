@@ -2,7 +2,7 @@
 
 > Cập nhật 2026-11-10 theo kết quả họp nhóm (Q-03, Q-06, Q-07, Q-10, Q-12, Q-14, Q-15, Q-30). Phần còn chờ: giờ mở cửa/nhận đơn (Q-29), cách tổ chức tag (Q-38), cơ chế xác thực (Q-39), bộ ảnh (Q-13, Q-21).
 >
-> **Nguồn sự thật của schema là các file Flyway** trong `backend/src/main/resources/db/migration/`. Tài liệu này mô tả ý đồ. Mục 1 là hiện trạng (V1–V3). Mục 2 là **đề xuất**, chưa có migration; khi viết migration cho một bảng, cập nhật lại mục tương ứng và chuyển nó lên "hiện trạng".
+> **Nguồn sự thật của schema là các file Flyway** trong `backend/src/main/resources/db/migration/`. Tài liệu này mô tả ý đồ. ZIP hiện có migration V1–V6. Mục 2 lưu ý đồ thiết kế ban đầu; đối chiếu migration trước khi thay đổi schema; khi viết migration cho một bảng, cập nhật lại mục tương ứng và chuyển nó lên "hiện trạng".
 
 
 | Bảng | Cột | Ghi chú |
@@ -77,3 +77,12 @@ erDiagram
 - Enum lưu dạng `VARCHAR` + `CHECK`, giá trị viết HOA, khớp enum Java.
 - Dữ liệu mẫu đặt ở `db/seed/`, phải idempotent (`ON CONFLICT ... DO NOTHING`), không đặt trong migration.
 - Entity JPA phải khớp schema vì `ddl-auto=validate`: thêm cột thì cập nhật entity trong cùng thay đổi.
+
+## Đối chiếu M1 bước 1–10 (2026-11-24)
+
+V5/V6 đã tồn tại trong ZIP đầu vào và được giữ nguyên trong lần cập nhật này.
+V5 mở rộng workshops, accounts, products và thêm email_otps, media, media_links,
+certificates, workshop_hours, workshop_closures, process_steps, batches, batch_milestones.
+V6 thêm news_posts. Bìa tin dùng media_links loại NEWS, không cần cột/migration khác.
+Giá khác null phải >0 theo CHECK của DB. Product dùng khóa identity để có thể tạo qua JPA.
+Các Instant trong JDBC được ghi bằng Timestamp và đọc bằng getTimestamp().toInstant().

@@ -1,123 +1,106 @@
 # Hợp đồng API
 
-> Mục 2 mô tả API **đang có** (đối chiếu mã ngày 2026-11-12). Mục 3 là **đề xuất** cho các module chưa làm: chỉ là khung đường dẫn; khi cài đặt một endpoint, bổ sung request/response cụ thể vào đây trong cùng thay đổi và chuyển nó lên mục 2. Mã nguồn controller + DTO luôn là nguồn sự thật cuối cùng.
+Cập nhật 2026-11-24: đã triển khai phạm vi THẮNG — M1 Backend, bước 1–10 trong `vcraft-action-plan.md`.
+Controller và DTO trong `backend/src/main/java/vn/vcraft/backend/` là hợp đồng chi tiết của từng trường.
+Luồng báo giá hiện có giữ nguyên, xem `../03-engineering/quote-backend.md`.
 
-## 1. Quy ước chung
+## Quy ước
 
-- Tiền tố `/api`. JSON UTF-8. Tên trường `camelCase`.
-- Xác thực: `Authorization: Bearer <token>` (token lấy từ `POST /api/login`).
-- Phân vùng theo vai trò: công khai `GET /api/...` · `/api/buyer/**` · `/api/artisan/**` · `/api/admin/**`.
-- Tài nguyên công khai định danh bằng `slug` (lô dùng `publicCode`); thao tác quản lý dùng `id`.
-- Phân trang đã cài đặt: `/api/products/page?page=0&size=12`; `page` 0..100000, `size` 1..50, mặc định 12. Response `{items,page,size,totalElements,totalPages,first,last}`, sắp `id ASC`. `/api/products` giữ mảng để tương thích; admin list chưa phân trang.
-- Thời gian ISO-8601 có múi giờ; ngày `YYYY-MM-DD`; tiền là số nguyên VND.
-- Giá bị hộ ẩn (`priceVisible = false`) thì response công khai trả `price: null` — không gửi giá về client rồi ẩn bằng giao diện.
-- Ảnh trong response là đối tượng `{ "id", "thumbUrl", "mediumUrl", "largeUrl", "width", "height" }`. *(Đề xuất; hiện `ProductResponse` chỉ có `imageUrl`.)*
+- JSON UTF-8, tên trường camelCase. Token: `Authorization: Bearer <token>`.
+- `PageQuery`: page từ 0 đến 100000, size từ 1 đến 50, mặc định page=0 và size=12.
+- `PageResponse`: `{items,page,size,totalElements,totalPages,first,last}`.
+- Các DTO mới dùng `referencePrice`, trả null khi `priceVisible=false`.
+- `MediaResponse`: `{id,thumbUrl,mediumUrl,largeUrl,width,height}`.
+- Không truyền id xưởng sở hữu trong input sản phẩm/lô. Backend lấy xưởng từ Actor.
+- Tài nguyên riêng tư của người khác trả 404. Sai vai trò trả 403, thiếu/sai/hết hạn token trả 401.
+- Hộ chưa duyệt hoặc bị khóa không đăng nhập được. Khóa hộ thu hồi mọi phiên và ẩn nội dung công khai của hộ.
+- Lỗi giữ dạng `{timestamp,status,code,message,path,fieldErrors}`. DTO/query/list sai trả 400, trùng dữ liệu 409, quá dung lượng 413, sai MIME 415. Lỗi 500 không trả chi tiết nội bộ.
 
-### Lỗi
+## API công khai
 
-Thân lỗi thống nhất: `{ "timestamp": "ISO-8601", "status": 400, "code": "VALIDATION_FAILED", "message": "Thông báo tiếng Việt", "path": "/api/login", "fieldErrors": {"username": "Vui lòng nhập tên đăng nhập."} }`.
-
-`fieldErrors` là object rỗng khi lỗi không gắn với ô nhập. Không trả rejectedValue, mật khẩu, token hoặc stack trace. Controller advice và Security dùng chung DTO.
-
-| HTTP | code | Trường hợp |
+| Method | Path | Input / response |
 |---|---|---|
-| 400 | VALIDATION_FAILED | Vi phạm ràng buộc DTO/service; query page/size ngoài giới hạn hoặc sai kiểu khi bind. fieldErrors có tên trường. |
-| 400 | INVALID_INPUT | JSON lỗi, kiểu id sai, thiếu request value. |
-| 401 | UNAUTHENTICATED | Thiếu/sai/hết hạn token; sai thông tin đăng nhập hoặc hộ chưa duyệt. |
-| 403 | FORBIDDEN | Sai vai trò hoặc không sở hữu xưởng (giữ hành vi Phase02). |
-| 404 | PRODUCT_NOT_FOUND | Không có sản phẩm theo id. |
-| 404 | NOT_FOUND | Không có đường dẫn/tài nguyên khác. |
-| 405 | METHOD_NOT_ALLOWED | Phương thức không được hỗ trợ sau khi qua Security; có Allow header. |
-| 409 | DATA_CONFLICT | Trùng/vi phạm ràng buộc dữ liệu. |
-| 413 | UPLOAD_TOO_LARGE | Đã có handler; chưa có API upload. |
-| 415 | UNSUPPORTED_MEDIA_TYPE | Content-Type không được hỗ trợ. |
-| 500 | INTERNAL_ERROR | Lỗi bất ngờ; nội dung chi tiết chỉ trong log server. |
-| 503 | DATABASE_UNAVAILABLE | Health DB không kết nối được. |
+| GET | `/api/health`, `/api/health/db` | Trạng thái dịch vụ / kết nối DB |
+| POST | `/api/login` | LoginRequest → LoginResponse `{token,role}` |
+| POST | `/api/register` | RegisterRequest `{username,password,displayName,email,phone}` → 201 RegisterResponse |
+| POST | `/api/register/verify-email` | VerifyEmailRequest `{username,otp}` → 200 không body |
+| POST | `/api/register/resend-otp` | ResendOtpRequest `{username}` → 200 không body |
+| GET | `/api/home` | HomeResponse: tối đa 3 xưởng, 6 sản phẩm, 3 lô nổi bật và 5 tin mới |
+| GET | `/api/quote-categories`, `/api/quote-tags` | Danh sách phân loại và tag hiện có |
+| GET | `/api/workshops?page=&size=` | PageResponse<WorkshopSummaryResponse> |
+| GET | `/api/workshops/map` | Mảng MapPinResponse, chỉ hộ công khai có tọa độ |
+| GET | `/api/workshops/{slug}` | WorkshopDetailResponse, kèm sản phẩm/lô công khai (trang đầu) |
+| GET | `/api/products` | Mảng ProductResponse cũ, chỉ nội dung công khai |
+| GET | `/api/products/page?workshopId=&categoryId=&tagSlug=&page=&size=` | PageResponse<ProductSummaryResponse> |
+| GET | `/api/products/{idOrSlug}` | ProductDetailResponse, chấp nhận cả id số và slug |
+| GET | `/api/products/{slug}/steps` | Mảng StepResponse |
+| GET | `/api/batches?productId=&workshopId=&kind=&page=&size=` | PageResponse<BatchSummaryResponse> |
+| GET | `/api/batches/{publicCode}?token=` | BatchDetailResponse. Lô PRIVATE cần token đang có hiệu lực, sai/thu hồi trả 404 |
+| GET | `/api/batches/{publicCode}/qr.png` | PNG của lô PUBLIC, lô PRIVATE/ẩn/bị khóa trả 404 |
+| GET | `/api/news?kind=&page=&size=` | PageResponse<NewsResponse>, chỉ tin đã xuất bản |
+| GET | `/api/news/{slug}` | NewsResponse đã xuất bản |
+| GET | `/media/**` | Ảnh tĩnh đã resize |
 
-Frontend rẽ nhánh theo status/code; đưa fieldErrors tới ô nhập, message vào thông báo chung. Không đổi mọi success response thành wrapper mới: login, Actor, product detail và legacy array giữ hợp đồng cũ.
+`ProductSummaryResponse` và `ProductDetailResponse` có thêm alias `workshop`, `category`, `imageUrl`
+để frontend cũ tiếp tục hiển thị được. `/api/products/page` giữ metadata phân trang và bổ sung dữ liệu mới.
+Slug không tồn tại trả 404 PRODUCT_NOT_FOUND, thay cho lỗi parse id 400 trước đây.
+`kind` của lô: IN_STOCK hoặc MADE_TO_ORDER. `visibility`: PUBLIC hoặc PRIVATE.
+`kind` của tin: MATERIAL_PRICE, POWER_CUT, POLICY, EVENT hoặc OTHER.
 
-## 2. API đang có
+## API có xác thực
 
-| Phương thức | Đường dẫn | Quyền | Mô tả |
+| Quyền | Method | Path | Input / response |
 |---|---|---|---|
-| GET | `/api/health`, `/api/health/db` | Công khai | Kiểm tra dịch vụ và kết nối DB. |
-| GET | `/api/products` | Công khai | Danh sách sản phẩm: mảng `ProductResponse { id, slug, name, workshop, category, description, imageUrl }`. Chưa lọc, chưa phân trang. |
-| GET | `/api/products/page?page=0&size=12` | Công khai | PageResponse; ví dụ/trường/giới hạn ở mục 1. |
-| GET | `/api/buyer/me` | BUYER | Actor của Buyer; Artisan/Admin → 403, Guest → 401. Endpoint kiểm tra vùng quyền; chưa là nghiệp vụ báo giá. |
-| GET | `/api/products/{id}` | Công khai | Chi tiết theo `id` số. |
-| POST | `/api/login` | Công khai | `{ username, password }` → `{ token, role }`. Sai thông tin → 401. Hộ chưa duyệt → 401. |
-| GET | `/api/me` | Đã đăng nhập | `{ id, role, workshop }` (`workshop` là id xưởng, null nếu không phải ARTISAN). |
-| POST | `/api/logout` | Đã đăng nhập | 204; token bị thu hồi. |
-| GET | `/api/admin/workshops` | ADMIN | Danh sách xưởng kèm trạng thái duyệt. |
-| POST | `/api/admin/workshops` | ADMIN | `{ workshopName, username, password }` → 201; tạo xưởng chờ duyệt + tài khoản hộ trong một giao dịch. |
-| POST | `/api/admin/workshops/{id}/approve` | ADMIN | Duyệt xưởng. |
-| PATCH | `/api/artisan/workshops/{id}` | ARTISAN (chủ xưởng) | `{ name }`; xưởng khác → 403. |
+| Đăng nhập | GET | `/api/me` | Actor `{id,role,workshop}` |
+| Đăng nhập | POST | `/api/logout` | 204, thu hồi token |
+| BUYER | GET | `/api/buyer/me` | Actor của Buyer |
+| Đăng nhập | POST | `/api/media` | Multipart `files` (nhiều tệp), tối đa 10 tệp × 5 MB → 201 mảng MediaResponse |
+| Chủ ảnh | DELETE | `/api/media/{id}` | 204, ảnh còn liên kết/được chọn làm bìa trả 409 |
+| ARTISAN | GET, PUT | `/api/artisan/workshop` | GET hồ sơ mình, PUT WorkshopProfileInput → WorkshopDetailResponse |
+| ARTISAN | PATCH | `/api/artisan/workshops/{id}` | WorkshopUpdateRequest `{name}` → WorkshopResponse cũ |
+| ARTISAN | PATCH | `/api/artisan/workshops/{id}/contact` | WorkshopContactInput → ContactResponse |
+| ARTISAN | PUT | `/api/artisan/workshop/hours` | Mảng WorkshopHourInput → 204, thay toàn bộ lịch |
+| ARTISAN | POST | `/api/artisan/workshop/closures` | WorkshopClosureInput → 201 |
+| ARTISAN | DELETE | `/api/artisan/workshop/closures/{id}` | 204 |
+| ARTISAN | GET, POST | `/api/artisan/workshop/certificates` | GET mảng CertificateResponse, POST CertificateInput → 201 |
+| ARTISAN | DELETE | `/api/artisan/workshop/certificates/{id}` | 204 |
+| ARTISAN | GET, POST | `/api/artisan/products` | GET mảng ProductSummaryResponse, POST ProductCreateInput → 201 ProductDetailResponse |
+| ARTISAN | GET, PUT, DELETE | `/api/artisan/products/{id}` | GET chi tiết, PUT ProductUpdateInput, DELETE ẩn → 204 |
+| ARTISAN | PUT | `/api/artisan/products/{id}/steps` | Mảng StepInput thay toàn bộ công đoạn → 204 |
+| ARTISAN | PUT | `/api/artisan/products/{id}/tags` | Mảng id tag → 204 |
+| ARTISAN | GET, POST | `/api/artisan/batches` | GET mảng BatchSummaryResponse, POST BatchCreateInput → 201 BatchDetailResponse |
+| ARTISAN | GET, PUT | `/api/artisan/batches/{id}` | GET chi tiết, PUT BatchUpdateInput |
+| ARTISAN | PUT | `/api/artisan/batches/{id}/milestones` | Mảng MilestoneInput → 204, công đoạn phải thuộc sản phẩm của lô |
+| ARTISAN | POST, DELETE | `/api/artisan/batches/{id}/share-token` | POST `{shareUrl}`, DELETE thu hồi → 204 |
+| ARTISAN | GET | `/api/artisan/batches/{id}/qr.png` | PNG, lô PRIVATE cần tạo share-token trước (chưa có → 409) |
+| ADMIN | GET, POST | `/api/admin/workshops` | GET mảng WorkshopResponse, POST NewArtisanRequest → 201 |
+| ADMIN | POST | `/api/admin/workshops/{id}/approve` | WorkshopResponse |
+| ADMIN | POST | `/api/admin/workshops/{id}/lock` | LockInput `{reason}` → 204 |
+| ADMIN | POST | `/api/admin/workshops/{id}/unlock` | 204 |
+| ADMIN | GET | `/api/admin/stats` | AdminStatsResponse, đếm dữ liệu thật |
+| ADMIN | GET, POST | `/api/admin/tags` | GET mảng TagResponse, POST TagInput → 201 |
+| ADMIN | PUT, DELETE | `/api/admin/tags/{id}` | PUT TagInput → TagResponse, DELETE → 204 (tag đang được tham chiếu có thể trả 409) |
+| ADMIN | POST | `/api/admin/products/{id}/hide`, `/api/admin/batches/{id}/hide` | 204 |
+| ADMIN | PUT | `/api/admin/featured` | FeaturedInput `{workshopIds,productIds,batchIds}` → 204, thay toàn bộ lựa chọn |
+| ADMIN | GET, POST | `/api/admin/news` | GET PageResponse<NewsResponse>, POST NewsCreateInput → 201 |
+| ADMIN | PUT, DELETE | `/api/admin/news/{id}` | PUT NewsCreateInput → NewsResponse, DELETE → 204 |
 
-Collection Postman: `postman/`. Kiểm thử HTTP: `backend/tests/phase02.py`, `backend/tests/m1.py`.
+Giờ dùng HH:mm, thứ 0=CN đến 6=T7. Giờ mở phải trước giờ đóng, mỗi thứ một khung giờ.
+`openNow` tính theo Asia/Ho_Chi_Minh, null khi chưa có lịch cho ngày hiện tại. Ngày nghỉ riêng trả false.
+`mediaIds` là danh sách có thứ tự, ảnh phải thuộc tài khoản đang thao tác. PUT các input tạo/sửa
+sản phẩm và lô là thay thế các trường dữ liệu, không phải PATCH từng trường.
 
-## 3. API dự kiến (đề xuất)
+QR/shareUrl dẫn tới `${app.frontend-url}/batches/{publicCode}` và thêm `?token=` cho lô riêng.
+Frontend landing page thuộc M2, chưa được xây trong lần cập nhật này.
 
-### Công khai
+## Giới hạn và phần sau M1 bước 10
 
-| Phương thức | Đường dẫn | FR |
-|---|---|---|
-| POST | `/api/register` (đăng ký Buyer: username, mật khẩu, tên hiển thị, email, SĐT) · các endpoint xác thực email/SĐT — chờ Q-39 | FR-AUTH-04 |
-| GET | `/api/home` (nội dung nổi bật) | FR-HOME-02 |
-| GET | `/api/categories` · `/api/tags` | FR-PROD-03, FR-PROD-06 |
-| GET | `/api/workshops?q=&page=` · `/api/workshops/{slug}` | FR-WS-01, 06, 07 |
-| GET | `/api/workshops/map` (chỉ trường cần cho ghim: slug, tên, tọa độ, giờ mở cửa, `openNow`, ảnh thumb) | FR-MAP-01..03 |
-| GET | `/api/products?workshop=&category=&tag=&q=&sort=&page=` · `/api/products/{slug}` (kèm công đoạn và lô công khai) | FR-PROD-03..05 |
-| GET | `/api/batches?product=&workshop=&kind=&page=` | FR-BATCH-07 |
-| GET | `/api/batches/{publicCode}` (landing page: thông tin lô + mốc thời gian + quy trình + ảnh; lô riêng tư cần `?token=`; sai → 404) | FR-BATCH-02, 03, 05, 06 |
-| GET | `/api/batches/{publicCode}/qr.png` (lô công khai) — với lô riêng tư, QR chứa liên kết riêng nên chỉ chủ lô lấy được qua `/api/artisan/batches/{id}/qr.png` | FR-BATCH-04 |
-| GET | `/api/news?kind=&page=` · `/api/news/{slug}` | FR-NEWS-02 |
-| POST | `/api/reports` | FR-ADMIN-04 |
+Các giả định Q-29, Q-38, Q-39 vẫn chưa phải quyết định mới của nhóm: lịch theo tuần/ngày nghỉ,
+Admin quản lý tag song song phân loại, OTP email và kiểm định dạng SĐT. Chưa có OTP SMS.
+JPEG/PNG đã kiểm thử. WebP chỉ xử lý được nếu JVM có ImageIO reader tương ứng, cấu hình hiện tại
+không thêm codec mới. Không giả vờ gửi OTP thành công: lỗi SMTP được log, tài khoản vẫn được tạo
+để có thể gửi lại khi cấu hình mail hoạt động. Không log mã OTP.
 
-Đổi `GET /api/products/{id}` sang slug là thay đổi phá vỡ: sửa frontend và Postman cùng lúc.
-
-### ARTISAN — `/api/artisan`
-
-Mọi thao tác ngầm định trên xưởng của người đăng nhập; không nhận `workshopId` từ client.
-
-| Phương thức | Đường dẫn | FR |
-|---|---|---|
-| GET, PUT | `/workshop` (hồ sơ của tôi) | FR-WS-02, 05 |
-| POST, PUT, DELETE | `/workshop/certificates[/{id}]` | FR-WS-03 |
-| GET, POST | `/products` · GET, PUT, DELETE `/products/{id}` | FR-PROD-01 |
-| PUT | `/products/{id}/steps` (ghi cả danh sách công đoạn theo thứ tự) | FR-PROD-02 |
-| GET, POST | `/batches` · GET, PUT `/batches/{id}` | FR-BATCH-01, 05 |
-| PUT | `/batches/{id}/milestones` | FR-BATCH-03 |
-| POST, DELETE | `/batches/{id}/share-token` | FR-BATCH-06 |
-
-### BUYER — `/api/buyer`
-
-| Phương thức | Đường dẫn | FR |
-|---|---|---|
-
-### ADMIN — `/api/admin`
-
-| Phương thức | Đường dẫn | FR |
-|---|---|---|
-| POST | `/workshops/{id}/suspend` | FR-ADMIN-01 |
-| GET, POST | `/news` · PUT, DELETE `/news/{id}` | FR-NEWS-01 |
-| GET | `/stats` | FR-ADMIN-02 |
-| POST | `/products/{id}/hide` · `/batches/{id}/hide` (hậu kiểm) | FR-ADMIN-05 |
-| GET, POST, PUT, DELETE | `/tags[/{id}]` | FR-ADMIN-06 |
-| PUT | `/featured` | FR-ADMIN-03 |
-| GET | `/reports` · POST `/reports/{id}/resolve` | FR-ADMIN-04 |
-
-### Ảnh (ARTISAN, ADMIN, BUYER cho ảnh tham khảo)
-
-| Phương thức | Đường dẫn | FR |
-|---|---|---|
-| POST | `/api/media` (multipart, nhiều tệp trường `files`) → mảng đối tượng ảnh | FR-MEDIA-01, 02 |
-| DELETE | `/api/media/{id}` (chỉ người tải lên) | FR-MEDIA-04 |
-| GET | `/media/**` (tệp tĩnh, không qua `/api`) | FR-MEDIA-03 |
-
-Gắn ảnh vào thực thể bằng cách gửi `mediaIds: [..]` theo thứ tự trong request tạo/sửa của thực thể đó.
-
-## 4. Quy trình thay đổi API
-
-1. Sửa tài liệu này trước (hoặc cùng lúc) với mã; người làm frontend và backend thống nhất trên tài liệu.
-2. Cập nhật collection Postman và test HTTP.
-3. Thay đổi phá vỡ phải ghi rõ trong mô tả PR.
+Tìm kiếm theo tên, sắp xếp tùy chọn, route `/api/categories`, `/api/tags`, báo cáo vi phạm,
+đổi mật khẩu và giao diện M2/M3 nằm ngoài phạm vi lần này.
+Postman: thư mục `M1 steps 1–10` trong collection hiện có. Kiểm thử: `m1.py`, `m1_extension.py`, `quotes.py`.

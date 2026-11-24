@@ -1,7 +1,7 @@
 # vCraft — Kế hoạch Thực thi
 # Việc cụ thể cho từng người · Bắt đầu ngay hôm nay
 
-> Repo hiện tại: V1–V4 đã chạy · Không có V5 · Không có Entity mới · Frontend 1 file main.jsx
+> Mốc gốc trước triển khai: V1–V4 đã chạy · Không có V5 · Không có Entity mới · Frontend 1 file main.jsx
 > Tất cả thiết kế chi tiết đã có trong 4 tài liệu trước. Tài liệu này chỉ nói: **ai làm gì, theo thứ tự nào, copy từ đâu.**
 
 ---
@@ -16,6 +16,10 @@
 ---
 
 ## THẮNG — M1 Backend (làm đầu tiên, ~2–3 ngày)
+
+> Cập nhật 2026-11-24: đã thực hiện đến hết bước 10 trong ZIP này.
+> Chi tiết thay đổi, kiểm thử và phần còn cần kiểm trên máy nhóm:
+> `../../03-engineering/m1-steps-1-10.md`. Bước 11 chưa được đánh dấu hoàn tất cho môi trường thật.
 
 ### Bước 1 · pom.xml — Thêm 4 dependency
 
@@ -408,7 +412,7 @@ public class NewsPost {
 
 **Tạo package `vn.vcraft.backend.storage`** (thư mục mới):
 
-- `MediaStorage.java` — Copy từ `vcraft-implementation-guide.md` → Phần 1.1 (WorkshopRepository, dòng interface MediaStorage)
+- `MediaStorage.java` — Copy từ `vcraft-backend-phase-c.md`
 - `LocalFileStorage.java` — Copy từ cùng tài liệu
 
 **Thêm vào `vn.vcraft.backend.validation`:**
