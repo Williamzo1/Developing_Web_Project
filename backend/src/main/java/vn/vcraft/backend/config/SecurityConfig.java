@@ -22,7 +22,7 @@ class SecurityConfig {
   @Bean
   SecurityFilterChain security(
           HttpSecurity http, AccountRepository accounts, SecurityErrorWriter errors) throws Exception {
-    return http.csrf(csrf -> csrf.disable())
+    return http.cors(org.springframework.security.config.Customizer.withDefaults()).csrf(csrf -> csrf.disable())
             .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .exceptionHandling(
                     e ->
@@ -41,13 +41,14 @@ class SecurityConfig {
                     auth ->
                             auth.requestMatchers(
                                             HttpMethod.GET,
+                                            "/api/home", "/api/workshops/**", "/api/batches/**", "/api/news/**", "/media/**",
                                             "/api/health",
                                             "/api/health/**",
                                             "/api/products/**",
                                             "/api/quote-tags",
                                             "/api/quote-categories")
                                     .permitAll()
-                                    .requestMatchers(HttpMethod.POST, "/api/login")
+                                    .requestMatchers(HttpMethod.POST, "/api/login", "/api/register", "/api/register/verify-email", "/api/register/resend-otp")
                                     .permitAll()
                                     .requestMatchers("/error")
                                     .permitAll()

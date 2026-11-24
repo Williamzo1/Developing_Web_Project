@@ -33,6 +33,7 @@ public class Workshop {
 
     // Getters
     public Long getId()            { return id; }
+    public String slug() { return slug; }
     public String getSlug()        { return slug; }
     public String name()           { return name; }   // giữ method name() cho code cũ dùng
     public String getName()        { return name; }

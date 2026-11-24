@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 @Table(name = "products")
 public class Product {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String slug;
     private String name;
@@ -26,7 +27,10 @@ public class Product {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    protected Product() {}
+    public Product() {}
+    public void setSlug(String v) { slug = v; }
+    public void setWorkshop(Workshop v) { workshop = v; }
+    public void setCategory(Category v) { category = v; }
 
     public Long getId() { return id; }
     public String getSlug() { return slug; }

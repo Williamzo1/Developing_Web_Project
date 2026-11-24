@@ -7,6 +7,10 @@ public record PageResponse<T>(
         List<T> items, int page, int size, long totalElements, int totalPages,
         boolean first, boolean last
 ) {
+    public static <T> PageResponse<T> of(List<T> items, int page, int size, long total) {
+        int pages = (int) Math.ceil((double) total / size);
+        return new PageResponse<>(items, page, size, total, pages, page == 0, page + 1 >= pages);
+    }
     public static <T> PageResponse<T> from(Page<T> data) {
         return new PageResponse<>(data.getContent(), data.getNumber(), data.getSize(),
                 data.getTotalElements(), data.getTotalPages(), data.isFirst(), data.isLast());
