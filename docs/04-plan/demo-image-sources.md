@@ -2,6 +2,8 @@
 
 > Trạng thái: **Đề xuất** — bộ ảnh ứng viên cho Q-24, chưa nhập vào hệ thống. Tên hộ là **hộ giả lập cho demo**, không phải cơ sở thật; ảnh chụp ở nhiều nơi trong làng, được gom theo phong cách để mỗi hộ trông nhất quán.
 
+**Xem trước:** mở [`demo-image-preview.html`](demo-image-preview.html) bằng trình duyệt (cần mạng; ảnh tải trực tiếp từ link gốc). Trang được sinh từ bảng trong file này; sửa bảng thì phải sinh lại trang.
+
 Ảnh lấy từ [Wikimedia Commons](https://commons.wikimedia.org/wiki/Category:B%C3%A1t_Tr%C3%A0ng) (giấy phép tự do). Cột tác giả/giấy phép giữ lại chỉ để tra cứu khi cần.
 
 ## Điều kiện khi dùng
