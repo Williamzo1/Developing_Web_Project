@@ -160,7 +160,7 @@ def upload(token,content=png,name='tiny.png',status=201):
     return call('/api/media',status,'POST',raw=payload,token=token,headers={'Content-Type':'multipart/form-data; boundary='+boundary})
 media=upload(a)[0]
 from urllib.parse import urlsplit
-assert call(urlsplit(media['thumbUrl']).path).startswith(b'\x89PNG')
+assert call(urlsplit(media['thumbUrl']).path).startswith(b'\xff\xd8')
 call('/api/media/'+str(media['id']),404,'DELETE',token=b)
 call('/api/artisan/batches/'+str(bid),404,'PUT',body={**batch,'mediaIds':[media['id']]},token=b)
 call('/api/artisan/products',404,'POST',body={**product,'mediaIds':[media['id']]},token=b)

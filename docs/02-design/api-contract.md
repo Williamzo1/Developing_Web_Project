@@ -97,8 +97,12 @@ Frontend landing page thuộc M2, chưa được xây trong lần cập nhật n
 
 Các giả định Q-29, Q-38, Q-39 vẫn chưa phải quyết định mới của nhóm: lịch theo tuần/ngày nghỉ,
 Admin quản lý tag song song phân loại, OTP email và kiểm định dạng SĐT. Chưa có OTP SMS.
-JPEG/PNG đã kiểm thử. WebP chỉ xử lý được nếu JVM có ImageIO reader tương ứng, cấu hình hiện tại
-không thêm codec mới. Không giả vờ gửi OTP thành công: lỗi SMTP được log, tài khoản vẫn được tạo
+Upload chỉ nhận JPEG/PNG theo nội dung, không nhận WebP. Bộ xử lý ImageVariants xuất ba biến thể JPEG
+320/800/1600 px theo cạnh dài, không phóng to, xoay EXIF, bỏ metadata và đưa nền trong suốt về trắng.
+Upload trả URL tương đối /media/..., width/height là kích thước biến thể lớn.
+Ảnh gốc tối đa 30 megapixel. /media/** có cache immutable, tên tệp UUID.
+Một tệp không hợp lệ làm hủy cả request; lỗi ghi đĩa/DB dọn các tệp đã tạo.
+Ảnh đang gắn thực thể/bìa xưởng không được xóa (409). Không giả vờ gửi OTP thành công: lỗi SMTP được log, tài khoản vẫn được tạo
 để có thể gửi lại khi cấu hình mail hoạt động. Không log mã OTP.
 
 Tìm kiếm theo tên, sắp xếp tùy chọn, route `/api/categories`, `/api/tags`, báo cáo vi phạm,

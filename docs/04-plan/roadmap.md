@@ -12,6 +12,18 @@
 
 Sau khi có nền, chia việc **theo tính năng** (mỗi người làm trọn cả API lẫn giao diện của tính năng mình nhận).
 
+### Việc tiếp theo của từng người (đề xuất 2026-11-24 — nhóm chốt lại)
+
+Dựa trên vai trò ở trên và hiện trạng ở `status.md`. Chưa phải quyết định của nhóm.
+
+| Thành viên | Việc tiếp theo |
+|---|---|
+| Huy | (1) Gộp prototype `developing/prototype_1` và hoàn tất nền frontend: tách `main.jsx`, client API, `useApi`/`useMutation`, AuthContext, route guard, bố cục 3 khu vực, design tokens, đăng nhập. (2) Wireframe 5 màn hình trọng điểm. (3) Giao diện Buyer + Artisan cho luồng báo giá (API đã có). |
+| Thắng | (1) Service/controller/DTO cho schema V5/V6: hồ sơ hộ + tọa độ + endpoint ghim bản đồ, tin tức + thống kê, CRUD sản phẩm + công đoạn. (2) Luồng lô: mốc, công khai/riêng tư, liên kết riêng, QR. (3) Migration `tags`/`product_tags` khi chốt Q-38. (4) Cập nhật `api-contract.md` và Postman. |
+| Dương | (1) MEDIA: upload nhiều ảnh, resize, phục vụ ảnh (chờ Q-13, Q-21). (2) Seed tối thiểu, CI + test tự động trong build. (3) Chuẩn bị triển khai Internet (chờ Q-23), sao lưu DB + ảnh, `restart` trong Compose, cache Nginx. (4) Chạy lại `backend/tests/phase02.py` kiểm hồi quy báo giá. |
+
+Cả nhóm: họp lần 2 chốt các câu 🔴 còn mở (xem M0).
+
 ## Giai đoạn
 
 ### M0 — Chốt tài liệu (đang làm)
@@ -61,7 +73,7 @@ Dựa trên các câu đã chốt. "Sẵn sàng" = không còn câu hỏi mở n
 
 - [ ] Frontend: tách cấu trúc thư mục, client API, AuthContext, route guard, bố cục 3 khu vực, design tokens, đăng nhập/đăng ký (FR-AUTH-01, 02, 04).
 - [x] Backend: validation, chuẩn hóa lỗi, khung phân trang, `/api/buyer/**` trong `SecurityConfig`, dọn `application.properties` — bản M1 backend ngày 2026-11-12; xem `../03-engineering/m1-backend.md`. MEDIA, nền frontend và deploy chưa hoàn thành.
-- [ ] **MEDIA**: upload nhiều ảnh + resize + phục vụ ảnh (FR-MEDIA-01..03) — làm sớm vì mọi module nội dung đều cần.
+- [x] **MEDIA backend**: upload nhiều ảnh + resize + phục vụ ảnh (FR-MEDIA-01..03) — 2026-11-24, theo giả định Q-13/Q-21. Còn giao diện upload và gắn ảnh vào từng module.
 - [ ] Seed tối thiểu (tài khoản mẫu, phân loại, tag, vài hộ/sản phẩm).
 - [ ] **Triển khai lên Internet ngay sau M1** (bắt buộc — Q-09) để nhóm nhập dữ liệu thật dần qua giao diện; thiết lập sao lưu DB + ảnh.
 

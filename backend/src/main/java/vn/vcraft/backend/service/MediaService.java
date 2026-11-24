@@ -1,162 +1,114 @@
 package vn.vcraft.backend.service;
 
-import net.coobird.thumbnailator.Thumbnails;
-import org.apache.tika.Tika;
+import static org.springframework.http.HttpStatus.*;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.web.multipart.MultipartFile;
 import vn.vcraft.backend.dto.MediaResponse;
 import vn.vcraft.backend.exception.ApiException;
 import vn.vcraft.backend.model.Actor;
 import vn.vcraft.backend.repository.MediaRepository;
-import vn.vcraft.backend.storage.MediaStorage;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
+/** Ghép liên kết ảnh M1 với bộ xử lý JPEG/PNG từ nhánh chung. */
 @Service
 public class MediaService {
-
-    private static final Set<String> ALLOWED_TYPES =
-            Set.of("image/jpeg", "image/png", "image/webp");
-    private static final Tika TIKA = new Tika();
-
-    @Value("${media.max-file-size-mb:5}")
-    private int maxFileSizeMb;
-
-    @Value("${media.max-files-per-request:10}")
-    private int maxFilesPerRequest;
-
+    private static final Logger log = LoggerFactory.getLogger(MediaService.class);
     private final MediaStorage storage;
-    private final MediaRepository mediaRepo;
+    private final MediaRepository media;
+    @Value("${media.max-file-size-mb:5}") private int maxFileSizeMb;
+    @Value("${media.max-files-per-request:10}") private int maxFilesPerRequest;
 
-    public MediaService(MediaStorage storage, MediaRepository mediaRepo) {
+    public MediaService(MediaStorage storage, MediaRepository media) {
         this.storage = storage;
-        this.mediaRepo = mediaRepo;
+        this.media = media;
     }
+    private record Prepared(String name, int inputSize, ImageVariants.Result image) {}
 
     @Transactional
     public List<MediaResponse> upload(Actor actor, List<MultipartFile> files) {
-        if (files == null || files.isEmpty()) {
-            throw new ApiException(HttpStatus.BAD_REQUEST, "VALIDATION_FAILED",
-                    "Vui lòng chọn ít nhất một ảnh.");
-        }
-        if (files.size() > maxFilesPerRequest) {
-            throw new ApiException(HttpStatus.BAD_REQUEST, "VALIDATION_FAILED",
-                    "Tối đa " + maxFilesPerRequest + " ảnh mỗi lần.");
-        }
-
-        List<MediaResponse> results = new ArrayList<>();
+        if (files == null || files.isEmpty())
+            throw new ApiException(BAD_REQUEST, "NO_FILES", "Vui lòng chọn ít nhất một ảnh.");
+        if (files.size() > maxFilesPerRequest)
+            throw new ApiException(BAD_REQUEST, "TOO_MANY_FILES", "Tối đa " + maxFilesPerRequest + " ảnh mỗi lần.");
+        // Kiểm tra tất cả ảnh trước khi ghi DB/đĩa.
+        List<Prepared> prepared = new ArrayList<>();
         for (MultipartFile file : files) {
-            results.add(processOne(actor, file));
+            if (file == null || file.isEmpty())
+                throw new ApiException(BAD_REQUEST, "EMPTY_FILE", "Tệp ảnh không được rỗng.");
+            if (file.getSize() > (long) maxFileSizeMb * 1024 * 1024)
+                throw new ApiException(PAYLOAD_TOO_LARGE, "UPLOAD_TOO_LARGE", "Ảnh vượt giới hạn " + maxFileSizeMb + " MB.");
+            try {
+                byte[] bytes = file.getBytes();
+                prepared.add(new Prepared(safeName(file.getOriginalFilename()), bytes.length, ImageVariants.create(bytes)));
+            } catch (IOException ex) {
+                throw new ApiException(BAD_REQUEST, "INVALID_IMAGE", "Không đọc được tệp ảnh.");
+            }
         }
-        return results;
-    }
-
-    private MediaResponse processOne(Actor actor, MultipartFile file) {
-        // 1. Kiểm tra kích thước
-        long maxBytes = (long) maxFileSizeMb * 1024 * 1024;
-        if (file.getSize() > maxBytes) {
-            throw new ApiException(HttpStatus.PAYLOAD_TOO_LARGE, "UPLOAD_TOO_LARGE",
-                    "Ảnh phải nhỏ hơn " + maxFileSizeMb + " MB.");
-        }
-
-        // 2. Validate MIME bằng Tika (magic bytes)
+        List<String> written = new ArrayList<>();
+        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+            @Override public void afterCompletion(int status) {
+                if (status != STATUS_COMMITTED) cleanup(written);
+            }
+        });
+        List<MediaResponse> result = new ArrayList<>();
         try {
-            byte[] bytes = file.getBytes();
-            String detectedType = TIKA.detect(bytes);
-            if (!ALLOWED_TYPES.contains(detectedType)) {
-                throw new ApiException(HttpStatus.UNSUPPORTED_MEDIA_TYPE,
-                        "UNSUPPORTED_MEDIA_TYPE",
-                        "Chỉ chấp nhận ảnh JPEG, PNG hoặc WebP.");
+            for (Prepared p : prepared) {
+                var image = p.image();
+                LocalDate date = LocalDate.now(ZoneId.of("Asia/Ho_Chi_Minh"));
+                String prefix = "%d/%02d/%s".formatted(date.getYear(), date.getMonthValue(), UUID.randomUUID());
+                String thumb = prefix + "-320.jpg", medium = prefix + "-800.jpg", large = prefix + "-1600.jpg";
+                save(thumb, image.thumb(), written);
+                save(medium, image.medium(), written);
+                save(large, image.large(), written);
+                long id = media.create(actor.id(), p.name(), "image/jpeg", p.inputSize(), image.width(), image.height(), thumb, medium, large);
+                // URL tương đối hoạt động qua cả backend trực tiếp và Nginx.
+                result.add(new MediaResponse(id, "/media/" + thumb, "/media/" + medium, "/media/" + large, image.width(), image.height()));
             }
-
-            // 3. Đọc ảnh gốc
-            BufferedImage original;
-            try (var stream = ImageIO.createImageInputStream(new java.io.ByteArrayInputStream(bytes))) {
-                var readers=ImageIO.getImageReaders(stream);
-                if (!readers.hasNext()) throw new ApiException(HttpStatus.BAD_REQUEST,"INVALID_INPUT","Định dạng ảnh chưa được bộ giải mã hỗ trợ.");
-                var reader=readers.next();
-                try {
-                    reader.setInput(stream);
-                    if ((long)reader.getWidth(0)*reader.getHeight(0)>40_000_000L)
-                        throw new ApiException(HttpStatus.BAD_REQUEST,"INVALID_INPUT","Ảnh vượt giới hạn 40 triệu điểm ảnh.");
-                    original=reader.read(0);
-                } finally { reader.dispose(); }
-            }
-            if (original == null) {
-                throw new ApiException(HttpStatus.BAD_REQUEST, "INVALID_INPUT",
-                        "Không thể đọc file ảnh.");
-            }
-            int origW = original.getWidth(), origH = original.getHeight();
-
-            // 4. Sinh 3 biến thể
-            String ext = detectedType.equals("image/png") ? "png" : "jpg";
-            String baseName = "img." + ext;
-            String outputFormat = ext.equals("png") ? "png" : "jpg";
-
-            String pathThumb  = storage.store(resize(original, 240,  outputFormat), "thumb_"  + baseName);
-            String pathMedium = storage.store(resize(original, 800,  outputFormat), "medium_" + baseName);
-            String pathLarge  = storage.store(resize(original, 1600, outputFormat), "large_"  + baseName);
-
-            // 5. Lưu metadata vào DB (trong @Transactional của caller)
-            long mediaId = mediaRepo.create(
-                    actor.id(),
-                    file.getOriginalFilename() != null ? file.getOriginalFilename() : "image",
-                    detectedType,
-                    (int) file.getSize(),
-                    origW, origH,
-                    pathThumb, pathMedium, pathLarge
-            );
-
-            return new MediaResponse(mediaId,
-                    storage.toUrl(pathThumb),
-                    storage.toUrl(pathMedium),
-                    storage.toUrl(pathLarge),
-                    origW, origH);
-
-        } catch (IOException e) {
-            throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL_ERROR",
-                    "Lỗi xử lý ảnh.");
+            return result;
+        } catch (RuntimeException ex) {
+            cleanup(written);
+            throw ex;
         }
     }
-
-    private byte[] resize(BufferedImage src, int maxWidth, String format) throws IOException {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        Thumbnails.of(src)
-                .width(Math.min(src.getWidth(), maxWidth))  // không phóng to ảnh nhỏ
-                .outputFormat(format)
-                .outputQuality(0.85)
-                .toOutputStream(out);
-        return out.toByteArray();
+    private void save(String key, byte[] data, List<String> written) {
+        written.add(key); // dọn cả tệp ghi dở nếu save thất bại
+        storage.save(key, data);
     }
-
+    private String safeName(String original) {
+        if (original == null || original.isBlank()) return "image";
+        String name = original.replace('\\', '/');
+        name = name.substring(name.lastIndexOf('/') + 1).replaceAll("[\\p{Cntrl}]", "");
+        if (name.isBlank()) return "image";
+        return name.substring(0, Math.min(255, name.length()));
+    }
+    private void cleanup(List<String> keys) {
+        for (String key : keys) {
+            try { storage.delete(key); }
+            catch (RuntimeException ex) { log.warn("Không xóa được biến thể ảnh khi dọn tệp."); }
+        }
+    }
     @Transactional
-    public void delete(Actor actor, long mediaId) {
-        var media = mediaRepo.findById(mediaId)
-                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "NOT_FOUND",
-                        "Không tìm thấy ảnh."));
-
-        if (media.ownerAccountId() != actor.id()) {
-            throw new ApiException(HttpStatus.NOT_FOUND, "NOT_FOUND", "Không tìm thấy tài nguyên.");
-        }
-
-        // Kiểm tra ảnh chưa được gắn vào thực thể nào
-        if (mediaRepo.isLinked(mediaId)) {
-            throw new ApiException(HttpStatus.CONFLICT, "DATA_CONFLICT",
-                    "Ảnh đang được sử dụng, không thể xóa.");
-        }
-
-        mediaRepo.delete(mediaId);
-        storage.delete(media.pathThumb());
-        storage.delete(media.pathMedium());
-        storage.delete(media.pathLarge());
+    public void delete(Actor actor, long id) {
+        var row = media.findById(id).filter(m -> m.ownerAccountId() == actor.id())
+                .orElseThrow(() -> new ApiException(NOT_FOUND, "NOT_FOUND", "Không tìm thấy ảnh."));
+        if (media.isLinked(id))
+            throw new ApiException(CONFLICT, "DATA_CONFLICT", "Ảnh đang được sử dụng, không thể xóa.");
+        media.delete(id);
+        List<String> keys = List.of(row.pathThumb(), row.pathMedium(), row.pathLarge());
+        // Chỉ xóa tệp khi DB đã commit.
+        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+            @Override public void afterCommit() { cleanup(keys); }
+        });
     }
 }

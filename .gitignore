@@ -10,3 +10,6 @@ dist/
 .vscode/
 
 application-local-private.properties
+
+# Bản sao lưu DB + ảnh (scripts/backup.ps1) chứa dữ liệu thật
+backups/
