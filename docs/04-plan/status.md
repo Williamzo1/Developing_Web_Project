@@ -23,7 +23,7 @@ Ký hiệu: ✅ xong (API + giao diện) · 🟡 một phần · ⬜ chưa làm.
 | MAP | ⬜ | Chỉ có cột tọa độ trong schema V5 | API ghim bản đồ, giao diện Leaflet, trạng thái mở cửa (Q-29) |
 | NEWS | ⬜ | Chỉ có schema `news_posts` (V6) | API, giao diện công khai và quản trị |
 | ADMIN | 🟡 | API danh sách xưởng, cấp tài khoản, duyệt | Giao diện quản trị, khóa hộ, thống kê, nổi bật, báo cáo |
-| MEDIA | ⬜ | Handler lỗi 413; schema `media`, `media_links` (V5); ảnh hiện là SVG tĩnh trong `frontend/public/images/` | Upload, resize, lưu trữ, phục vụ ảnh (chờ Q-13, Q-21) |
+| MEDIA | 🟡 | Backend: `POST/DELETE /api/media`, `GET /media/**`; 3 biến thể 320/800/1600 px; lưu đĩa qua `MediaStorage` (giả định Q-13/Q-21, chưa chốt); test `media.py`. Ảnh tĩnh SVG trong `frontend/public/images/` vẫn dùng ở giao diện | Giao diện upload, gắn ảnh vào sản phẩm/hộ/lô (`media_links`), sắp xếp + ảnh bìa (FR-MEDIA-04), WebP, hạn mức dung lượng mỗi tài khoản |
 
 ## Nợ kỹ thuật đã biết
 
@@ -52,4 +52,5 @@ Ký hiệu: ✅ xong (API + giao diện) · 🟡 một phần · ⬜ chưa làm.
 | 2026-11-17 | Backend báo giá (migration V4): nháp/gửi/hủy yêu cầu, gửi/sửa/rút/chọn báo giá, khóa dòng + version, tiến độ In Production → Delivered, lịch sử trạng thái. Xem `../03-engineering/quote-backend.md`. Chưa có giao diện. |
 | 2026-11-23 | Migration V5 (mở rộng schema lõi: hồ sơ hộ, media, chứng nhận, giờ mở cửa, công đoạn, lô, mốc) và V6 (tin tức); cập nhật entity `Workshop`, `Product`. Chưa có API cho các bảng mới. |
 | 2026-11-24 | Dương: thêm CI, nâng cấp Compose/Nginx/Dockerfile backend (restart, healthcheck, volume ảnh, giới hạn upload, cache), thêm mục chạy Compose vào `setup.md`. Đã dựng và chạy thử Compose trên Windows. |
+| 2026-11-24 | Dương: MEDIA backend (upload nhiều ảnh, resize 3 cỡ bằng Thumbnailator đã có trong `pom.xml`, EXIF, lưu đĩa), `scripts/backup.ps1` + `restore.ps1` (DB + ảnh), thêm vào Postman và `api-contract.md`. |
 | 2026-11-24 | Đồng bộ lại `status.md` (khôi phục dòng QUOTE bị mất khi merge, ghi V5/V6) và thêm bảng phân công đề xuất vào `roadmap.md`. |

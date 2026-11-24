@@ -24,6 +24,22 @@ Cần Docker Desktop (Windows: bật WSL2). Không cần cài JDK, Node hay Post
 
 Compose chạy profile `local` nên có tài khoản và dữ liệu mẫu (xem README). Dữ liệu DB nằm ở volume `catalog_data`, ảnh upload ở `media_data`. Khi triển khai có tên miền, đặt `APP_BASE_URL` thành địa chỉ đó. Nginx cho phép body tới 60 MB để upload ảnh.
 
+### Sao lưu và khôi phục (DB + ảnh)
+
+Cần stack đang chạy (ít nhất `db`). Chạy ở thư mục gốc, bằng Windows PowerShell:
+
+```powershell
+.\scripts\backup.ps1
+```
+
+Tạo `backups\<yyyyMMdd-HHmmss>\` gồm `db.dump` (pg_dump) và `media.tgz` (volume ảnh); mặc định giữ 14 bản gần nhất (`-Keep N`). Thư mục `backups/` bị git bỏ qua. Khôi phục (ghi đè dữ liệu hiện tại, có hỏi xác nhận):
+
+```powershell
+.\scripts\restore.ps1 -From backups\20261124-103839
+```
+
+Để sao lưu định kỳ, dùng Task Scheduler gọi `powershell -File <đường dẫn>\scripts\backup.ps1`. Hãy chép `backups\` sang ổ/máy khác, vì cùng ổ đĩa với Docker thì không phải sao lưu thật. Đã kiểm vòng upload → backup → xóa → restore trên máy dev (2026-11-24).
+
 CI (`.github/workflows/ci.yml`) build backend và frontend ở mỗi push và pull request.
 
 | Việc | Lệnh | Thư mục |

@@ -73,7 +73,7 @@ Dựa trên các câu đã chốt. "Sẵn sàng" = không còn câu hỏi mở n
 
 - [ ] Frontend: tách cấu trúc thư mục, client API, AuthContext, route guard, bố cục 3 khu vực, design tokens, đăng nhập/đăng ký (FR-AUTH-01, 02, 04).
 - [x] Backend: validation, chuẩn hóa lỗi, khung phân trang, `/api/buyer/**` trong `SecurityConfig`, dọn `application.properties` — bản M1 backend ngày 2026-11-12; xem `../03-engineering/m1-backend.md`. MEDIA, nền frontend và deploy chưa hoàn thành.
-- [ ] **MEDIA**: upload nhiều ảnh + resize + phục vụ ảnh (FR-MEDIA-01..03) — làm sớm vì mọi module nội dung đều cần.
+- [x] **MEDIA backend**: upload nhiều ảnh + resize + phục vụ ảnh (FR-MEDIA-01..03) — 2026-11-24, theo giả định Q-13/Q-21. Còn giao diện upload và gắn ảnh vào từng module.
 - [ ] Seed tối thiểu (tài khoản mẫu, phân loại, tag, vài hộ/sản phẩm).
 - [ ] **Triển khai lên Internet ngay sau M1** (bắt buộc — Q-09) để nhóm nhập dữ liệu thật dần qua giao diện; thiết lập sao lưu DB + ảnh.
 

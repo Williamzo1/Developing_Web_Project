@@ -11,7 +11,7 @@
 - Phân trang đã cài đặt: `/api/products/page?page=0&size=12`; `page` 0..100000, `size` 1..50, mặc định 12. Response `{items,page,size,totalElements,totalPages,first,last}`, sắp `id ASC`. `/api/products` giữ mảng để tương thích; admin list chưa phân trang.
 - Thời gian ISO-8601 có múi giờ; ngày `YYYY-MM-DD`; tiền là số nguyên VND.
 - Giá bị hộ ẩn (`priceVisible = false`) thì response công khai trả `price: null` — không gửi giá về client rồi ẩn bằng giao diện.
-- Ảnh trong response là đối tượng `{ "id", "thumbUrl", "mediumUrl", "largeUrl", "width", "height" }`. *(Đề xuất; hiện `ProductResponse` chỉ có `imageUrl`.)*
+- Ảnh trong response là đối tượng `{ "id", "thumbUrl", "mediumUrl", "largeUrl", "width", "height" }`; URL tương đối dạng `/media/2026/11/<uuid>-320.jpg`. *(Đã có ở `POST /api/media`; `ProductResponse` vẫn chỉ có `imageUrl` cho tới khi sản phẩm gắn ảnh.)*
 
 ### Lỗi
 
@@ -29,8 +29,11 @@ Thân lỗi thống nhất: `{ "timestamp": "ISO-8601", "status": 400, "code": "
 | 404 | NOT_FOUND | Không có đường dẫn/tài nguyên khác. |
 | 405 | METHOD_NOT_ALLOWED | Phương thức không được hỗ trợ sau khi qua Security; có Allow header. |
 | 409 | DATA_CONFLICT | Trùng/vi phạm ràng buộc dữ liệu. |
-| 413 | UPLOAD_TOO_LARGE | Đã có handler; chưa có API upload. |
-| 415 | UNSUPPORTED_MEDIA_TYPE | Content-Type không được hỗ trợ. |
+| 413 | UPLOAD_TOO_LARGE | Một ảnh quá 5 MB, hoặc cả request quá 55 MB. |
+| 415 | UNSUPPORTED_MEDIA_TYPE | Content-Type không được hỗ trợ (ví dụ gửi JSON vào endpoint multipart). |
+| 415 | UNSUPPORTED_IMAGE_TYPE | Tệp không phải JPEG/PNG (xác định theo nội dung, không theo đuôi tệp). WebP chưa hỗ trợ. |
+| 400 | NO_FILES, EMPTY_FILE, TOO_MANY_FILES | Upload không có tệp, có tệp rỗng, hoặc quá 10 tệp một lần. |
+| 400 | INVALID_IMAGE, IMAGE_DIMENSIONS_TOO_LARGE | Ảnh hỏng/không giải mã được; ảnh quá 30 megapixel. |
 | 500 | INTERNAL_ERROR | Lỗi bất ngờ; nội dung chi tiết chỉ trong log server. |
 | 503 | DATABASE_UNAVAILABLE | Health DB không kết nối được. |
 
@@ -52,8 +55,11 @@ Frontend rẽ nhánh theo status/code; đưa fieldErrors tới ô nhập, messag
 | POST | `/api/admin/workshops` | ADMIN | `{ workshopName, username, password }` → 201; tạo xưởng chờ duyệt + tài khoản hộ trong một giao dịch. |
 | POST | `/api/admin/workshops/{id}/approve` | ADMIN | Duyệt xưởng. |
 | PATCH | `/api/artisan/workshops/{id}` | ARTISAN (chủ xưởng) | `{ name }`; xưởng khác → 403. |
+| POST | `/api/media` | Mọi vai trò đã đăng nhập | `multipart/form-data`, trường `files` lặp lại (tối đa 10 tệp, mỗi tệp ≤ 5 MB, JPEG hoặc PNG, ≤ 30 megapixel) → 201, mảng `[{ id, thumbUrl, mediumUrl, largeUrl, width, height }]`. Sinh 3 biến thể JPEG chất lượng 80 có cạnh dài 320/800/1600 px (không phóng to ảnh nhỏ), xoay theo EXIF, nền trắng cho PNG trong suốt, bỏ metadata. Tất cả-hoặc-không: một tệp lỗi thì không lưu tệp nào. `width`/`height` là của bản lớn. |
+| DELETE | `/api/media/{id}` | Người tải lên | 204 và xóa cả 3 tệp. Ảnh của người khác (kể cả Admin) hoặc không có → 404. Ảnh đang gắn vào thực thể thì bị gỡ khỏi đó (schema: `media_links` xóa theo, `workshops.cover_media_id` về NULL), chưa có chặn xóa ảnh đang dùng. |
+| GET, HEAD | `/media/**` | Công khai | Tệp ảnh tĩnh, `Cache-Control: public, max-age=31536000, immutable` (tên tệp có UUID nên không đổi nội dung). Không có → 404. |
 
-Collection Postman: `postman/`. Kiểm thử HTTP: `backend/tests/phase02.py`, `backend/tests/m1.py`.
+Collection Postman: `postman/`. Kiểm thử HTTP: `backend/tests/phase02.py`, `backend/tests/m1.py`, `backend/tests/media.py`.
 
 ## 3. API dự kiến (đề xuất)
 
@@ -106,15 +112,9 @@ Mọi thao tác ngầm định trên xưởng của người đăng nhập; khô
 | PUT | `/featured` | FR-ADMIN-03 |
 | GET | `/reports` · POST `/reports/{id}/resolve` | FR-ADMIN-04 |
 
-### Ảnh (ARTISAN, ADMIN, BUYER cho ảnh tham khảo)
+### Ảnh
 
-| Phương thức | Đường dẫn | FR |
-|---|---|---|
-| POST | `/api/media` (multipart, nhiều tệp trường `files`) → mảng đối tượng ảnh | FR-MEDIA-01, 02 |
-| DELETE | `/api/media/{id}` (chỉ người tải lên) | FR-MEDIA-04 |
-| GET | `/media/**` (tệp tĩnh, không qua `/api`) | FR-MEDIA-03 |
-
-Gắn ảnh vào thực thể bằng cách gửi `mediaIds: [..]` theo thứ tự trong request tạo/sửa của thực thể đó.
+Ba endpoint upload/xóa/phục vụ ảnh đã chuyển lên mục 2. Còn thiếu (FR-MEDIA-04, P1): sắp xếp lại và chọn ảnh bìa. Gắn ảnh vào thực thể bằng cách gửi `mediaIds: [..]` theo thứ tự trong request tạo/sửa của thực thể đó (bảng `media_links`); việc này làm cùng từng module (sản phẩm, lô, hồ sơ hộ…).
 
 ## 4. Quy trình thay đổi API
 

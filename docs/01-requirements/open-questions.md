@@ -256,6 +256,7 @@ Nhóm không tự chốt được các câu này, nhưng nên thống nhất **p
 - **Phương án:** (a) Đĩa server qua Docker volume. (b) Dịch vụ ngoài (Cloudinary, S3…). (c) Lưu trong PostgreSQL.
 - **Gợi ý:** (a), viết sau một interface `MediaStorage`. Demo không phụ thuộc mạng và tài khoản bên ngoài; và tự resize ở backend mới đúng yêu cầu §4.4 (Cloudinary resize hộ thì mất điểm kỹ năng). Nhớ sao lưu thư mục ảnh cùng dữ liệu seed.
 - **Nhóm chốt:** _chưa_
+- **Đang cài đặt (2026-11-24):** theo gợi ý (a): đĩa qua interface `MediaStorage`, volume `media_data` trong Compose. Đổi nơi lưu chỉ cần viết lớp mới.
 
 ### Q-19 🔴 Frontend lấy và lưu dữ liệu server thế nào?
 
@@ -275,6 +276,7 @@ Nhóm không tự chốt được các câu này, nhưng nên thống nhất **p
 - **Gợi ý:** Thumbnailator. Ba biến thể theo cạnh dài: 320 px (danh sách), 800 px (chi tiết), 1600 px (xem lớn); JPEG chất lượng khoảng 80 (WebP cần thêm plugin, để sau). Nhận JPEG/PNG/WebP, tối đa 8 MB mỗi ảnh và 10 ảnh mỗi lần. Xử lý đồng bộ trong request; bỏ metadata EXIF và xoay ảnh theo hướng chụp.
 - **Cần bàn thêm:** có giữ ảnh gốc không? Gợi ý: không, chỉ giữ bản 1600 px để tiết kiệm đĩa.
 - **Nhóm chốt:** _chưa_
+- **Đang cài đặt (2026-11-24):** Thumbnailator (đã có trong `pom.xml`), 3 cỡ 320/800/1600 px, JPEG chất lượng 80, **tối đa 5 MB/ảnh** (theo cấu hình multipart sẵn có, không phải 8 MB), 10 ảnh/lần, không giữ ảnh gốc, xử lý đồng bộ. **Chỉ nhận JPEG và PNG**: JDK không đọc được WebP, muốn nhận WebP phải thêm thư viện (cần nhóm đồng ý).
 
 ### Q-22 🟡 Kiểm thử bằng công cụ gì?
 

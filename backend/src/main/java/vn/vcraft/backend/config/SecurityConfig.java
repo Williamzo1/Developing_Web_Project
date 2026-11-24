@@ -49,6 +49,11 @@ class SecurityConfig {
                                     .permitAll()
                                     .requestMatchers(HttpMethod.POST, "/api/login")
                                     .permitAll()
+                                    // Ảnh upload là tệp tĩnh công khai (FR-MEDIA-03).
+                                    .requestMatchers(HttpMethod.GET, "/media/**")
+                                    .permitAll()
+                                    .requestMatchers(HttpMethod.HEAD, "/media/**")
+                                    .permitAll()
                                     .requestMatchers("/error")
                                     .permitAll()
                                     .requestMatchers("/api/admin/**")
