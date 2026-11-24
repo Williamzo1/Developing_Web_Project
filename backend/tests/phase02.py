@@ -39,7 +39,7 @@ before = {w["id"]: w["name"] for w in call("/admin/workshops", token=admin)}
 call("/admin/workshops", 403, token=buyer)
 call("/admin/workshops", 403, token=a)
 call(f"/artisan/workshops/{a_id}", 403, "PATCH", {"name": "Denied"}, buyer)
-call(f"/artisan/workshops/{b_id}", 403, "PATCH", {"name": "Denied"}, a)
+call(f"/artisan/workshops/{b_id}", 404, "PATCH", {"name": "Denied"}, a)
 call(f"/artisan/workshops/{a_id}", 400, "PATCH", {"name": " "}, a)
 try:
     assert call(f"/artisan/workshops/{a_id}", 200, "PATCH", {"name": "Tên thử Phase 02"}, a)["name"] == "Tên thử Phase 02"
