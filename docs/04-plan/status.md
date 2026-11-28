@@ -2,6 +2,7 @@
 
 > Tài liệu **sống**: cập nhật trong cùng thay đổi mỗi khi một yêu cầu đổi tình trạng. Đây là nơi duy nhất ghi "đã làm đến đâu".
 >
+> Cập nhật lần cuối: **2026-11-28** — gộp backend M1 vào `master`, chốt câu hỏi mở.
 
 Ký hiệu: ✅ xong (API + giao diện) · 🟡 một phần · ⬜ chưa làm.
 
@@ -48,10 +49,10 @@ Ngày 2026-11-28 nhóm chốt toàn bộ câu hỏi mở còn lại (Q-13, 16, 1
 | 2026-11-10 | Dựng hệ thống tài liệu `docs/`, `AGENTS.md`, `CLAUDE.md`. Chưa đổi mã. |
 | 2026-11-10 | Họp nhóm lần 1: chốt 18 câu hỏi mở (Q-01..12, 14, 15, 30..33, trừ Q-29 cần làm rõ). Thay đổi đáng chú ý: khớp yêu cầu mở theo **tag**; Buyer đăng ký có xác thực email + SĐT; **bắt buộc triển khai Internet** với dữ liệu như người dùng thật; hộ chọn công khai/ẩn giá; Buyer chỉ định một hộ. Phát sinh Q-37, Q-38, Q-39. Bảng "sẵn sàng cài đặt" ở `roadmap.md`. |
 | 2026-11-10 | Chốt Q-18 (CSS thuần + CSS Modules) và Q-19 (hook tự viết + client API chung) — ADR-0003. Phần giao diện không còn bị chặn. |
-
 | 2026-11-12 | Hoàn thành phần backend foundation của M1: lỗi JSON chung, Bean Validation, phân trang danh mục thật, quyền Buyer và cấu hình local. Không thay migration. MEDIA và phần frontend foundation chưa hoàn thành. |
-
+| 2026-11-13 | Thêm V4 và backend báo giá; Postman, test HTTP và PostgreSQL đồng thời; giữ M1. Xem quote-verification.md về kết quả thật. |
 | 2026-11-17 | Backend báo giá (migration V4): nháp/gửi/hủy yêu cầu, gửi/sửa/rút/chọn báo giá, khóa dòng + version, tiến độ In Production → Delivered, lịch sử trạng thái. Xem `../03-engineering/quote-backend.md`. Chưa có giao diện. |
+| 2026-11-20 | Khôi phục tài liệu báo giá, Postman và phần font bị mất ở commit merge `ed29e0b` (lấy lại từ `b39455b` và `3f1230d`). Không đổi mã backend. |
 | 2026-11-23 | Migration V5 (hồ sơ hộ, media, chứng nhận, giờ mở cửa, công đoạn, lô, mốc) và V6 (tin tức); cập nhật entity `Workshop`, `Product`. |
 | 2026-11-24 | Dương: CI, nâng cấp Compose/Nginx/Dockerfile backend; MEDIA backend (upload nhiều ảnh, resize 3 cỡ, EXIF, lưu đĩa); `scripts/backup.ps1` + `restore.ps1`. |
 | 2026-11-24 | Hoàn thiện THẮNG M1 Backend đến bước 10, bổ sung kiểm thử HTTP và tài liệu hợp đồng API. |
