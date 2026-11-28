@@ -13,7 +13,7 @@ Trình duyệt ── React SPA (Vite) ──/api──▶ Spring Boot REST API 
 - **Frontend**: React 19, React Router 7, Vite 7, CSS thuần. Khi dev, Vite proxy `/api` sang `localhost:8080`. Khi chạy Compose, Nginx phục vụ bản build và proxy `/api`.
 - **Backend**: Spring Boot 4.1.2, Java 17, Spring MVC + Spring Security + Spring Data JPA + JDBC, Flyway. Chỉ trả JSON, không render HTML.
 - **Database**: PostgreSQL 16. Schema do Flyway quản lý, Hibernate chỉ `validate`.
-- **Triển khai**: Docker Compose gồm `db`, `backend`, `frontend`. Nhóm đã chốt web **phải chạy trên Internet** (Q-09); nơi đặt máy chủ chờ Q-23. Cần thêm: HTTPS, `APP_BASE_URL` trỏ tên miền thật, sao lưu DB + thư mục ảnh, cấu hình gửi email nếu Q-39 chọn OTP qua email.
+- **Triển khai**: Docker Compose gồm `db`, `backend`, `frontend`. Nhóm đã chốt web **phải chạy trên Internet** (Q-09); chạy trên một VPS bằng nguyên `compose.yaml` (Q-23 đã chốt), laptop + Compose làm dự phòng. Cần thêm: HTTPS, `APP_BASE_URL` trỏ tên miền thật, sao lưu DB + thư mục ảnh, cấu hình SMTP cho OTP email (Q-39).
 
 Lý do chọn stack: [ADR-0002](../decisions/0002-stack-va-xac-thuc.md).
 
@@ -78,4 +78,4 @@ frontend/src/
 - Compose đọc `.env` (mẫu: `.env.example`): `POSTGRES_*`, `SPRING_PROFILES_ACTIVE`, `BACKEND_PORT`, `FRONTEND_PORT`.
 - Chạy backend local với profile local: application.properties chỉ cấu hình chung, application-local.properties dùng VCRAFT_DB_URL/USER/PASSWORD. Không có mật khẩu mặc định; xem README về biến môi trường/file private.
 - Profile `local`/`demo` nạp `db/seed/catalog.sql` rồi tạo tài khoản mẫu (`DemoData`, `DemoAccounts`).
-- Biến sẽ cần thêm: `APP_BASE_URL` (QR), `MEDIA_DIR` (thư mục ảnh), cấu hình SMTP (nếu Q-39 chọn xác thực email bằng OTP). Bí mật của bản triển khai chỉ đặt trong `.env` trên máy chủ, không commit.
+- Biến sẽ cần thêm: `APP_BASE_URL` (QR), `MEDIA_DIR` (thư mục ảnh), cấu hình SMTP (OTP email — Q-39). Bí mật của bản triển khai chỉ đặt trong `.env` trên máy chủ, không commit.

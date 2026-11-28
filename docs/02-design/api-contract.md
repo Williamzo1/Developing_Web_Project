@@ -95,7 +95,7 @@ Frontend landing page thuộc M2, chưa được xây trong lần cập nhật n
 
 ## Giới hạn và phần sau M1 bước 10
 
-Các giả định Q-29, Q-38, Q-39 vẫn chưa phải quyết định mới của nhóm: lịch theo tuần/ngày nghỉ,
+Q-29, Q-38, Q-39 đã chốt ngày 2026-11-28 đúng như cài đặt: lịch theo tuần/ngày nghỉ,
 Admin quản lý tag song song phân loại, OTP email và kiểm định dạng SĐT. Chưa có OTP SMS.
 Upload chỉ nhận JPEG/PNG theo nội dung, không nhận WebP. Bộ xử lý ImageVariants xuất ba biến thể JPEG
 320/800/1600 px theo cạnh dài, không phóng to, xoay EXIF, bỏ metadata và đưa nền trong suốt về trắng.

@@ -18,7 +18,7 @@ Profile local/demo giữ buyer, admin, xuong-men-lam, xuong-dat-nung; thêm buye
 
 Seed thêm ba tag gom-thu-cong, men-lam, dat-nung và product_tags cho hai hộ hiện có; không seed yêu cầu/báo giá để tránh giả hoàn thành trạng thái. Liên hệ hộ là địa chỉ example.test và số demo, không phải thông tin thật. Hộ có API PATCH /api/artisan/workshops/{id}/contact để cập nhật email/phone của chính mình.
 
-Giả định Q-38: tag seed cố định, khớp đúng ít nhất một tag; category vẫn riêng. Điều kiện khớp nằm **duy nhất trong QuoteMatchingRepository.eligibilityPredicate()**, dùng lại cho danh sách và quyền tham gia. Chưa làm CRUD tag/Admin UI hoặc matching gần đúng. Rút báo giá tạm theo gợi ý Q-31 đã ghi trong tài liệu gốc.
+Q-38 (đã chốt 2026-11-28): tag do Admin quản lý, khớp đúng ít nhất một tag; category vẫn riêng. Điều kiện khớp nằm **duy nhất trong QuoteMatchingRepository.eligibilityPredicate()**, dùng lại cho danh sách và quyền tham gia. Chưa làm CRUD tag/Admin UI hoặc matching gần đúng. Rút báo giá theo Q-31 đã chốt.
 
 ## 3. Luồng chính và quyền
 

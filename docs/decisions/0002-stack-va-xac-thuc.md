@@ -1,6 +1,6 @@
 # ADR-0002: Stack công nghệ và cơ chế xác thực
 
-- Trạng thái: Stack — Đã chốt (đã có trong mã). Xác thực — Đề xuất (Q-16).
+- Trạng thái: Stack — Đã chốt (đã có trong mã). Xác thực — Đã chốt 2026-11-28 (Q-16: giữ token lưu DB).
 - Ngày: 2026-11-10 (ghi lại quyết định đã có trong repo)
 - Người quyết định: Nhóm
 

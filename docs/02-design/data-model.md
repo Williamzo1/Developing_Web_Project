@@ -1,6 +1,6 @@
 # Mô hình dữ liệu
 
-> Cập nhật 2026-11-10 theo kết quả họp nhóm (Q-03, Q-06, Q-07, Q-10, Q-12, Q-14, Q-15, Q-30). Phần còn chờ: giờ mở cửa/nhận đơn (Q-29), cách tổ chức tag (Q-38), cơ chế xác thực (Q-39), bộ ảnh (Q-13, Q-21).
+> Cập nhật 2026-11-10 theo kết quả họp nhóm (Q-03, Q-06, Q-07, Q-10, Q-12, Q-14, Q-15, Q-30). Ngày 2026-11-28 nhóm chốt nốt Q-13, Q-21, Q-29, Q-38, Q-39 đúng như schema V4–V6; riêng nhãn "đang nhận đơn" (Q-29) chưa có cột, cần migration mới.
 >
 > **Nguồn sự thật của schema là các file Flyway** trong `backend/src/main/resources/db/migration/`. Tài liệu này mô tả ý đồ. ZIP hiện có migration V1–V6. Mục 2 lưu ý đồ thiết kế ban đầu; đối chiếu migration trước khi thay đổi schema; khi viết migration cho một bảng, cập nhật lại mục tương ứng và chuyển nó lên "hiện trạng".
 
@@ -44,7 +44,7 @@ erDiagram
 
 - `workshops`: `description`, `family_history`, `address`, `phone`, `contact_email` (Gmail) và `facebook_url` — hai trường này là thông tin xác minh hộ (Q-07 đã chốt), `latitude`, `longitude`, `approved_at`, `featured` (bool), `cover_media_id`. **Chờ Q-29:** `opening_hours`, `accepts_visitors`, và/hoặc cờ "đang nhận đơn" — chưa đưa vào migration cho đến khi nhóm làm rõ.
 - `products`: `reference_price`, `price_visible` (bool — hộ chọn công khai hay ẩn giá, Q-30 đã chốt), `hidden` (bool, Admin hậu kiểm hoặc hộ tự ẩn), `featured` (bool); thay `image_path` bằng liên kết bộ ảnh (giữ cột cũ đến khi chuyển xong dữ liệu).
-- `accounts`: `display_name`, `email` (unique), `phone`, `email_verified_at`, `phone_verified_at` (Buyer tự đăng ký có xác thực — Q-12 đã chốt; cơ chế xác thực và bảng mã OTP nếu cần: chờ Q-39).
+- `accounts`: `display_name`, `email` (unique), `phone`, `email_verified_at`, `phone_verified_at` (Buyer tự đăng ký có xác thực — Q-12 đã chốt; xác thực email bằng OTP, SĐT chỉ kiểm định dạng — Q-39 đã chốt).
 - Mọi bảng nghiệp vụ: `created_at`, `updated_at` (`TIMESTAMPTZ`).
 
 ### 2.2. Bảng mới
@@ -58,7 +58,7 @@ erDiagram
 | `batches` | `id`, `product_id`, `workshop_id`, `code` (mã lô hiển thị), `public_code` (unique, ngẫu nhiên, dùng trong URL/QR), `name`, `description`, `kind` (`IN_STOCK`/`MADE_TO_ORDER`), `quantity`, `unit`, `reference_price`, `price_visible`, `supply_capacity`, `available_from`, `visibility` (`PUBLIC`/`PRIVATE`), `share_token` (nullable; liên kết riêng do hộ tạo/thu hồi — Q-02, Q-06 đã chốt), `partner_note` (ghi chú hộ cùng tham gia — Q-05, Q-14), `hidden`, `featured` | `workshop_id` lặp lại từ product để truy vấn/kiểm quyền nhanh; phải khớp với xưởng của product. |
 | `batch_milestones` | `id`, `batch_id`, `process_step_id` (nullable), `title`, `note`, `happened_on` (DATE) | "Mảng mốc thời gian + ảnh chứng minh" của đề gốc 4.1 (Q-10 đã chốt: hai tầng). Sắp theo `happened_on`. |
 | `quote_requests` | `id`, `buyer_account_id`, `category_id`, `title`, `quantity`, `unit`, `spec` (yêu cầu kỹ thuật), `desired_by` (DATE), `bidding_deadline` (nullable — Q-15 đã chốt), `mode` (`TARGETED`/`OPEN`), `target_workshop_id` (nullable; bắt buộc khi `TARGETED` — Buyer chỉ định **một** hộ, Q-14), `status`, `accepted_quote_id` (nullable), `version` (khóa lạc quan), `created_at`, `updated_at` | Trạng thái: xem `quote-state-machine.md`. |
-| `tags` | `id`, `slug` (unique), `name` | Danh sách tag (cách quản lý: Q-38). |
+| `tags` | `id`, `slug` (unique), `name` | Danh sách tag do Admin quản lý, seed sẵn (Q-38 đã chốt). |
 | `product_tags` | `product_id`, `tag_id` (PK kép) | Tag của sản phẩm. |
 | `quote_request_tags` | `request_id`, `tag_id` (PK kép) | Tag của yêu cầu. Yêu cầu mở khớp với hộ có sản phẩm trùng ít nhất một tag (Q-03 đã chốt). |
 | `quotes` | `id`, `request_id`, `workshop_id`, `unit_price`, `total_price`, `lead_time_days`, `note`, `status` (`SUBMITTED`/`WITHDRAWN`/`ACCEPTED`/`NOT_SELECTED`), `created_at`, `updated_at` | Unique (`request_id`, `workshop_id`). Unique một phần: mỗi `request_id` tối đa một dòng `status = 'ACCEPTED'`. |

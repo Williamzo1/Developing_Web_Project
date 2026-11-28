@@ -57,7 +57,7 @@ Danh sách đầy đủ: [functional-requirements.md](functional-requirements.md
 | C-02 | Mỗi **lô** có mảng mốc thời gian + ảnh chứng minh | Quy trình dùng chung theo **loại sản phẩm**, không lặp lại cho từng lô | Làm cả hai tầng: quy trình dùng chung ở sản phẩm (bắt buộc) + mốc thời gian riêng của lô (ngày + ảnh, tùy chọn, ánh xạ vào công đoạn). Landing page lô ghép hai tầng. | Nhóm chốt (Q-10) |
 | C-03 | State machine 6 trạng thái đến `Delivered`, có khóa bản ghi | Không quản lý bắt buộc sản xuất/giao hàng; "chấp nhận báo giá, nếu có" | Giữ đủ 6 trạng thái để đáp ứng 4.2, nhưng `In Production`/`Delivered` chỉ là mốc thông tin do hộ tự cập nhật, không kèm quản lý hợp đồng/thanh toán. Khóa bản ghi ở bước chấp nhận báo giá. | Nhóm chốt (Q-04, Q-11) |
 | C-04 | QR mỗi lô → landing page kể toàn bộ câu chuyện | QR đến landing page lô "hoặc trang truy xuất phù hợp" | QR → trang lô (quy trình + mốc thời gian + ảnh); hộ gửi QR cho khách. Lô riêng tư: QR mã hóa liên kết riêng. | Nhóm chốt (Q-06) |
-| C-05 | Bản đồ cho biết xưởng nào **đang mở cửa** | Giờ mở cửa "có thể hiển thị nếu hộ cung cấp" | Hộ khai giờ mở cửa + cờ nhận khách tham quan; ghim thể hiện trạng thái mở/đóng. | Chờ làm rõ Q-29 |
+| C-05 | Bản đồ cho biết xưởng nào **đang mở cửa** | Giờ mở cửa "có thể hiển thị nếu hộ cung cấp" | Hộ khai giờ mở cửa + cờ nhận khách tham quan; ghim thể hiện trạng thái mở/đóng. | Chốt (Q-29), thêm nhãn "đang nhận đơn" riêng |
 | C-06 | Admin kiểm duyệt **và cấp** tài khoản hộ | Admin xác minh hộ | Tương thích. Giữ luồng hiện có: Admin cấp tài khoản → duyệt → hộ đăng nhập được. | Đã chốt |
 
 ## 6. Tiêu chí nghiệm thu (tự kiểm)

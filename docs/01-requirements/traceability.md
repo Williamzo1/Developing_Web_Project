@@ -11,7 +11,7 @@ Mục đích: bảo đảm không câu nào trong **đề gốc** bị bỏ sót
 | §3 Artisan | Đăng sản phẩm kèm nhật ký sản xuất | FR-PROD-01..02, FR-BATCH-03 | |
 | §3 Artisan | Nhận và chào giá yêu cầu báo giá | FR-QUOTE-04 | |
 | §3 Buyer | Danh mục theo hộ hoặc phân loại | FR-PROD-03 | |
-| §3 Buyer | Bản đồ, biết xưởng nào đang mở cửa | FR-MAP-01..03, FR-WS-05 | Cách xác định "đang mở": chờ Q-29 |
+| §3 Buyer | Bản đồ, biết xưởng nào đang mở cửa | FR-MAP-01..03, FR-WS-05 | "Đang mở" tính từ giờ mở cửa (Q-29 đã chốt) |
 | §3 Buyer | Tạo yêu cầu báo giá, gửi đến các hộ phù hợp | FR-QUOTE-01..03, FR-PROD-06 | "Phù hợp" = trùng tag (Q-03) |
 | §3 Admin | Kiểm duyệt và cấp tài khoản hộ | FR-AUTH-03, FR-ADMIN-01 | |
 | §3 Admin | Quản lý tin tức cộng đồng | FR-NEWS-01..02 | |
