@@ -1,0 +1,12 @@
+2026-11-24T21:50:19.585+07:00  INFO 28 --- [vcraft] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 6 migrations (execution time 00:00.018s)
+2026-11-24T21:50:19.934+07:00  INFO 28 --- [vcraft] [           main] o.f.core.internal.command.DbMigrate      : Successfully applied 6 migrations to schema "public", now at version v6 (execution time 00:00.206s)
+2026-11-24T21:50:24.005+07:00  INFO 28 --- [vcraft] [           main] vn.vcraft.backend.VCraftApplication      : Started VCraftApplication in 7.209 seconds (process running for 7.809)
+
+HEALTH: {"status":"UP"}
+PASS Phase 02: public catalog, roles, ownership, provisioning, approval and token revocation
+PASS M1: 25 error-contract checks plus pagination, UTF-8 validation, buyer isolation, legacy API and Phase02 regression
+PASS: 88 M1 extension HTTP checks
+PASS concurrent acceptance: 10 rounds, exactly one 200 and one 409 each
+PASS additional races: accept/edit, accept/withdraw, cancel/submit, duplicate submit, draft edit
+SKIP direct DB/held-lock checks: set VCRAFT_TEST_DB_URL and install quote_requirements.txt
+PASS quote workflow: 143 HTTP checks + privacy, state history, deadlines and concurrency

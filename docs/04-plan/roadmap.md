@@ -12,18 +12,32 @@
 
 Sau khi có nền, chia việc **theo tính năng** (mỗi người làm trọn cả API lẫn giao diện của tính năng mình nhận).
 
+### Việc tiếp theo của từng người (cập nhật 2026-11-28)
+
+Chia luồng M2 theo Q-25 (đã chốt). Backend của cả ba luồng phần lớn đã có, nên phần việc chính là giao diện và phần backend còn thiếu.
+
+| Thành viên | Việc tiếp theo |
+|---|---|
+| Huy | (1) **Chặn cả nhóm:** gộp prototype `developing/prototype_1`, hoàn tất nền frontend (tách `main.jsx`, client API, `useApi`/`useMutation`, AuthContext, route guard, bố cục 3 khu vực, design tokens, đăng nhập/đăng ký + nhập OTP). (2) Wireframe 5 màn hình trọng điểm. (3) Luồng **A. Triển lãm**: trang chủ, danh sách/hồ sơ hộ, danh mục có lọc/tìm, chi tiết sản phẩm + công đoạn. |
+| Thắng | (1) Luồng **C. Báo giá**: giao diện Buyer + Artisan, badge FR-QUOTE-10, ảnh tham khảo. (2) Backend còn thiếu: tìm kiếm theo tên/sort, đổi mật khẩu (FR-AUTH-06), báo cáo vi phạm (FR-ADMIN-04, cắt đầu tiên theo Q-35), nhãn "đang nhận đơn" (Q-29, migration mới). (3) Giữ `api-contract.md` và Postman khớp mã. |
+| Dương | (1) Review và gộp PR M1 vào `master`; chạy `m1.py`, `m1_extension.py`, `quotes.py`, `phase02.py`, `media.py` với SMTP thật. (2) Seed tối thiểu ở `db/seed/` + nhập ảnh demo (Q-24). (3) **Triển khai VPS** + tên miền + HTTPS (Q-23), lịch sao lưu DB + ảnh; đưa test vào CI. (4) Luồng **B. Truy xuất + bản đồ**: landing page lô `/batches/{publicCode}`, giao diện quản lý lô/mốc/QR, bản đồ Leaflet. |
+
+M3 (tin tức, giao diện quản trị, UI upload ảnh): ai xong luồng M2 trước nhận. Mốc thời gian: đếm ngược từ ngày thi (Q-26) — điền khi biết ngày.
+
 ## Giai đoạn
 
 ### M0 — Chốt tài liệu (đang làm)
 
 - [ ] Nhóm đọc và duyệt `01-requirements/`, đặc biệt bảng lệch đề gốc/đặc tả trong `overview.md`.
 - [x] Họp nhóm lần 1 (2026-11-10): đã chốt 18 câu nghiệp vụ (nhóm A và phần lớn nhóm B).
-- [ ] Họp nhóm lần 2: làm rõ Q-29; chốt các câu 🔴 còn mở — Q-38 (tag), Q-39 (xác thực email/SĐT), Q-13 (lưu ảnh), Q-23 (nơi đặt máy chủ), Q-16, Q-17, Q-25, Q-26. (Q-18, Q-19 đã chốt.)
+- [x] Chốt toàn bộ câu hỏi mở còn lại theo gợi ý (2026-11-28), gồm Q-29, Q-38, Q-39, Q-13, Q-23, Q-16, Q-17, Q-25, Q-26.
 - [ ] Gửi giảng viên các điểm nhóm làm khác/diễn giải đề gốc §4.1–4.2 (bản nháp tin nhắn có sẵn trong `open-questions.md`).
-- [ ] Duyệt `conventions.md`, `git-workflow.md` (Q-27, Q-28).
+- [x] Quy trình review/merge và dùng AI (Q-27, Q-28) đã chốt; `conventions.md`, `git-workflow.md` áp dụng như hiện có.
 - [ ] Wireframe 5 màn hình trọng điểm (`02-design/ui-ux.md`).
 
 ## Sẵn sàng cài đặt (đánh giá ngày 2026-11-10)
+
+> **Lịch sử.** Từ 2026-11-28 mọi câu hỏi mở đã chốt và backend M1 đã có phần lớn các việc dưới đây; xem hiện trạng ở `status.md`.
 
 Dựa trên các câu đã chốt. "Sẵn sàng" = không còn câu hỏi mở nào ảnh hưởng tới schema hay hành vi của phần đó. Cập nhật bảng này mỗi khi chốt thêm câu hỏi.
 
@@ -62,7 +76,7 @@ Dựa trên các câu đã chốt. "Sẵn sàng" = không còn câu hỏi mở n
 
 - [ ] Frontend: tách cấu trúc thư mục, client API, AuthContext, route guard, bố cục 3 khu vực, design tokens, đăng nhập/đăng ký (FR-AUTH-01, 02, 04).
 - [x] Backend: validation, chuẩn hóa lỗi, khung phân trang, `/api/buyer/**` trong `SecurityConfig`, dọn `application.properties` — bản M1 backend ngày 2026-11-12; xem `../03-engineering/m1-backend.md`. MEDIA, nền frontend và deploy chưa hoàn thành.
-- [ ] **MEDIA**: upload nhiều ảnh + resize + phục vụ ảnh (FR-MEDIA-01..03) — làm sớm vì mọi module nội dung đều cần.
+- [x] **MEDIA backend**: upload nhiều ảnh + resize + phục vụ ảnh (FR-MEDIA-01..03) — 2026-11-24, theo Q-13/Q-21 (đã chốt 2026-11-28). Còn giao diện upload và gắn ảnh vào từng module.
 - [ ] Seed tối thiểu (tài khoản mẫu, phân loại, tag, vài hộ/sản phẩm).
 - [ ] **Triển khai lên Internet ngay sau M1** (bắt buộc — Q-09) để nhóm nhập dữ liệu thật dần qua giao diện; thiết lập sao lưu DB + ảnh.
 

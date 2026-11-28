@@ -7,7 +7,7 @@
 - **Gợi ý cũng là giả định làm việc**: cho đến khi nhóm chốt, mã và tài liệu thiết kế tạm đi theo gợi ý để không bị chặn. Gợi ý không phải quyết định.
 - Khi chốt một câu: điền dòng **Nhóm chốt** (phương án, ngày, ai chốt), đổi trạng thái trong bảng mục lục thành `Đã chốt`, rồi sửa các chỗ ghi "Giả định Q-xx" trong `functional-requirements.md` và tài liệu thiết kế liên quan trong cùng một lần thay đổi. Quyết định lớn thì thêm ADR.
 - Câu đã chốt giữ lại để tra cứu, không xóa, không đánh số lại.
-- AI gặp điểm mơ hồ mới: thêm câu hỏi (mã kế tiếp, hiện là **Q-40**) kèm gợi ý, rồi báo người dùng.
+- AI gặp điểm mơ hồ mới: thêm câu hỏi (mã kế tiếp, hiện là **Q-40**; đến 2026-11-28 mọi câu Q-01..Q-39 đã chốt) kèm gợi ý, rồi báo người dùng.
 - Nhãn mức ảnh hưởng: 🔴 chặn schema/kiến trúc — chốt trước khi code · 🟡 ảnh hưởng một module · 🟢 chốt lúc nào cũng được.
 
 ## Đề xuất thứ tự bàn
@@ -34,31 +34,31 @@
 | Q-12 | Buyer đăng ký thế nào | B | 🟡 | Tự đăng ký, xác thực email + SĐT | Đã chốt |
 | Q-14 | Chỉ định một hay nhiều hộ | B | 🟡 | Buyer chỉ định một hộ; hộ tự rủ hộ khác bên ngoài | Đã chốt |
 | Q-15 | Hạn chót nhận báo giá | B | 🟡 | Hạn chót tùy chọn | Đã chốt |
-| Q-29 | "Đang mở cửa" xác định thế nào | B | 🟡 | Giờ theo thứ + công tắc tạm đóng | Mở — cần làm rõ |
+| Q-29 | "Đang mở cửa" xác định thế nào | B | 🟡 | Giờ mở cửa + nhãn "đang nhận đơn" riêng | Đã chốt |
 | Q-30 | Hiển thị giá sản phẩm/lô | B | 🟡 | Hộ chọn công khai hoặc ẩn giá | Đã chốt |
 | Q-31 | Sửa/rút/từ chối báo giá | B | 🟡 | Hộ sửa được báo giá | Đã chốt |
 | Q-32 | Kiểm duyệt nội dung trước hay sau | B | 🟡 | Hậu kiểm | Đã chốt |
 | Q-33 | Hộ tự đăng ký hay Admin cấp | B | 🟡 | Admin cấp | Đã chốt |
-| Q-34 | Ai quản lý phân loại | B | 🟢 | Seed cố định | Mở |
-| Q-35 | Cắt gì khi thiếu thời gian | B | 🟡 | Danh sách cắt theo thứ tự | Mở |
-| Q-37 | Có chức năng bình luận không | B | 🟡 | Không làm | Mở |
-| Q-38 | Tổ chức tag sản phẩm thế nào | B | 🔴 | Danh sách tag do Admin quản lý, nhiều tag mỗi sản phẩm | Mở |
-| Q-13 | Lưu ảnh ở đâu | C | 🔴 | Đĩa cục bộ qua volume, sau interface | Mở |
-| Q-16 | Giữ token DB hay đổi JWT | C | 🔴 | Giữ token DB | Mở |
-| Q-17 | Cấu trúc gói backend | C | 🔴 | Giữ theo lớp | Mở |
+| Q-34 | Ai quản lý phân loại | B | 🟢 | Seed cố định | Đã chốt |
+| Q-35 | Cắt gì khi thiếu thời gian | B | 🟡 | Danh sách cắt theo thứ tự | Đã chốt |
+| Q-37 | Có chức năng bình luận không | B | 🟡 | Không làm | Đã chốt |
+| Q-38 | Tổ chức tag sản phẩm thế nào | B | 🔴 | Danh sách tag do Admin quản lý, nhiều tag mỗi sản phẩm | Đã chốt |
+| Q-13 | Lưu ảnh ở đâu | C | 🔴 | Đĩa cục bộ qua volume, sau interface | Đã chốt |
+| Q-16 | Giữ token DB hay đổi JWT | C | 🔴 | Giữ token DB | Đã chốt |
+| Q-17 | Cấu trúc gói backend | C | 🔴 | Giữ theo lớp | Đã chốt |
 | Q-19 | Lấy dữ liệu ở frontend | C | 🔴 | Hook tự viết + client chung | Đã chốt |
-| Q-20 | Sinh QR ở backend hay frontend | C | 🟡 | Backend trả PNG | Mở |
-| Q-21 | Resize ảnh: thư viện, kích thước, giới hạn | C | 🟡 | Thumbnailator, 3 cỡ, JPEG | Mở |
-| Q-22 | Công cụ kiểm thử | C | 🟡 | Python cho HTTP + JUnit cho logic | Mở |
-| Q-23 | Phương án demo/triển khai | C | 🔴 | Triển khai Internet là bắt buộc (Q-09); chọn nơi đặt máy chủ | Mở |
-| Q-39 | Xác thực email và SĐT bằng cách nào | C | 🔴 | Email bằng mã OTP; SĐT chỉ kiểm định dạng | Mở |
+| Q-20 | Sinh QR ở backend hay frontend | C | 🟡 | Backend trả PNG | Đã chốt |
+| Q-21 | Resize ảnh: thư viện, kích thước, giới hạn | C | 🟡 | Thumbnailator, 3 cỡ, JPEG | Đã chốt |
+| Q-22 | Công cụ kiểm thử | C | 🟡 | Python cho HTTP + JUnit cho logic | Đã chốt |
+| Q-23 | Phương án demo/triển khai | C | 🔴 | Triển khai Internet là bắt buộc (Q-09); chọn nơi đặt máy chủ | Đã chốt |
+| Q-39 | Xác thực email và SĐT bằng cách nào | C | 🔴 | Email bằng mã OTP; SĐT chỉ kiểm định dạng | Đã chốt |
 | Q-18 | CSS thuần hay thư viện UI | D | 🔴 | CSS thuần + CSS Modules | Đã chốt |
-| Q-24 | Nguồn ảnh và dữ liệu demo | D | 🟡 | Ảnh giấy phép tự do, ghi nguồn | Mở |
-| Q-36 | Ngôn ngữ giao diện | D | 🟢 | Chỉ tiếng Việt | Mở |
-| Q-25 | Chia việc theo tính năng | E | 🔴 | Ba luồng A/B/C | Mở |
-| Q-26 | Mốc thời gian | E | 🔴 | Đếm ngược từ ngày thi | Mở |
-| Q-27 | Review và merge | E | 🟡 | PR + 1 review, squash | Mở |
-| Q-28 | Cách dùng AI trong nhóm | E | 🟡 | Một phiên một FR, người giao đọc diff | Mở |
+| Q-24 | Nguồn ảnh và dữ liệu demo | D | 🟡 | Ảnh giấy phép tự do, ghi nguồn | Đã chốt |
+| Q-36 | Ngôn ngữ giao diện | D | 🟢 | Chỉ tiếng Việt | Đã chốt |
+| Q-25 | Chia việc theo tính năng | E | 🔴 | Ba luồng A/B/C | Đã chốt |
+| Q-26 | Mốc thời gian | E | 🔴 | Đếm ngược từ ngày thi | Đã chốt |
+| Q-27 | Review và merge | E | 🟡 | PR + 1 review, squash | Đã chốt |
+| Q-28 | Cách dùng AI trong nhóm | E | 🟡 | Một phiên một FR, người giao đọc diff | Đã chốt |
 
 ---
 
@@ -161,7 +161,7 @@ Nhóm không tự chốt được các câu này, nhưng nên thống nhất **p
 ### Q-14 🟡 Yêu cầu chỉ định gửi được cho một hay nhiều hộ?
 
 - **Gợi ý:** Nhiều hộ. Bảng nối `quote_request_targets` xử lý cả hai trường hợp; chỉ cho một hộ thì luồng "so sánh báo giá" mất ý nghĩa.
-- **Nhóm chốt:** Hộ đã nhận đơn có thể tự chỉ định/rủ các hộ khác, việc này chốt **bên ngoài** nền tảng. (2026-11-10, nhóm) *Diễn giải của Claude, cần nhóm xác nhận:* Buyer chỉ định **một** hộ (đúng đặc tả); hệ thống không quản lý việc chia cho hộ khác, chỉ có ô ghi chú.
+- **Nhóm chốt:** Hộ đã nhận đơn có thể tự chỉ định/rủ các hộ khác, việc này chốt **bên ngoài** nền tảng. (2026-11-10, nhóm) *Nhóm xác nhận diễn giải (2026-11-28):* Buyer chỉ định **một** hộ (đúng đặc tả); hệ thống không quản lý việc chia cho hộ khác, chỉ có ô ghi chú.
 
 ### Q-15 🟡 Yêu cầu có hạn chót nhận báo giá không?
 
@@ -173,14 +173,14 @@ Nhóm không tự chốt được các câu này, nhưng nên thống nhất **p
 
 - **Phương án:** (a) Gửi rồi là cố định. (b) Sửa và rút được cho đến khi yêu cầu được chấp nhận; không có "từ chối" riêng lẻ. (c) Thêm từ chối từng báo giá + thương lượng nhiều vòng.
 - **Gợi ý:** (b). Sửa/rút tạo ra tình huống tranh chấp với thao tác chấp nhận — đúng thứ cần để trình diễn khóa bản ghi. (c) thành hệ thống đàm phán, vượt phạm vi.
-- **Nhóm chốt:** Hộ được phép sửa báo giá; Buyer có thể tự liên hệ với hộ. (2026-11-10, nhóm) Chưa nói tới rút báo giá và từ chối lẻ: tạm giữ theo gợi ý (rút được, không từ chối lẻ).
+- **Nhóm chốt:** Hộ được phép sửa báo giá; Buyer có thể tự liên hệ với hộ. (2026-11-10, nhóm) Rút báo giá và từ chối lẻ: chốt theo gợi ý — rút được cho đến khi yêu cầu được chấp nhận, không có từ chối lẻ. (2026-11-28, nhóm)
 
 ### Q-29 🟡 "Xưởng đang mở cửa" xác định thế nào?
 
 - **Bối cảnh:** Đề gốc: bản đồ "để biết xưởng nào đang mở cửa cho khách vào tham quan".
 - **Phương án:** (a) Hộ tự bật/tắt công tắc "đang mở". (b) Tính từ giờ mở cửa theo thứ trong tuần. (c) Kết hợp: giờ theo thứ + công tắc "tạm đóng" + cờ "có nhận khách tham quan".
 - **Gợi ý:** (c) nhưng làm theo bước: trước tiên (b) + cờ nhận khách, thêm công tắc tạm đóng sau. Tính `openNow` ở backend theo múi giờ Việt Nam để không lệch khi demo.
-- **Nhóm chốt:** _chưa — cần làm rõ._ Nhóm ghi (2026-11-10): "Dựa theo buyer xác nhận hộ gia đình có nhận đơn hay không". Câu trả lời này nói về việc **nhận đơn**, còn câu hỏi là về **mở cửa đón khách tham quan** trên bản đồ (đề gốc §3). Đề nghị nhóm chọn: (1) bản đồ chỉ thể hiện giờ mở cửa tham quan; (2) bản đồ thể hiện "đang nhận đơn" thay cho mở cửa; (3) cả hai là hai thông tin riêng. Gợi ý: (3) — giờ mở cửa do hộ khai để đáp ứng đề gốc, cộng thêm nhãn "đang nhận đơn" do hộ tự bật/tắt.
+- **Nhóm chốt:** **(3)** — hai thông tin riêng: giờ mở cửa tham quan theo thứ trong tuần + ngày nghỉ/tạm đóng và cờ `accepts_visitors` do hộ khai (đáp ứng đề gốc, backend tính `openNow` theo giờ Việt Nam); thêm nhãn "đang nhận đơn" do hộ tự bật/tắt. (2026-11-28, nhóm — theo gợi ý) Nhãn "đang nhận đơn" chưa có trong schema, cần một migration mới khi làm.
 
 ### Q-30 🟡 Hiển thị giá thế nào?
 
@@ -202,12 +202,12 @@ Nhóm không tự chốt được các câu này, nhưng nên thống nhất **p
 ### Q-34 🟢 Ai quản lý danh sách phân loại?
 
 - **Gợi ý:** Seed cố định cho gốm (cốc chén, bình lọ, đĩa bát, tượng trang trí, đồ thờ, quà tặng theo đơn…). Admin thêm/sửa là P2.
-- **Nhóm chốt:** _chưa_
+- **Nhóm chốt:** Seed cố định danh sách phân loại gốm; Admin thêm/sửa là P2. (2026-11-28, nhóm — theo gợi ý)
 
 ### Q-35 🟡 Thiếu thời gian thì cắt gì trước?
 
 - **Gợi ý (cắt theo thứ tự):** báo cáo vi phạm (FR-ADMIN-04) → sự kiện có thời gian/địa điểm (FR-NEWS-03) → đổi mật khẩu (FR-AUTH-06) → ghi chú nhiều hộ (FR-BATCH-08) → nội dung nổi bật do Admin chọn (thay bằng "mới nhất") → liên kết riêng cho lô riêng tư (lô riêng tư chỉ chủ xem). **Không cắt:** bốn yêu cầu kỹ thuật §4.1–4.4 và giao diện các trang công khai.
-- **Nhóm chốt:** _chưa_
+- **Nhóm chốt:** Cắt theo đúng thứ tự gợi ý; không cắt bốn yêu cầu kỹ thuật §4.1–4.4 và giao diện trang công khai. (2026-11-28, nhóm — theo gợi ý)
 
 ### Q-38 🔴 Tag sản phẩm tổ chức thế nào? (phát sinh từ Q-03)
 
@@ -217,14 +217,14 @@ Nhóm không tự chốt được các câu này, nhưng nên thống nhất **p
   2. Tag thay thế phân loại hay tồn tại song song?
   3. "Tương tự" nghĩa là gì: trùng ít nhất một tag, hay cần so khớp gần đúng?
 - **Gợi ý:** Danh sách tag do Admin quản lý (seed sẵn: chất liệu men, công năng, kỹ thuật, "in logo theo yêu cầu"…); mỗi sản phẩm và mỗi yêu cầu gắn nhiều tag chọn từ danh sách. Giữ `categories` song song làm bộ lọc danh mục (đề gốc yêu cầu "xem theo phân loại"). "Tương tự" = **trùng ít nhất một tag**. Tag tự do dễ sinh trùng lặp ("coc"/"cốc"/"ly") làm việc khớp sai.
-- **Nhóm chốt:** _chưa_
+- **Nhóm chốt:** Danh sách tag do Admin quản lý (seed sẵn), nhiều tag mỗi sản phẩm và mỗi yêu cầu; `categories` giữ song song làm bộ lọc danh mục; "tương tự" = trùng ít nhất một tag. (2026-11-28, nhóm — theo gợi ý)
 
 ### Q-37 🟡 Có chức năng bình luận không? (phát sinh từ Q-01)
 
 - **Bối cảnh:** Kết quả Q-01 ghi khách chưa đăng nhập "không được comment". Đề gốc và đặc tả không có chức năng bình luận nào.
 - **Phương án:** (a) Không làm bình luận; câu ở Q-01 chỉ mang nghĩa "khách không tương tác được". (b) Người đã đăng nhập bình luận được trên sản phẩm/lô/tin tức.
 - **Gợi ý:** (a). Bình luận kéo theo kiểm duyệt, báo cáo vi phạm, chống spam — không được chấm. Nếu muốn tăng cảm giác "có người dùng thật" thì luồng yêu cầu/báo giá và tin tức đã đủ.
-- **Nhóm chốt:** _chưa_
+- **Nhóm chốt:** **(a)** — không làm bình luận. (2026-11-28, nhóm — theo gợi ý)
 
 ---
 
@@ -237,25 +237,26 @@ Nhóm không tự chốt được các câu này, nhưng nên thống nhất **p
 - **Phương án cho SĐT:** (a) Chỉ kiểm định dạng số Việt Nam, không gửi OTP. (b) OTP qua SMS (trả phí). (c) OTP giả lập: mã hiện trong trang/nhật ký server, chỉ để demo.
 - **Gợi ý:** Email (a) — đơn giản, demo được thật trên Internet; cần tài khoản gửi thư riêng và giới hạn số lần gửi. SĐT (a) — kiểm định dạng, hiển thị cho hộ để gọi lại; việc gọi được hay không chính là xác thực thực tế. Tránh (c) vì giả lập bảo mật dễ bị hỏi vặn khi vấn đáp.
 - **Cần bàn thêm:** tài khoản chưa xác thực email có đăng nhập được không? Gợi ý: đăng nhập được nhưng chưa gửi được yêu cầu báo giá. Tên đăng nhập hiện là `username`; có chuyển sang đăng nhập bằng email không? Gợi ý: giữ `username`, thêm email là trường bắt buộc và duy nhất cho Buyer.
-- **Nhóm chốt:** _chưa_
+- **Nhóm chốt:** Email: **(a)** OTP 6 số qua SMTP (tài khoản gửi thư riêng của nhóm, giới hạn số lần gửi). SĐT: **(a)** chỉ kiểm định dạng số Việt Nam. Tài khoản chưa xác thực email đăng nhập được nhưng chưa gửi được yêu cầu báo giá; giữ `username`, email bắt buộc và duy nhất cho Buyer. (2026-11-28, nhóm — theo gợi ý)
 
 ### Q-16 🔴 Giữ cơ chế token lưu DB hay chuyển sang JWT?
 
 - **Bối cảnh:** Mã đang dùng token ngẫu nhiên, DB lưu mã băm. Bản đánh giá v0 trong ghi chú nhóm gợi ý JWT.
 - **Gợi ý:** Giữ nguyên. Đang chạy, có test, đăng xuất và khóa hộ có hiệu lực ngay. JWT không đem lại gì ở quy mô này mà phải viết lại. Chi tiết: ADR-0002.
-- **Nhóm chốt:** _chưa_
+- **Nhóm chốt:** Giữ token ngẫu nhiên lưu mã băm trong DB, không chuyển JWT (ADR-0002). (2026-11-28, nhóm — theo gợi ý)
 
 ### Q-17 🔴 Backend chia gói theo lớp hay theo module?
 
 - **Phương án:** (a) Giữ theo lớp (`controller/`, `service/`…), đặt tên file theo module. (b) Chuyển sang theo module (`batch/`, `quote/`…).
 - **Gợi ý:** (a). Sẽ có khoảng 10 controller — vẫn dễ tìm; đổi cấu trúc lúc này tốn công và gây xung đột khi ba người cùng làm. Nếu muốn (b) thì phải làm **ngay bây giờ**, trước khi chia việc.
-- **Nhóm chốt:** _chưa_
+- **Nhóm chốt:** **(a)** — giữ chia gói theo lớp, đặt tên file theo module. (2026-11-28, nhóm — theo gợi ý)
 
 ### Q-13 🔴 Ảnh upload lưu ở đâu?
 
 - **Phương án:** (a) Đĩa server qua Docker volume. (b) Dịch vụ ngoài (Cloudinary, S3…). (c) Lưu trong PostgreSQL.
 - **Gợi ý:** (a), viết sau một interface `MediaStorage`. Demo không phụ thuộc mạng và tài khoản bên ngoài; và tự resize ở backend mới đúng yêu cầu §4.4 (Cloudinary resize hộ thì mất điểm kỹ năng). Nhớ sao lưu thư mục ảnh cùng dữ liệu seed.
-- **Nhóm chốt:** _chưa_
+- **Nhóm chốt:** **(a)** — lưu đĩa server qua Docker volume `media_data`, sau interface `MediaStorage`; sao lưu thư mục ảnh cùng DB. (2026-11-28, nhóm — theo gợi ý)
+- **Đang cài đặt (2026-11-24):** theo gợi ý (a): đĩa qua interface `MediaStorage`, volume `media_data` trong Compose. Đổi nơi lưu chỉ cần viết lớp mới.
 
 ### Q-19 🔴 Frontend lấy và lưu dữ liệu server thế nào?
 
@@ -268,26 +269,27 @@ Nhóm không tự chốt được các câu này, nhưng nên thống nhất **p
 - **Phương án:** (a) Backend sinh PNG (ZXing) qua `GET /api/batches/{code}/qr.png`. (b) Frontend vẽ bằng thư viện JS.
 - **Gợi ý:** (a). Hộ tải về in được, ảnh có URL ổn định, cùng chỗ với `APP_BASE_URL`. Đề cho phép cả hai.
 - **Cần bàn thêm:** khi demo, điện thoại quét QR phải truy cập được máy chạy web → `APP_BASE_URL` là IP LAN hoặc tên miền (xem Q-23).
-- **Nhóm chốt:** _chưa_
+- **Nhóm chốt:** **(a)** — backend sinh PNG bằng ZXing; URL trong QR lấy từ URL gốc cấu hình được, trỏ về tên miền của bản triển khai (Q-23). (2026-11-28, nhóm — theo gợi ý)
 
 ### Q-21 🟡 Resize ảnh: thư viện, kích thước, giới hạn?
 
 - **Gợi ý:** Thumbnailator. Ba biến thể theo cạnh dài: 320 px (danh sách), 800 px (chi tiết), 1600 px (xem lớn); JPEG chất lượng khoảng 80 (WebP cần thêm plugin, để sau). Nhận JPEG/PNG/WebP, tối đa 8 MB mỗi ảnh và 10 ảnh mỗi lần. Xử lý đồng bộ trong request; bỏ metadata EXIF và xoay ảnh theo hướng chụp.
 - **Cần bàn thêm:** có giữ ảnh gốc không? Gợi ý: không, chỉ giữ bản 1600 px để tiết kiệm đĩa.
-- **Nhóm chốt:** _chưa_
+- **Nhóm chốt:** Theo bản đang cài đặt: Thumbnailator, 3 cỡ 320/800/1600 px, JPEG chất lượng 80, tối đa 5 MB/ảnh và 10 ảnh/lần, chỉ JPEG + PNG (WebP để sau, cần thêm thư viện), không giữ ảnh gốc, xử lý đồng bộ, bỏ EXIF và xoay theo hướng chụp. (2026-11-28, nhóm — theo gợi ý)
+- **Đang cài đặt (2026-11-24):** Thumbnailator (đã có trong `pom.xml`), 3 cỡ 320/800/1600 px, JPEG chất lượng 80, **tối đa 5 MB/ảnh** (theo cấu hình multipart sẵn có, không phải 8 MB), 10 ảnh/lần, không giữ ảnh gốc, xử lý đồng bộ. **Chỉ nhận JPEG và PNG**: JDK không đọc được WebP, muốn nhận WebP phải thêm thư viện (cần nhóm đồng ý).
 
 ### Q-22 🟡 Kiểm thử bằng công cụ gì?
 
 - **Phương án:** (a) Tiếp tục script Python gọi HTTP (đang có `phase02.py`). (b) Chuyển hết sang JUnit + Spring test. (c) Cả hai: Python cho phân quyền/luồng đầu-cuối, JUnit cho logic thuần (bảng chuyển trạng thái, tính giờ mở cửa).
 - **Gợi ý:** (c). Script Python đã có nền, viết nhanh, kiểm được cả ca hai request song song. Mỗi module một file `backend/tests/<module>.py`.
-- **Nhóm chốt:** _chưa_
+- **Nhóm chốt:** **(c)** — Python gọi HTTP cho phân quyền/luồng đầu-cuối (mỗi module một file `backend/tests/<module>.py`), JUnit cho logic thuần. (2026-11-28, nhóm — theo gợi ý)
 
 ### Q-23 🟡 Demo và triển khai theo phương án nào?
 
 - **Phương án:** (a) Laptop chạy Docker Compose; điện thoại quét QR qua cùng mạng (phát hotspot từ điện thoại). (b) Triển khai lên một máy chủ có tên miền. (c) Cả hai: (b) là chính, (a) dự phòng.
 - **Cập nhật 2026-11-10:** Q-09 đã chốt **bắt buộc chạy trên Internet**, nên (b) là bắt buộc; câu còn lại là đặt máy chủ ở đâu. Hai hướng: (b1) một máy chủ ảo (VPS) chạy nguyên `compose.yaml` hiện có, thêm tên miền + HTTPS; (b2) dịch vụ PaaS (frontend tĩnh + backend container + PostgreSQL quản lý sẵn).
 - **Gợi ý:** (b1). Dùng lại đúng Compose đang có, ảnh upload nằm trên volume của máy chủ nên Q-13 giữ được phương án đĩa cục bộ. (b2) thường có đĩa tạm (mất ảnh mỗi lần triển khai lại) → buộc phải dùng kho lưu trữ ngoài. Triển khai **sớm** (ngay sau M1) để nhóm tạo dữ liệu thật dần theo chỉ dẫn chung, và sao lưu DB + thư mục ảnh định kỳ. Vẫn giữ phương án laptop + Compose làm dự phòng khi thi.
-- **Nhóm chốt:** _chưa_
+- **Nhóm chốt:** **(c)** với **(b1)** là chính: một VPS chạy nguyên `compose.yaml`, có tên miền + HTTPS, triển khai ngay sau M1, sao lưu DB + ảnh định kỳ; laptop + Compose làm dự phòng khi thi. (2026-11-28, nhóm — theo gợi ý) Nhà cung cấp VPS và tên miền cụ thể: Dương chọn và ghi vào `03-engineering/setup.md`.
 
 ---
 
@@ -304,12 +306,13 @@ Nhóm không tự chốt được các câu này, nhưng nên thống nhất **p
 
 - **Bối cảnh:** Hiện chỉ có 3 ảnh SVG minh họa. Giao diện image-centric cần ảnh thật, chất lượng tốt.
 - **Gợi ý:** Ưu tiên ảnh tự chụp (đi Bát Tràng một buổi nếu được) hoặc ảnh giấy phép tự do (Wikimedia Commons, Unsplash, Pexels), ghi nguồn trong một file danh sách. **Cập nhật 2026-11-10 (chỉ dẫn chung của nhóm):** dữ liệu phải trông như có người dùng thật — nhóm tự tạo tài khoản Admin/Buyer/hộ và thao tác qua giao diện trên bản đã triển khai (đăng bài, tạo lô, gửi yêu cầu, chào giá). Vì vậy seed chỉ nên là bộ khung tối thiểu; phần còn lại nhập tay qua web và **sao lưu** để không mất. Mục tiêu: 6–8 hộ có tọa độ thật ở Bát Tràng, 60–100 sản phẩm thật + sinh thêm để đủ vài trăm cho bài toán hiệu năng, 4–5 lô có mốc sản xuất, 5–6 tin tức, vài yêu cầu ở các trạng thái khác nhau. Giao một người phụ trách.
-- **Nhóm chốt:** _chưa_
+- **Cập nhật 2026-11-24:** Đã lọc 189 ảnh ứng viên (98 từ Wikimedia Commons, 91 từ Flickr qua Openverse; 99 ảnh sản phẩm) cho 6 hộ giả lập và 3 loại sản phẩm (bình lọ chum chậu · ấm chén bát đĩa · tượng & trang trí) — xem `04-plan/demo-image-sources.md`. **Đề xuất**, chưa nhập vào hệ thống. Nhóm chốt: giả định ảnh do các hộ tự chuẩn bị; không cần ghi nguồn ảnh trong hệ thống hay trên web. Còn mở: thêm phân loại thứ 3, bổ sung ảnh để đủ số lượng.
+- **Nhóm chốt:** Ảnh giấy phép tự do từ bộ ứng viên ở `04-plan/demo-image-sources.md` (hoặc ảnh tự chụp); theo ghi chú nhóm, coi như ảnh do các hộ tự chuẩn bị nên không ghi nguồn trên web. Seed chỉ là khung tối thiểu, phần còn lại nhập tay qua bản triển khai và sao lưu. Người phụ trách: Dương. (2026-11-28, nhóm — theo gợi ý)
 
 ### Q-36 🟢 Giao diện chỉ tiếng Việt?
 
 - **Gợi ý:** Chỉ tiếng Việt. Đa ngôn ngữ không được yêu cầu.
-- **Nhóm chốt:** _chưa_
+- **Nhóm chốt:** Chỉ tiếng Việt. (2026-11-28, nhóm — theo gợi ý)
 
 ---
 
@@ -323,20 +326,20 @@ Nhóm không tự chốt được các câu này, nhưng nên thống nhất **p
   - Song song (M2), mỗi người làm trọn API + giao diện: **A. Triển lãm** (hồ sơ hộ, sản phẩm, quy trình, danh mục, trang chủ) — Huy · **C. Báo giá** (state machine, khóa bản ghi) — Thắng · **B. Truy xuất + bản đồ** (lô, mốc, QR, Leaflet) — Dương.
   - Quản trị + tin tức (M3): ai xong trước nhận.
 - **Cần bàn thêm:** mỗi người có muốn làm cả hai phía không; ai trình bày phần nào khi vấn đáp.
-- **Nhóm chốt:** _chưa_
+- **Nhóm chốt:** Theo gợi ý: nền M1 như trên; M2 mỗi người làm trọn API + giao diện — **A. Triển lãm**: Huy · **C. Báo giá**: Thắng · **B. Truy xuất + bản đồ**: Dương; M3 (quản trị + tin tức) ai xong trước nhận. (2026-11-28, nhóm — theo gợi ý) Phần backend của cả ba luồng phần lớn đã có (nhánh M1 của Thắng), nên M2 chủ yếu là giao diện và phần backend còn thiếu.
 
 ### Q-26 🔴 Các mốc thời gian?
 
 - **Bối cảnh:** Chưa rõ ngày thi vấn đáp; kế hoạch 8 tuần trong ghi chú nhóm chưa gắn ngày.
 - **Gợi ý:** Xác định ngày thi rồi đếm ngược: đóng băng tính năng trước thi 1 tuần (chỉ sửa lỗi, seed, tập demo); M2 xong trước đó 1 tuần; M1 gói trong 1 tuần kể từ khi chốt tài liệu. Điền ngày cụ thể vào `04-plan/roadmap.md`.
-- **Nhóm chốt:** _chưa_
+- **Nhóm chốt:** Đếm ngược từ ngày thi: đóng băng tính năng trước thi 1 tuần; M2 xong trước đó 1 tuần. (2026-11-28, nhóm — theo gợi ý) Ngày thi chưa biết — khi có thì điền ngày cụ thể vào `04-plan/roadmap.md`.
 
 ### Q-27 🟡 Quy trình review và merge?
 
 - **Gợi ý:** Mỗi việc một nhánh + PR vào `master`; cần một người khác xem; squash merge; bật bảo vệ nhánh `master` trên GitHub. PR nhỏ (dưới vài trăm dòng) để review kịp. Ai thêm migration thì báo số trong nhóm chat để tránh trùng. Chi tiết: `03-engineering/git-workflow.md`.
-- **Nhóm chốt:** _chưa_
+- **Nhóm chốt:** Mỗi việc một nhánh + PR vào `master`, một người khác review, squash merge, bật bảo vệ nhánh `master`; ai thêm migration báo số trong nhóm chat. (2026-11-28, nhóm — theo gợi ý)
 
 ### Q-28 🟡 Dùng AI trong nhóm theo quy tắc nào?
 
 - **Gợi ý:** Cả nhóm dùng chung `AGENTS.md` và `docs/` làm ngữ cảnh. Mỗi phiên AI làm một FR hoặc một nhóm FR cùng module, trên nhánh riêng. Người giao việc đọc toàn bộ diff trước khi mở PR và phải giải thích được mã đó khi vấn đáp. AI không tự commit/push. Tài liệu lệch mã thì sửa ngay trong PR đó.
-- **Nhóm chốt:** _chưa_
+- **Nhóm chốt:** Theo gợi ý: dùng chung `AGENTS.md` + `docs/`; một phiên AI một FR (hoặc nhóm FR cùng module) trên nhánh riêng; người giao đọc toàn bộ diff trước khi mở PR và giải thích được khi vấn đáp; AI không tự commit/push. (2026-11-28, nhóm — theo gợi ý)

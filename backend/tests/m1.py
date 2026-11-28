@@ -34,7 +34,7 @@ assert p.call('/buyer/me',token=p.buyer)['role'] == 'BUYER'
 for token in (p.a,p.b,p.admin): error('/buyer/me',403,token=token,code='FORBIDDEN')
 for token in (p.buyer,p.a,p.b,p.admin): assert p.call('/me',token=token)['id']
 error('/admin/workshops',403,token=p.buyer,code='FORBIDDEN')
-error('/artisan/workshops/'+str(p.b_id),403,'PATCH',{'name':'Denied'},p.a,code='FORBIDDEN')
+error('/artisan/workshops/'+str(p.b_id),404,'PATCH',{'name':'Denied'},p.a,code='NOT_FOUND')
 legacy=p.call('/products')
 assert isinstance(legacy,list) and len(legacy)>=3
 first=p.call('/products/page?page=0&size=1')
@@ -48,7 +48,7 @@ assert p.call('/products/page')['size']==12
 for query,field in (('page=-1','page'),('page=100001','page'),('size=0','size'),('size=51','size'),('size=abc','size')):
     error('/products/page?'+query,400,fields=(field,),code='VALIDATION_FAILED')
 error('/products/999999999',404,code='PRODUCT_NOT_FOUND')
-error('/products/abc',400,code='INVALID_INPUT')
+error('/products/abc',404,code='PRODUCT_NOT_FOUND')
 error('/does-not-exist',404,token=p.buyer,code='NOT_FOUND')
 error('/login',405,token=p.buyer,code='METHOD_NOT_ALLOWED')
 # Bad JSON and content type: not intercepted as a generic 500.

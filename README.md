@@ -142,7 +142,7 @@ Danh sách đầy đủ: `docs/02-design/api-contract.md`; chi tiết chặng: `
 
 ## 6. SQL, kiểm thử và bàn giao
 
-- Migration chính thức: `backend/src/main/resources/db/migration/`; đã có V1–V4. Schema mới dùng **V5__...sql**. Không sửa file đã áp dụng.
+- Migration chính thức: `backend/src/main/resources/db/migration/`; đã có V1–V6. Schema mới dùng **V7__...sql**. Không sửa file đã áp dụng.
 - Seed: `backend/src/main/resources/db/seed/`, chỉ local/demo. JPA `validate`, SQL init `never`. Kiểm tra DB: `SELECT version,description,success FROM flyway_schema_history ORDER BY installed_rank;`, `SELECT COUNT(*) FROM products;`, `SELECT COUNT(*) FROM accounts;`. Khởi động lại không tăng số bản ghi seed; bộ test HTTP chủ động tạo thêm hộ với username riêng, đó không phải seed bị trùng.
 - Build backend: tại backend chạy `.\mvnw.cmd clean package` (Linux `./mvnw clean package`). Build frontend: `npm ci` rồi `npm run build` trong frontend.
 - Backend đang chạy với DB **test riêng**, từ gốc chạy `python backend/tests/m1.py`. Test này chạy cả Phase02, tạo/duyệt thêm một hộ để kiểm tra; không chạy trên dữ liệu thật.
@@ -150,4 +150,10 @@ Danh sách đầy đủ: `docs/02-design/api-contract.md`; chi tiết chặng: `
 
 Lỗi thường gặp: `password authentication failed` → kiểm tra user/password đúng PostgreSQL; `database does not exist` → tạo DB trống đúng tên; Flyway báo schema non-empty/no history → đổi sang DB mới và giữ DB cũ; cổng 8080 bận → dừng phiên backend cũ; React lỗi tải → gọi health/db trước và kiểm tra backend 8080; Java release không đúng → kiểm tra cả Maven Runner JRE, không chỉ Project SDK.
 
-Các phần chưa hoàn thành: upload/resize ảnh, CRUD danh mục đầy đủ, đăng ký Buyer, giao diện đăng nhập/quản trị/báo giá, lô/QR, bản đồ, tin tức, triển khai Internet. Không đánh dấu toàn bộ M1 hoặc đề bài là hoàn thành.
+
+## Bản cập nhật THẮNG — M1 Backend bước 1–10
+
+Đọc [hướng dẫn cập nhật, kiểm thử và phần cần làm ở bước 11](docs/03-engineering/m1-steps-1-10.md).
+Hợp đồng API mới nằm ở [api-contract.md](docs/02-design/api-contract.md).
+Folder Postman `M1 steps 1–10` có 54 request bổ sung. Chạy kiểm thử mới bằng
+`python backend/tests/m1_extension.py` với backend local/demo đang chạy.

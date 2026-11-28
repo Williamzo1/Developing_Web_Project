@@ -1,10 +1,10 @@
 # Mô hình dữ liệu
 
-> Cập nhật 2026-11-10 theo kết quả họp nhóm (Q-03, Q-06, Q-07, Q-10, Q-12, Q-14, Q-15, Q-30). Phần còn chờ: giờ mở cửa/nhận đơn (Q-29), cách tổ chức tag (Q-38), cơ chế xác thực (Q-39), bộ ảnh (Q-13, Q-21).
+> Cập nhật 2026-11-10 theo kết quả họp nhóm (Q-03, Q-06, Q-07, Q-10, Q-12, Q-14, Q-15, Q-30). Ngày 2026-11-28 nhóm chốt nốt Q-13, Q-21, Q-29, Q-38, Q-39 đúng như schema V4–V6; riêng nhãn "đang nhận đơn" (Q-29) chưa có cột, cần migration mới.
 >
-> **Nguồn sự thật của schema là các file Flyway** trong `backend/src/main/resources/db/migration/`. Tài liệu này mô tả ý đồ. Mục 1 là hiện trạng (V1–V3). Mục 2 là **đề xuất**, chưa có migration; khi viết migration cho một bảng, cập nhật lại mục tương ứng và chuyển nó lên "hiện trạng".
+> **Nguồn sự thật của schema là các file Flyway** trong `backend/src/main/resources/db/migration/`. Tài liệu này mô tả ý đồ. ZIP hiện có migration V1–V6. Mục 2 lưu ý đồ thiết kế ban đầu; đối chiếu migration trước khi thay đổi schema; khi viết migration cho một bảng, cập nhật lại mục tương ứng và chuyển nó lên "hiện trạng".
 
-## 1. Hiện trạng (Flyway V1–V4)
+## 1. Hiện trạng (Flyway V1–V6)
 
 | Bảng | Cột | Ghi chú |
 |---|---|---|
@@ -17,14 +17,14 @@
 ### V4 — đã áp dụng trong bản backend báo giá
 
 - Thêm workshops.contact_email, phone để hai bên trao đổi liên hệ sau khi có báo giá.
-- tags, product_tags, quote_request_tags: tag tạm theo giả định Q-38; không có CRUD tag.
+- tags, product_tags, quote_request_tags: tag do Admin quản lý (Q-38 đã chốt); CRUD tag ở `/api/admin/tags`.
 - quote_requests: buyer_account_id; nội dung nháp; contact snapshot; mode/target; deadline; status; accepted_quote_id; @Version; created/updated. Trường nội dung có thể null khi DRAFT, service bắt buộc khi gửi.
 - quotes: request/workshop, đơn giá/tổng giá, số ngày, ghi chú, status, @Version, timestamps; unique(request_id,workshop_id); index một phần chỉ một ACCEPTED/request.
 - Composite FK (request id, accepted_quote_id) → quotes(request_id,id) chặn chọn nhầm quote của request khác. CHECK trạng thái sau chấp nhận phải có accepted_quote_id và ngược lại.
 - quote_request_events: actor, from/to, note, thời điểm; tag/events cascade khi xóa nháp.
 - Nguồn schema: V4__quote_workflow.sql; seed mới db/seed/quotes.sql (local/demo), không seed giao dịch.
 
-Các hàng quote/tag ở phần mô hình tổng thể bên dưới là ý đồ đã được hiện thực bởi V4 nêu trên; các bảng lô/media/news vẫn là đề xuất. Source V4 là hợp đồng cột chính xác. V1–V3 giữ byte nguyên vẹn.
+Các hàng quote/tag ở phần mô hình tổng thể bên dưới là ý đồ đã được hiện thực bởi V4 nêu trên; các bảng lô/media/news đã có ở V5/V6. File migration là hợp đồng cột chính xác. V1–V3 giữ byte nguyên vẹn.
 
 ## 2. Đề xuất mở rộng
 
@@ -57,7 +57,7 @@ erDiagram
 
 - `workshops`: `description`, `family_history`, `address`, `phone`, `contact_email` (Gmail) và `facebook_url` — hai trường này là thông tin xác minh hộ (Q-07 đã chốt), `latitude`, `longitude`, `approved_at`, `featured` (bool), `cover_media_id`. **Chờ Q-29:** `opening_hours`, `accepts_visitors`, và/hoặc cờ "đang nhận đơn" — chưa đưa vào migration cho đến khi nhóm làm rõ.
 - `products`: `reference_price`, `price_visible` (bool — hộ chọn công khai hay ẩn giá, Q-30 đã chốt), `hidden` (bool, Admin hậu kiểm hoặc hộ tự ẩn), `featured` (bool); thay `image_path` bằng liên kết bộ ảnh (giữ cột cũ đến khi chuyển xong dữ liệu).
-- `accounts`: `display_name`, `email` (unique), `phone`, `email_verified_at`, `phone_verified_at` (Buyer tự đăng ký có xác thực — Q-12 đã chốt; cơ chế xác thực và bảng mã OTP nếu cần: chờ Q-39).
+- `accounts`: `display_name`, `email` (unique), `phone`, `email_verified_at`, `phone_verified_at` (Buyer tự đăng ký có xác thực — Q-12 đã chốt; xác thực email bằng OTP, SĐT chỉ kiểm định dạng — Q-39 đã chốt).
 - Mọi bảng nghiệp vụ: `created_at`, `updated_at` (`TIMESTAMPTZ`).
 
 ### 2.2. Bảng mới
@@ -71,7 +71,7 @@ erDiagram
 | `batches` | `id`, `product_id`, `workshop_id`, `code` (mã lô hiển thị), `public_code` (unique, ngẫu nhiên, dùng trong URL/QR), `name`, `description`, `kind` (`IN_STOCK`/`MADE_TO_ORDER`), `quantity`, `unit`, `reference_price`, `price_visible`, `supply_capacity`, `available_from`, `visibility` (`PUBLIC`/`PRIVATE`), `share_token` (nullable; liên kết riêng do hộ tạo/thu hồi — Q-02, Q-06 đã chốt), `partner_note` (ghi chú hộ cùng tham gia — Q-05, Q-14), `hidden`, `featured` | `workshop_id` lặp lại từ product để truy vấn/kiểm quyền nhanh; phải khớp với xưởng của product. |
 | `batch_milestones` | `id`, `batch_id`, `process_step_id` (nullable), `title`, `note`, `happened_on` (DATE) | "Mảng mốc thời gian + ảnh chứng minh" của đề gốc 4.1 (Q-10 đã chốt: hai tầng). Sắp theo `happened_on`. |
 | `quote_requests` | `id`, `buyer_account_id`, `category_id`, `title`, `quantity`, `unit`, `spec` (yêu cầu kỹ thuật), `desired_by` (DATE), `bidding_deadline` (nullable — Q-15 đã chốt), `mode` (`TARGETED`/`OPEN`), `target_workshop_id` (nullable; bắt buộc khi `TARGETED` — Buyer chỉ định **một** hộ, Q-14), `status`, `accepted_quote_id` (nullable), `version` (khóa lạc quan), `created_at`, `updated_at` | Trạng thái: xem `quote-state-machine.md`. |
-| `tags` | `id`, `slug` (unique), `name` | Danh sách tag (cách quản lý: Q-38). |
+| `tags` | `id`, `slug` (unique), `name` | Danh sách tag do Admin quản lý, seed sẵn (Q-38 đã chốt). |
 | `product_tags` | `product_id`, `tag_id` (PK kép) | Tag của sản phẩm. |
 | `quote_request_tags` | `request_id`, `tag_id` (PK kép) | Tag của yêu cầu. Yêu cầu mở khớp với hộ có sản phẩm trùng ít nhất một tag (Q-03 đã chốt). |
 | `quotes` | `id`, `request_id`, `workshop_id`, `unit_price`, `total_price`, `lead_time_days`, `note`, `status` (`SUBMITTED`/`WITHDRAWN`/`ACCEPTED`/`NOT_SELECTED`), `created_at`, `updated_at` | Unique (`request_id`, `workshop_id`). Unique một phần: mỗi `request_id` tối đa một dòng `status = 'ACCEPTED'`. |
@@ -88,6 +88,15 @@ erDiagram
 - Tên bảng/cột: `snake_case`, tiếng Anh, bảng ở số nhiều.
 - Khóa chính `BIGINT GENERATED ... AS IDENTITY`. Thời gian `TIMESTAMPTZ`; ngày thuần `DATE`. Tiền `NUMERIC(15,2)` (VND).
 - Enum lưu dạng `VARCHAR` + `CHECK`, giá trị viết HOA, khớp enum Java.
-- Mỗi thay đổi là **một file migration mới** `V<n>__mo_ta_ngan.sql`; không sửa file đã merge vào nhánh chính. Số `n` kế tiếp hiện tại: **V5**. Hai người cùng thêm migration thì người merge sau đổi số.
+- Mỗi thay đổi là **một file migration mới** `V<n>__mo_ta_ngan.sql`; không sửa file đã merge vào nhánh chính. Số `n` kế tiếp hiện tại: **V7**. Hai người cùng thêm migration thì người merge sau đổi số.
 - Dữ liệu mẫu đặt ở `db/seed/`, phải idempotent (`ON CONFLICT ... DO NOTHING`), không đặt trong migration.
 - Entity JPA phải khớp schema vì `ddl-auto=validate`: thêm cột thì cập nhật entity trong cùng thay đổi.
+
+## Đối chiếu M1 bước 1–10 (2026-11-24)
+
+V5/V6 đã tồn tại trong ZIP đầu vào và được giữ nguyên trong lần cập nhật này.
+V5 mở rộng workshops, accounts, products và thêm email_otps, media, media_links,
+certificates, workshop_hours, workshop_closures, process_steps, batches, batch_milestones.
+V6 thêm news_posts. Bìa tin dùng media_links loại NEWS, không cần cột/migration khác.
+Giá khác null phải >0 theo CHECK của DB. Product dùng khóa identity để có thể tạo qua JPA.
+Các Instant trong JDBC được ghi bằng Timestamp và đọc bằng getTimestamp().toInstant().

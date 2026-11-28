@@ -51,6 +51,11 @@ class ApiErrors {
                             fields));
   }
 
+  @ExceptionHandler(org.springframework.web.method.annotation.HandlerMethodValidationException.class)
+  ResponseEntity<ApiErrorResponse> methodValidation(Exception error, HttpServletRequest request) {
+    return response(400,"VALIDATION_FAILED","Vui lòng kiểm tra dữ liệu nhập.",request);
+  }
+
   @ExceptionHandler(ConstraintViolationException.class)
   ResponseEntity<ApiErrorResponse> serviceValidation(
           ConstraintViolationException error, HttpServletRequest request) {

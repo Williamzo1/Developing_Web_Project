@@ -1,37 +1,33 @@
 package vn.vcraft.backend.controller;
-
-import java.util.List;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.http.*;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import vn.vcraft.backend.dto.PageQuery;
-import vn.vcraft.backend.dto.PageResponse;
-import vn.vcraft.backend.dto.ProductResponse;
-import vn.vcraft.backend.exception.ApiException;
-import vn.vcraft.backend.service.ProductService;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
+import vn.vcraft.backend.dto.*;
+import vn.vcraft.backend.model.Actor;
+import vn.vcraft.backend.service.*;
+import java.util.*;
 
 @RestController
+@Validated
 @RequestMapping("/api/products")
-class ProductController {
+public class ProductController {
     private final ProductService products;
-
-    ProductController(ProductService products) {
+    public ProductController(ProductService products) {
         this.products = products;
     }
 
     @GetMapping
-    List<ProductResponse> list() {
-        return products.list();
-    }
-
+    List<ProductResponse> list() { return products.list(); }
     @GetMapping("/page")
-    PageResponse<ProductResponse> page(@Valid @ModelAttribute PageQuery query) {
-        return products.page(query);
-    }
+    PageResponse<ProductSummaryResponse> page(@Valid @ModelAttribute PageQuery q,
+            @RequestParam(required=false) Long workshopId,@RequestParam(required=false) Long categoryId,
+            @RequestParam(required=false) String tagSlug) { return products.pageFiltered(q,workshopId,categoryId,tagSlug); }
+    @GetMapping("/{idOrSlug}")
+    ProductDetailResponse detail(@PathVariable String idOrSlug) { return products.detailByIdOrSlug(idOrSlug); }
+    @GetMapping("/{slug}/steps")
+    List<StepResponse> steps(@PathVariable String slug) { return products.getSteps(slug); }
 
-    @GetMapping("/{id}")
-    ProductResponse detail(@PathVariable long id) {
-        return products.detail(id).orElseThrow(() ->
-                new ApiException(NOT_FOUND, "PRODUCT_NOT_FOUND", "Không tìm thấy sản phẩm."));
-    }
 }

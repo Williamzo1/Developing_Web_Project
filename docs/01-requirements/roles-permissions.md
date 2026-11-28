@@ -7,7 +7,7 @@
 | Vai trò | Cách có tài khoản | Ghi chú |
 |---|---|---|
 | Khách (guest) | Không cần | Xem toàn bộ nội dung công khai, quét QR. Không gửi yêu cầu/báo giá. |
-| `BUYER` | Tự đăng ký, xác thực email + SĐT (cách xác thực: Q-39) | Tạo yêu cầu mua sỉ, xem báo giá gửi cho mình. |
+| `BUYER` | Tự đăng ký, xác thực email + SĐT (OTP email, SĐT kiểm định dạng — Q-39) | Tạo yêu cầu mua sỉ, xem báo giá gửi cho mình. |
 | `ARTISAN` | Admin cấp, phải được duyệt mới đăng nhập được (đã có trong mã) | Gắn đúng 1 xưởng. Chỉ thao tác trên dữ liệu của xưởng mình. |
 | `ADMIN` | Tạo sẵn bằng seed | Quản trị nền tảng; không tham gia giao dịch. |
 
@@ -25,7 +25,7 @@ Ký hiệu: ✔ được phép · ✖ không · "của mình" = chỉ bản ghi 
 | Tạo/sửa lô, mốc sản xuất, đổi công khai/riêng tư | ✖ | ✖ | của mình | ẩn khi vi phạm |
 | Upload ảnh | ✖ | ✖* | ✔ | ✔ |
 | Tạo/sửa/gửi/hủy yêu cầu mua sỉ | ✖ | của mình | ✖ | ✖ |
-| Xem yêu cầu mua sỉ | ✖ | của mình | yêu cầu chỉ định mình + yêu cầu mở trùng tag (Q-38) | chỉ số liệu tổng hợp* |
+| Xem yêu cầu mua sỉ | ✖ | của mình | yêu cầu chỉ định mình + yêu cầu mở trùng ít nhất một tag (Q-38) | chỉ số liệu tổng hợp* |
 | Gửi/sửa/rút báo giá | ✖ | ✖ | của mình | ✖ |
 | Xem báo giá | ✖ | các báo giá gửi cho yêu cầu của mình | **chỉ** báo giá của mình | ✖* |
 | Chấp nhận báo giá | ✖ | yêu cầu của mình | ✖ | ✖ |

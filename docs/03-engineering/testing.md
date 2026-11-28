@@ -3,6 +3,7 @@
 ## Hiện trạng
 
 - `backend/tests/phase02.py`: script Python gọi HTTP vào backend đang chạy (profile `local`), kiểm đăng nhập, phân quyền vai trò, quyền sở hữu xưởng, duyệt hộ, thu hồi token, danh mục. Địa chỉ đổi bằng biến `VCRAFT_TEST_URL`.
+- `backend/tests/media.py`: upload/resize/phục vụ/xóa ảnh (96 kiểm tra: 3 cỡ, không phóng to, EXIF, JPEG/PNG, giới hạn, tất cả-hoặc-không, chống path traversal, quyền sở hữu khi xóa). Chỉ dùng thư viện chuẩn Python, ảnh mẫu ở `backend/tests/fixtures/`. Chạy được cả qua Nginx: `$env:VCRAFT_TEST_URL='http://localhost:5173'`.
 - `postman/`: collection + environment để thử tay.
 - Chưa có: test JUnit trong `backend/src/test`, test frontend, CI.
 
